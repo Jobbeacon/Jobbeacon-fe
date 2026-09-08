@@ -1,8 +1,17 @@
 .header {
-  position: relative;
+  position: fixed;
+  z-index: 20;
+  top: 0;
+  right: 0;
+  left: 0;
   width: 100%;
   overflow: hidden;
   background: linear-gradient(105deg, #fff 0%, #f9fcff 36%, #e8f4ff 68%, #cae3ff 100%);
+  box-shadow: 0 8px 24px rgba(31, 92, 151, .2);
+}
+
+.headerSpacer {
+  height: 75px;
 }
 
 .container {
@@ -64,6 +73,12 @@
   height: auto;
 }
 
+.menuButton,
+.mobileNavigation,
+.menuBackdrop {
+  display: none;
+}
+
 .navigation {
   display: flex;
   align-items: center;
@@ -79,7 +94,7 @@
   padding: 0 16px;
   border-radius: 30px;
   color: #65738c;
-  font-size: 15px;
+  font-size: var(--text-base);
   font-weight: 700;
   transition: color .2s ease, background .2s ease;
 }
@@ -116,7 +131,7 @@
 
 .loginButton {
   color: #52627c;
-  font-size: 15px;
+  font-size: var(--text-base);
   font-weight: 700;
   white-space: nowrap;
 }
@@ -127,7 +142,7 @@
   color: #fff;
   background: linear-gradient(135deg, #1688ff, #0865f3);
   box-shadow: 0 12px 25px rgba(15, 111, 245, .24);
-  font-size: 15px;
+  font-size: var(--text-base);
   font-weight: 700;
   white-space: nowrap;
   transition: background .2s ease, transform .2s ease;
@@ -150,21 +165,93 @@
 }
 
 @media (max-width: 760px) {
-  .container { width: calc(100% - 28px); height: 68px; }
-  .logoLink { width: 138px; }
-  .navigation { margin-inline-start: auto; gap: 3px; }
-  .navLink { min-height: 42px; padding: 0 8px; }
-  .navLink > span:last-child { display: none; }
-  .navIcon, .navIcon svg { width: 24px; height: 24px; }
-  .accountActions { margin-inline-start: 5px; gap: 8px; }
-  .searchButton, .divider, .loginButton { display: none; }
-  .registerButton { padding: 11px 13px; font-size: 14px; }
+  .header { overflow: visible; }
+  .container { width: calc(100% - 24px); height: 68px; }
+  .headerSpacer { height: 68px; }
+  .menuButton {
+    width: 38px;
+    height: 38px;
+    flex: 0 0 auto;
+    display: grid;
+    place-items: center;
+    margin-inline-end: 10px;
+    padding: 0;
+    border: 1px solid rgba(8, 124, 240, .2);
+    border-radius: 50%;
+    color: #087cf0;
+    background: rgba(255, 255, 255, .75);
+  }
+  .menuButton svg { width: 20px; height: 20px; }
+  .logoLink { width: 128px; }
+  .navigation { display: none; }
+  .accountActions { margin-inline-start: auto; gap: 12px; }
+  .searchButton, .divider { display: none; }
+  .loginButton { display: inline-flex; font-size: var(--text-sm); }
+  .registerButton { padding: 10px 13px; font-size: var(--text-sm); }
   .backgroundShapeOne { width: 85vw; right: 10%; bottom: -95%; }
   .backgroundShapeTwo { width: 78vw; right: -22%; top: 50%; }
+  .backgroundShape,
+  .dotPattern { display: none; }
+  .mobileNavigation {
+    position: fixed;
+    z-index: 5;
+    top: 68px;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: min(82vw, 320px);
+    padding: 22px 14px;
+    overflow-y: auto;
+    background: #fff;
+    box-shadow: 16px 0 35px rgba(26, 54, 91, .16);
+    visibility: hidden;
+    transform: translateX(-100%);
+    transition: transform .3s ease, visibility 0s linear .3s;
+  }
+  .menuOpen .mobileNavigation {
+    visibility: visible;
+    transform: translateX(0);
+    transition-delay: 0s;
+  }
+  .mobileNavLink {
+    min-height: 52px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 16px;
+    border-radius: 10px;
+    color: #52627c;
+    font-size: var(--text-base);
+    font-weight: 700;
+  }
+  .mobileNavLink svg { width: 21px; height: 21px; }
+  .mobileNavLink:hover,
+  .mobileActive { color: #087cf0; background: rgba(218, 237, 255, .82); }
+  .menuBackdrop {
+    position: fixed;
+    z-index: 4;
+    inset: 68px 0 0;
+    display: block;
+    padding: 0;
+    border: 0;
+    background: rgba(20, 39, 65, .28);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity .25s ease, visibility 0s linear .3s;
+  }
+  .menuOpen .menuBackdrop {
+    opacity: 1;
+    visibility: visible;
+    transition-delay: 0s;
+  }
 }
 
 @media (max-width: 430px) {
-  .logoLink { width: 112px; }
-  .navigation { margin-inline-start: 7px; }
-  .registerButton { padding-inline: 9px; }
+  .menuButton { width: 34px; height: 34px; margin-inline-end: 7px; }
+  .logoLink { width: 115px; }
+  .accountActions { gap: 8px; }
+  .loginButton { font-size: var(--text-xs); }
+  .registerButton { padding: 9px 10px; font-size: var(--text-xs); }
 }
