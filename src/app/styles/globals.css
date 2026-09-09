@@ -2,21 +2,68 @@
   box-sizing: border-box;
 }
 
-html {
-  min-width: 320px;
-  min-height: 100%;
-  background: var(--color-background);
-}
-
-body {
+html,
+body,
+#root {
   min-width: 320px;
   min-height: 100vh;
   margin: 0;
 }
 
+html {
+  font-size: 15px;
+  background: var(--color-background);
+}
+
+body,
 button,
-input {
+input,
+textarea,
+select {
+  font-family: var(--font-family-base);
+}
+
+body {
+  font-size: var(--text-base);
+  line-height: var(--line-height-base);
+}
+
+button,
+input,
+textarea,
+select {
   font: inherit;
+  font-size: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin-top: 0;
+}
+
+h1 {
+  font-size: var(--text-display);
+  line-height: var(--line-height-tight);
+}
+
+h2 {
+  font-size: var(--text-2xl);
+  line-height: var(--line-height-tight);
+}
+
+h3 {
+  font-size: var(--text-lg);
+  line-height: var(--line-height-tight);
+}
+
+small {
+  font-weight: var(--font-weight-medium);
 }
 
 button,
@@ -24,14 +71,7 @@ a {
   -webkit-tap-highlight-color: transparent;
 }
 
-button {
-  cursor: pointer;
-}
-
 a {
   color: inherit;
-}
-
-#root {
-  min-height: 100vh;
+  text-decoration: none;
 }

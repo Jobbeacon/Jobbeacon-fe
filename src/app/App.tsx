@@ -1,27 +1,51 @@
-import { ForgotPasswordPage } from '../features/auth/pages/ForgotPasswordPage'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import Header from '../shared/components/navigation/header/Header'
+import HomePage from '../features/home/pages/HomePage'
 import { LoginPage } from '../features/auth/pages/LoginPage'
 import { RegisterPage } from '../features/auth/pages/RegisterPage'
+import { ForgotPasswordPage } from '../features/auth/pages/ForgotPasswordPage'
 import { CandidateProfilePage } from '../features/candidate-profile/pages/CandidateProfilePage'
 import { AuthGuard } from './router/guards/AuthGuard'
 
-export function App() {
-  const path = window.location.pathname.replace(/\/$/, '')
-
-  if (path === '/register' || path === '/dang-ky') {
-    return <RegisterPage />
-  }
-
-  if (path === '/forgot-password' || path === '/quen-mat-khau') {
-    return <ForgotPasswordPage />
-  }
-
-  if (path === '/profile' || path === '/ho-so') {
-    return (
-      <AuthGuard>
-        <CandidateProfilePage />
-      </AuthGuard>
-    )
-  }
-
-  return <LoginPage />
+function MainLayout() {
+  return (
+    <>
+      <Header />
+      <HomePage />
+    </>
+  )
 }
+
+export function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<MainLayout />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/dang-ky" element={<RegisterPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/quen-mat-khau" element={<ForgotPasswordPage />} />
+        <Route
+          path="/profile"
+          element={
+            <AuthGuard>
+              <CandidateProfilePage />
+            </AuthGuard>
+          }
+        />
+        <Route
+          path="/ho-so"
+          element={
+            <AuthGuard>
+              <CandidateProfilePage />
+            </AuthGuard>
+          }
+        />
+        <Route path="*" element={<MainLayout />} />
+      </Routes>
+    </BrowserRouter>
+  )
+}
+
+export default App

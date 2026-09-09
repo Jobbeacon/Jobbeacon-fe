@@ -1,0 +1,257 @@
+.header {
+  position: fixed;
+  z-index: 20;
+  top: 0;
+  right: 0;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  background: linear-gradient(105deg, #fff 0%, #f9fcff 36%, #e8f4ff 68%, #cae3ff 100%);
+  box-shadow: 0 8px 24px rgba(31, 92, 151, .2);
+}
+
+.headerSpacer {
+  height: 75px;
+}
+
+.container {
+  position: relative;
+  z-index: 2;
+  width: min(1510px, calc(100% - 80px));
+  height: 75px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+}
+
+.backgroundShape {
+  position: absolute;
+  pointer-events: none;
+  border-radius: 50%;
+}
+
+.backgroundShapeOne {
+  width: clamp(34rem, 58vw, 72rem);
+  height: clamp(11rem, 19vw, 22rem);
+  right: 18%;
+  bottom: -145%;
+  background: rgba(184, 218, 255, .26);
+  transform: rotate(-8deg);
+}
+
+.backgroundShapeTwo {
+  width: clamp(28rem, 48vw, 60rem);
+  height: clamp(10rem, 18vw, 21rem);
+  right: -8%;
+  top: 42%;
+  background: rgba(166, 208, 255, .2);
+  transform: rotate(-13deg);
+}
+
+.dotPattern {
+  position: absolute;
+  top: 6%;
+  right: clamp(1.25rem, 4vw, 4.5rem);
+  width: clamp(3rem, 4.2vw, 4.25rem);
+  height: clamp(2rem, 3vw, 3rem);
+  opacity: .58;
+  background-image: radial-gradient(circle, rgba(255, 255, 255, .95) 2px, transparent 2.5px);
+  background-size: 14px 14px;
+}
+
+.logoLink {
+  width: 190px;
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  height: 100%;
+}
+
+.logoImage {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.menuButton,
+.mobileNavigation,
+.menuBackdrop {
+  display: none;
+}
+
+.navigation {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-inline-start: 54px;
+}
+
+.navLink {
+  min-height: 42px;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 0 16px;
+  border-radius: 30px;
+  color: #65738c;
+  font-size: var(--text-base);
+  font-weight: 700;
+  transition: color .2s ease, background .2s ease;
+}
+
+.navLink:hover,
+.navLink.active {
+  color: #087cf0;
+}
+
+.navLink.active {
+  background: rgba(218, 237, 255, .82);
+}
+
+.navIcon,
+.navIcon svg {
+  width: 21px;
+  height: 21px;
+}
+
+.navIcon svg {
+  fill: rgba(62, 91, 132, .12);
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.accountActions {
+  margin-inline-start: auto;
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+
+.loginButton {
+  color: #52627c;
+  font-size: var(--text-base);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.registerButton {
+  padding: 12px 22px;
+  border-radius: 9px;
+  color: #fff;
+  background: linear-gradient(135deg, #1688ff, #0865f3);
+  box-shadow: 0 12px 25px rgba(15, 111, 245, .24);
+  font-size: var(--text-base);
+  font-weight: 700;
+  white-space: nowrap;
+  transition: background .2s ease, transform .2s ease;
+}
+
+.registerButton:hover {
+  background: linear-gradient(135deg, #0878ed, #0558dc);
+  transform: translateY(-1px);
+}
+
+@media (max-width: 1100px) {
+  .container { width: calc(100% - 48px); height: 75px; }
+  .logoLink { width: 170px; }
+  .navigation { margin-inline-start: 28px; gap: 8px; }
+  .navLink { padding: 0 12px; }
+  .accountActions { gap: 14px; }
+  .registerButton { padding: 11px 17px; }
+  .backgroundShapeOne { right: 8%; }
+  .backgroundShapeTwo { right: -14%; }
+}
+
+@media (max-width: 760px) {
+  .header { overflow: visible; }
+  .container { width: calc(100% - 24px); height: 68px; }
+  .headerSpacer { height: 68px; }
+  .menuButton {
+    width: 38px;
+    height: 38px;
+    flex: 0 0 auto;
+    display: grid;
+    place-items: center;
+    margin-inline-end: 10px;
+    padding: 0;
+    border: 1px solid rgba(8, 124, 240, .2);
+    border-radius: 50%;
+    color: #087cf0;
+    background: rgba(255, 255, 255, .75);
+  }
+  .menuButton svg { width: 20px; height: 20px; }
+  .logoLink { width: 128px; }
+  .navigation { display: none; }
+  .accountActions { margin-inline-start: auto; gap: 12px; }
+  .searchButton, .divider { display: none; }
+  .loginButton { display: inline-flex; font-size: var(--text-sm); }
+  .registerButton { padding: 10px 13px; font-size: var(--text-sm); }
+  .backgroundShapeOne { width: 85vw; right: 10%; bottom: -95%; }
+  .backgroundShapeTwo { width: 78vw; right: -22%; top: 50%; }
+  .backgroundShape,
+  .dotPattern { display: none; }
+  .mobileNavigation {
+    position: fixed;
+    z-index: 5;
+    top: 68px;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: min(82vw, 320px);
+    padding: 22px 14px;
+    overflow-y: auto;
+    background: #fff;
+    box-shadow: 16px 0 35px rgba(26, 54, 91, .16);
+    visibility: hidden;
+    transform: translateX(-100%);
+    transition: transform .3s ease, visibility 0s linear .3s;
+  }
+  .menuOpen .mobileNavigation {
+    visibility: visible;
+    transform: translateX(0);
+    transition-delay: 0s;
+  }
+  .mobileNavLink {
+    min-height: 52px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 16px;
+    border-radius: 10px;
+    color: #52627c;
+    font-size: var(--text-base);
+    font-weight: 700;
+  }
+  .mobileNavLink svg { width: 21px; height: 21px; }
+  .mobileNavLink:hover,
+  .mobileActive { color: #087cf0; background: rgba(218, 237, 255, .82); }
+  .menuBackdrop {
+    position: fixed;
+    z-index: 4;
+    inset: 68px 0 0;
+    display: block;
+    padding: 0;
+    border: 0;
+    background: rgba(20, 39, 65, .28);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity .25s ease, visibility 0s linear .3s;
+  }
+  .menuOpen .menuBackdrop {
+    opacity: 1;
+    visibility: visible;
+    transition-delay: 0s;
+  }
+}
+
+@media (max-width: 430px) {
+  .menuButton { width: 34px; height: 34px; margin-inline-end: 7px; }
+  .logoLink { width: 115px; }
+  .accountActions { gap: 8px; }
+  .loginButton { font-size: var(--text-xs); }
+  .registerButton { padding: 9px 10px; font-size: var(--text-xs); }
+}
