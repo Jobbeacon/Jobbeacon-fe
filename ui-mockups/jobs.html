@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tìm việc · JobBeacon</title>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="page page--tint">
+
+<header class="site-header">
+  <div class="header-inner">
+    <button class="menu-btn" type="button" data-menu aria-label="Mở menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+    <a class="logo" href="index.html"><img src="assets/logo.svg" alt="JobBeacon"></a>
+    <nav class="nav">
+      <a class="nav-link is-active" href="jobs.html"><svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M3 13h18"/></svg> Việc làm</a>
+      <a class="nav-link" href="companies.html"><svg viewBox="0 0 24 24"><path d="M4 20V6a2 2 0 0 1 2-2h6v16"/><path d="M12 10h6a2 2 0 0 1 2 2v8"/><path d="M8 8h.01M8 12h.01M8 16h.01M16 14h.01M16 18h.01"/></svg> Công ty</a>
+    </nav>
+    <div class="header-actions">
+        <a class="btn-login" href="login.html">Đăng nhập</a>
+        <a class="btn-register" href="register.html">Đăng ký</a>
+        </div>
+  </div>
+</header>
+<nav class="mobile-nav" data-mobile-nav>
+  <a href="jobs.html">Việc làm</a>
+  <a href="companies.html">Công ty</a>
+  <a href="saved-jobs.html">Việc đã lưu</a>
+  <a href="job-alerts.html">Job Alert</a>
+  <a href="profile.html">Hồ sơ</a>
+  <a href="login.html">Đăng nhập</a>
+</nav>
+<div class="header-spacer"></div>
+
+
+<section class="page-hero">
+  <div class="breadcrumb"><a href="index.html">Trang chủ</a> · Việc làm</div>
+  <h1>Tìm kiếm việc làm</h1>
+  <p>Tổng hợp tin tuyển dụng từ TopCV, ITviec, VietnamWorks và nhiều nguồn khác. JobBeacon chuẩn hóa dữ liệu và gộp tin trùng.</p>
+  <form class="search-bar" action="jobs.html">
+    <label><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3-3"/></svg> <input value="Java Developer" placeholder="Vị trí, kỹ năng, công ty"></label>
+    <label><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.2"/></svg> <input value="Hà Nội" placeholder="Địa điểm"></label>
+    <button type="submit">Tìm việc</button>
+  </form>
+</section>
+
+<div class="jobs-layout">
+  <form class="filter-card">
+    <h2>Bộ lọc <button type="button" data-reset-filters>Xóa lọc</button></h2>
+    <div class="filter-group">
+      <h3>Địa điểm</h3>
+      <label class="filter-option"><input type="checkbox" checked> Hà Nội <span>1.240</span></label>
+      <label class="filter-option"><input type="checkbox"> Hồ Chí Minh <span>2.180</span></label>
+      <label class="filter-option"><input type="checkbox"> Đà Nẵng <span>310</span></label>
+      <label class="filter-option"><input type="checkbox"> Remote <span>420</span></label>
+    </div>
+    <div class="filter-group">
+      <h3>Ngành nghề</h3>
+      <label class="filter-option"><input type="checkbox" checked> Công nghệ <span>2.430</span></label>
+      <label class="filter-option"><input type="checkbox"> Tài chính <span>1.250</span></label>
+      <label class="filter-option"><input type="checkbox"> Marketing <span>840</span></label>
+    </div>
+    <div class="filter-group">
+      <h3>Kỹ năng</h3>
+      <label class="filter-option"><input type="checkbox" checked> Java <span>640</span></label>
+      <label class="filter-option"><input type="checkbox"> Spring <span>210</span></label>
+      <label class="filter-option"><input type="checkbox"> SQL <span>880</span></label>
+      <label class="filter-option"><input type="checkbox"> ReactJS <span>390</span></label>
+    </div>
+    <div class="filter-group">
+      <h3>Mức lương (triệu)</h3>
+      <div class="salary-row">
+        <input placeholder="Từ" value="20">
+        <input placeholder="Đến" value="45">
+      </div>
+    </div>
+    <div class="filter-group">
+      <h3>Kinh nghiệm</h3>
+      <label class="filter-option"><input type="checkbox"> Chưa có KN</label>
+      <label class="filter-option"><input type="checkbox" checked> 1 - 3 năm</label>
+      <label class="filter-option"><input type="checkbox"> 3 - 5 năm</label>
+      <label class="filter-option"><input type="checkbox"> Trên 5 năm</label>
+    </div>
+    <div class="filter-group">
+      <h3>Loại hình</h3>
+      <label class="filter-option"><input type="checkbox" checked> Full-time</label>
+      <label class="filter-option"><input type="checkbox"> Part-time</label>
+      <label class="filter-option"><input type="checkbox"> Hợp đồng</label>
+      <label class="filter-option"><input type="checkbox"> Internship</label>
+    </div>
+    <div class="filter-group">
+      <h3>Ngày đăng</h3>
+      <label class="filter-option"><input type="checkbox"> 24 giờ qua</label>
+      <label class="filter-option"><input type="checkbox" checked> 7 ngày qua</label>
+      <label class="filter-option"><input type="checkbox"> 30 ngày qua</label>
+    </div>
+    <div class="filter-group">
+      <h3>Nguồn tuyển dụng</h3>
+      <label class="filter-option"><input type="checkbox" checked> TopCV</label>
+      <label class="filter-option"><input type="checkbox" checked> ITviec</label>
+      <label class="filter-option"><input type="checkbox"> VietnamWorks</label>
+      <label class="filter-option"><input type="checkbox"> CareerViet</label>
+    </div>
+  </form>
+
+  <div>
+    <div class="results-head">
+      <h2>128 việc làm cho “Java Developer” tại Hà Nội</h2>
+      <select>
+        <option>Mới nhất</option>
+        <option>Phù hợp nhất</option>
+        <option>Lương cao đến thấp</option>
+      </select>
+    </div>
+    <div class="active-filters">
+      <span class="chip">Java</span>
+      <span class="chip">Hà Nội</span>
+      <span class="chip">1 - 3 năm</span>
+      <span class="chip">Full-time</span>
+      <a class="chip" href="job-alerts.html">+ Tạo Job Alert từ bộ lọc này</a>
+    </div>
+    
+<article class="job-row">
+  <div class="company-mark">FPT</div>
+  <div>
+    <h3><a href="job-detail.html">Java Developer</a></h3>
+    <p class="company"><a href="company-detail.html">FPT Software</a></p>
+    <div class="job-facts">
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.2"/></svg> Hà Nội</span>
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7H14a3.5 3.5 0 0 1 0 7H6"/></svg> 25 - 35 triệu</span>
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg> Full-time</span>
+    </div>
+    <div class="tags" style="min-height:auto;margin-top:10px"><span class='pill'>Java</span><span class='pill'>Spring</span><span class='pill'>SQL</span></div>
+    <div class="dup-note">Cùng tin này còn trên <a href="#">ITviec</a> · JobBeacon đã gộp trùng</div>
+  </div>
+  <div class="job-row-side">
+    <span class="source source--topcv">Nguồn: TopCV</span>
+    <span class="meta">2 giờ trước</span>
+    <button class="icon-btn" data-save type="button" aria-label="Lưu việc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.8 8.6a5 5 0 0 0-8.8-3.4L12 5.4l-.99-.2A5 5 0 0 0 3.2 8.6c0 6 8.8 11 8.8 11s8.8-5 8.8-11z"/></svg></button>
+  </div>
+</article>
+
+    
+<article class="job-row">
+  <div class="company-mark">ABC</div>
+  <div>
+    <h3><a href="job-detail.html">Backend Engineer</a></h3>
+    <p class="company"><a href="company-detail.html">ABC Technology</a></p>
+    <div class="job-facts">
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.2"/></svg> Hồ Chí Minh</span>
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7H14a3.5 3.5 0 0 1 0 7H6"/></svg> 30 - 45 triệu</span>
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg> Full-time</span>
+    </div>
+    <div class="tags" style="min-height:auto;margin-top:10px"><span class='pill'>Java</span><span class='pill'>Kafka</span><span class='pill'>Redis</span></div>
+    
+  </div>
+  <div class="job-row-side">
+    <span class="source source--itviec">Nguồn: ITviec</span>
+    <span class="meta">2 giờ trước</span>
+    <button class="icon-btn" data-save type="button" aria-label="Lưu việc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.8 8.6a5 5 0 0 0-8.8-3.4L12 5.4l-.99-.2A5 5 0 0 0 3.2 8.6c0 6 8.8 11 8.8 11s8.8-5 8.8-11z"/></svg></button>
+  </div>
+</article>
+
+    
+<article class="job-row">
+  <div class="company-mark">S</div>
+  <div>
+    <h3><a href="job-detail.html">DevOps Engineer</a></h3>
+    <p class="company"><a href="company-detail.html">Shopee</a></p>
+    <div class="job-facts">
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.2"/></svg> Hà Nội</span>
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7H14a3.5 3.5 0 0 1 0 7H6"/></svg> 40 - 60 triệu</span>
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg> Full-time</span>
+    </div>
+    <div class="tags" style="min-height:auto;margin-top:10px"><span class='pill'>AWS</span><span class='pill'>Kubernetes</span><span class='pill'>CI/CD</span></div>
+    
+  </div>
+  <div class="job-row-side">
+    <span class="source source--careerviet">Nguồn: CareerViet</span>
+    <span class="meta">1 ngày trước</span>
+    <button class="icon-btn" data-save type="button" aria-label="Lưu việc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.8 8.6a5 5 0 0 0-8.8-3.4L12 5.4l-.99-.2A5 5 0 0 0 3.2 8.6c0 6 8.8 11 8.8 11s8.8-5 8.8-11z"/></svg></button>
+  </div>
+</article>
+
+    
+<article class="job-row">
+  <div class="company-mark">T</div>
+  <div>
+    <h3><a href="job-detail.html">Frontend Developer</a></h3>
+    <p class="company"><a href="company-detail.html">TechViet</a></p>
+    <div class="job-facts">
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.2"/></svg> Hà Nội</span>
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7H14a3.5 3.5 0 0 1 0 7H6"/></svg> 20 - 35 triệu</span>
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg> Full-time</span>
+    </div>
+    <div class="tags" style="min-height:auto;margin-top:10px"><span class='pill'>ReactJS</span><span class='pill'>TypeScript</span><span class='pill'>CSS</span></div>
+    
+  </div>
+  <div class="job-row-side">
+    <span class="source source--vnworks">Nguồn: VietnamWorks</span>
+    <span class="meta">3 giờ trước</span>
+    <button class="icon-btn" data-save type="button" aria-label="Lưu việc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.8 8.6a5 5 0 0 0-8.8-3.4L12 5.4l-.99-.2A5 5 0 0 0 3.2 8.6c0 6 8.8 11 8.8 11s8.8-5 8.8-11z"/></svg></button>
+  </div>
+</article>
+
+    
+<article class="job-row">
+  <div class="company-mark">TIK</div>
+  <div>
+    <h3><a href="job-detail.html">Mobile Developer</a></h3>
+    <p class="company"><a href="company-detail.html">TikTok Vietnam</a></p>
+    <div class="job-facts">
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.2"/></svg> Hà Nội</span>
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7H14a3.5 3.5 0 0 1 0 7H6"/></svg> 35 - 55 triệu</span>
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg> Full-time</span>
+    </div>
+    <div class="tags" style="min-height:auto;margin-top:10px"><span class='pill'>Kotlin</span><span class='pill'>Swift</span><span class='pill'>Flutter</span></div>
+    
+  </div>
+  <div class="job-row-side">
+    <span class="source source--itviec">Nguồn: ITviec</span>
+    <span class="meta">2 ngày trước</span>
+    <button class="icon-btn" data-save type="button" aria-label="Lưu việc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.8 8.6a5 5 0 0 0-8.8-3.4L12 5.4l-.99-.2A5 5 0 0 0 3.2 8.6c0 6 8.8 11 8.8 11s8.8-5 8.8-11z"/></svg></button>
+  </div>
+</article>
+
+    
+<article class="job-row">
+  <div class="company-mark">VN</div>
+  <div>
+    <h3><a href="job-detail.html">QA Engineer</a></h3>
+    <p class="company"><a href="company-detail.html">VNG</a></p>
+    <div class="job-facts">
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.2"/></svg> Hồ Chí Minh</span>
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7H14a3.5 3.5 0 0 1 0 7H6"/></svg> 18 - 28 triệu</span>
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg> Full-time</span>
+    </div>
+    <div class="tags" style="min-height:auto;margin-top:10px"><span class='pill'>Selenium</span><span class='pill'>API Test</span><span class='pill'>Jira</span></div>
+    
+  </div>
+  <div class="job-row-side">
+    <span class="source source--topcv">Nguồn: TopCV</span>
+    <span class="meta">1 ngày trước</span>
+    <button class="icon-btn" data-save type="button" aria-label="Lưu việc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.8 8.6a5 5 0 0 0-8.8-3.4L12 5.4l-.99-.2A5 5 0 0 0 3.2 8.6c0 6 8.8 11 8.8 11s8.8-5 8.8-11z"/></svg></button>
+  </div>
+</article>
+
+    <div class="pagination">
+      <span class="is-active">1</span>
+      <a href="#">2</a>
+      <a href="#">3</a>
+      <a href="#">›</a>
+    </div>
+  </div>
+</div>
+
+
+<footer class="site-footer">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <img src="assets/logo.svg" alt="JobBeacon">
+      <p>Kết nối cơ hội, kiến tạo tương lai</p>
+    </div>
+    <div>
+      <strong>Dành cho ứng viên</strong>
+      <a href="jobs.html">Tìm việc làm</a>
+      <a href="profile.html">Tạo hồ sơ</a>
+      <a href="job-alerts.html">Cẩm nang nghề nghiệp</a>
+    </div>
+    <div>
+      <strong>Dành cho nhà tuyển dụng</strong>
+      <a href="#">Đăng tin tuyển dụng</a>
+      <a href="#">Giải pháp tuyển dụng</a>
+      <a href="#">Liên hệ</a>
+    </div>
+    <div>
+      <strong>Về JobBeacon</strong>
+      <a href="#">Giới thiệu</a>
+      <a href="#">Blog</a>
+      <a href="#">Điều khoản</a>
+    </div>
+    <div>
+      <strong>Kết nối với chúng tôi</strong>
+      <div class="footer-socials"><span>f</span><span>in</span><span>▶</span><span>X</span></div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 JobBeacon. All rights reserved.</span>
+    <span>Việc tốt hơn, gần hơn mỗi ngày ♥</span>
+  </div>
+</footer>
+
+
+<div class="mock-index">
+  <details>
+    <summary>Mockup · 10 màn</summary>
+    <a href="index.html" class="">Trang chủ</a>
+<a href="jobs.html" class="is-here">Tìm việc</a>
+<a href="job-detail.html" class="">Chi tiết việc làm</a>
+<a href="companies.html" class="">Danh sách công ty</a>
+<a href="company-detail.html" class="">Chi tiết công ty</a>
+<a href="saved-jobs.html" class="">Việc đã lưu</a>
+<a href="job-alerts.html" class="">Job Alert</a>
+<a href="profile.html" class="">Hồ sơ</a>
+<a href="login.html" class="">Đăng nhập</a>
+<a href="register.html" class="">Đăng ký</a>
+  </details>
+</div>
+
+<script src="js/app.js"></script>
+</body>
+</html>
