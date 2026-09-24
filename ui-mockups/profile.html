@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hồ sơ · JobBeacon</title>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="page page--tint">
+
+<header class="site-header">
+  <div class="header-inner">
+    <button class="menu-btn" type="button" data-menu aria-label="Mở menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+    <a class="logo" href="index.html"><img src="assets/logo.svg" alt="JobBeacon"></a>
+    <nav class="nav">
+      <a class="nav-link" href="jobs.html"><svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M3 13h18"/></svg> Việc làm</a>
+      <a class="nav-link" href="companies.html"><svg viewBox="0 0 24 24"><path d="M4 20V6a2 2 0 0 1 2-2h6v16"/><path d="M12 10h6a2 2 0 0 1 2 2v8"/><path d="M8 8h.01M8 12h.01M8 16h.01M16 14h.01M16 18h.01"/></svg> Công ty</a>
+    </nav>
+    <div class="header-actions">
+        <div class="user-chip">
+          <div class="avatar">MH</div>
+          <strong>Minh Hiếu</strong>
+          <div class="user-menu">
+            <a href="profile.html">Hồ sơ của tôi</a>
+            <a href="saved-jobs.html">Việc làm đã lưu</a>
+            <a href="job-alerts.html">Job Alert</a>
+            <a href="index.html">Đăng xuất</a>
+          </div>
+        </div>
+        </div>
+  </div>
+</header>
+<nav class="mobile-nav" data-mobile-nav>
+  <a href="jobs.html">Việc làm</a>
+  <a href="companies.html">Công ty</a>
+  <a href="saved-jobs.html">Việc đã lưu</a>
+  <a href="job-alerts.html">Job Alert</a>
+  <a href="profile.html">Hồ sơ</a>
+  <a href="login.html">Đăng nhập</a>
+</nav>
+<div class="header-spacer"></div>
+
+
+<section class="page-hero">
+  <div class="breadcrumb"><a href="index.html">Trang chủ</a> · Hồ sơ</div>
+  <h1>Hồ sơ của bạn</h1>
+  <p>Skill, kinh nghiệm và vị trí mong muốn sẽ dùng cho gợi ý việc làm sau này.</p>
+</section>
+<section class="section">
+  <div class="profile-grid">
+    <aside class="panel profile-card">
+      <div class="profile-summary">
+        <div class="avatar xl">MH</div>
+        <div>
+          <h2>Minh Hiếu</h2>
+          <p style="color:#687d98;margin-top:4px">hieu.minh@email.com</p>
+          <span class="badge-new" style="display:inline-block;margin-top:8px">Đã xác thực</span>
+        </div>
+      </div>
+      <hr style="border:0;border-top:1px solid #eef2f6;margin:22px 0">
+      <p style="color:#5b6f86;line-height:1.6">Backend developer, quan tâm Java/Spring và các vị trí data engineer tại Hà Nội.</p>
+    </aside>
+    <form class="panel profile-card">
+      <div class="field"><label>Vị trí mong muốn</label><input value="Java Developer / Backend Engineer"></div>
+      <div class="field"><label>Địa điểm làm việc</label><input value="Hà Nội, Hybrid"></div>
+      <div class="field"><label>Mức lương kỳ vọng</label><input value="25 - 35 triệu"></div>
+      <div class="field"><label>Kinh nghiệm</label><select><option>1 - 3 năm</option><option>3 - 5 năm</option></select></div>
+      <div class="field"><label>Kỹ năng</label>
+        <div class="skill-editor">
+          <span class="pill">Java ×</span>
+          <span class="pill">Spring Boot ×</span>
+          <span class="pill">SQL ×</span>
+          <span class="pill">Redis ×</span>
+          <input placeholder="Thêm kỹ năng" style="min-height:34px;width:140px">
+        </div>
+      </div>
+      <div class="field"><label>CV</label><input type="text" value="CV_MinhHieu_Java.pdf"></div>
+      <div class="field"><label>Giới thiệu ngắn</label><textarea>Backend developer 2 năm, từng làm hệ thống ngân hàng lõi với Java, Spring Boot và Kafka.</textarea></div>
+      <button class="btn-primary" type="button">Lưu hồ sơ</button>
+    </form>
+  </div>
+</section>
+
+
+<footer class="site-footer">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <img src="assets/logo.svg" alt="JobBeacon">
+      <p>Kết nối cơ hội, kiến tạo tương lai</p>
+    </div>
+    <div>
+      <strong>Dành cho ứng viên</strong>
+      <a href="jobs.html">Tìm việc làm</a>
+      <a href="profile.html">Tạo hồ sơ</a>
+      <a href="job-alerts.html">Cẩm nang nghề nghiệp</a>
+    </div>
+    <div>
+      <strong>Dành cho nhà tuyển dụng</strong>
+      <a href="#">Đăng tin tuyển dụng</a>
+      <a href="#">Giải pháp tuyển dụng</a>
+      <a href="#">Liên hệ</a>
+    </div>
+    <div>
+      <strong>Về JobBeacon</strong>
+      <a href="#">Giới thiệu</a>
+      <a href="#">Blog</a>
+      <a href="#">Điều khoản</a>
+    </div>
+    <div>
+      <strong>Kết nối với chúng tôi</strong>
+      <div class="footer-socials"><span>f</span><span>in</span><span>▶</span><span>X</span></div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 JobBeacon. All rights reserved.</span>
+    <span>Việc tốt hơn, gần hơn mỗi ngày ♥</span>
+  </div>
+</footer>
+
+
+<div class="mock-index">
+  <details>
+    <summary>Mockup · 10 màn</summary>
+    <a href="index.html" class="">Trang chủ</a>
+<a href="jobs.html" class="">Tìm việc</a>
+<a href="job-detail.html" class="">Chi tiết việc làm</a>
+<a href="companies.html" class="">Danh sách công ty</a>
+<a href="company-detail.html" class="">Chi tiết công ty</a>
+<a href="saved-jobs.html" class="">Việc đã lưu</a>
+<a href="job-alerts.html" class="">Job Alert</a>
+<a href="profile.html" class="is-here">Hồ sơ</a>
+<a href="login.html" class="">Đăng nhập</a>
+<a href="register.html" class="">Đăng ký</a>
+  </details>
+</div>
+
+<script src="js/app.js"></script>
+</body>
+</html>
