@@ -10,6 +10,7 @@ export type ApiErrorBody = {
   error?: string
   code?: string | number
   details?: unknown
+  data?: { code?: string; detail?: string } | null
 }
 
 export type AccessTokenProvider = (forceRefresh?: boolean) => Promise<string | null>

@@ -1,5 +1,6 @@
 import { Clock3, Heart, MapPin } from "lucide-react";
 import type { HomeJob } from "../types/home.types";
+import { Link } from "react-router-dom";
 import styles from "./LatestJobs.module.css";
 
 export default function LatestJobs({ jobs }: { jobs: HomeJob[] }) {
@@ -16,7 +17,9 @@ export default function LatestJobs({ jobs }: { jobs: HomeJob[] }) {
               <span className={styles.logo}>{job.logo}</span>
               <span className={styles.new}>Mới</span>
             </div>
-            <h3>{job.title}</h3>
+            <h3>
+              <Link to={`/jobs/${job.id}`}>{job.title}</Link>
+            </h3>
             <p>{job.company}</p>
             <ul>
               <li>

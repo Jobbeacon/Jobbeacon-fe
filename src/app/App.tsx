@@ -1,6 +1,8 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Header from '../shared/components/navigation/header/Header'
 import HomePage from '../features/home/pages/HomePage'
+import HomeFooter from '../features/home/components/HomeFooter'
+import { JobDetailPage } from '../features/jobs/pages/JobDetailPage'
 import { LoginPage } from '../features/auth/pages/LoginPage'
 import { RegisterPage } from '../features/auth/pages/RegisterPage'
 import { ForgotPasswordPage } from '../features/auth/pages/ForgotPasswordPage'
@@ -16,11 +18,22 @@ function MainLayout() {
   )
 }
 
+function JobDetailLayout() {
+  return (
+    <>
+      <Header />
+      <JobDetailPage />
+      <HomeFooter />
+    </>
+  )
+}
+
 export function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<MainLayout />} />
+        <Route path="/jobs/:jobId" element={<JobDetailLayout />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/dang-ky" element={<RegisterPage />} />

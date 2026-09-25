@@ -86,7 +86,11 @@ async function parseResponse(response: Response) {
 function toApiError(response: Response, body: unknown) {
   const errorBody =
     typeof body === 'object' && body !== null ? (body as ApiErrorBody) : undefined
+  // Backend bọc lỗi trong ResponseGeneral: { status, message, data: { code, detail } }
+  const errorData =
+    typeof errorBody?.data === 'object' && errorBody.data !== null ? errorBody.data : undefined
   const message =
+    errorData?.detail ??
     errorBody?.message ??
     errorBody?.error ??
     (response.status === 401
