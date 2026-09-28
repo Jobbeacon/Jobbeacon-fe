@@ -1,4 +1,5 @@
 .card {
+  --logo-size: 72px;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -12,20 +13,21 @@
 
 .top {
   display: flex;
+  gap: 12px;
   align-items: flex-start;
-  justify-content: space-between;
+  margin-bottom: 12px;
 }
 
 .logo {
   display: grid;
   flex: none;
   place-items: center;
-  width: 42px;
-  height: 42px;
-  border-radius: 7px;
+  width: var(--logo-size);
+  height: var(--logo-size);
+  border-radius: 10px;
   color: #fff;
   background: linear-gradient(135deg, #1288ed, #123e71);
-  font-size: 12px;
+  font-size: 16px;
   font-weight: 800;
 }
 
@@ -50,10 +52,21 @@
   font-weight: 600;
 }
 
+/* Tiêu đề cao tối đa bằng logo (3 dòng x 24px), dư thì cắt "…"; tên đầy đủ nằm trong title để hover. */
 .card h3 {
-  margin: 14px 0 4px;
+  display: -webkit-box;
+  flex: 1;
+  min-width: 0;
+  max-height: var(--logo-size);
+  margin: 0;
+  overflow: hidden;
   color: #142a47;
   font-size: var(--text-lg);
+  line-height: calc(var(--logo-size) / 3);
+  overflow-wrap: anywhere;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
 }
 
 .card h3 a {
@@ -133,6 +146,10 @@
   display: inline-flex;
   align-items: center;
   gap: 5px;
+}
+
+.foot .badgeNew {
+  margin-left: 4px;
 }
 
 .foot svg {

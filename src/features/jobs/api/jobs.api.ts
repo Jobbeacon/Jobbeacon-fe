@@ -82,15 +82,16 @@ export async function getJobDetail(jobId: string, signal?: AbortSignal) {
   return toJobDetail(response.data)
 }
 
-// Backend chưa có API gợi ý việc tương tự, tạm lấy các tin mới nhất (bỏ tin đang xem).
-export async function getSimilarJobs(jobId: string, signal?: AbortSignal) {
-  const params = new URLSearchParams({ page: '1', size: String(SIMILAR_JOBS_LIMIT + 1) })
+export async function getLatestJobs(limit: number, signal?: AbortSignal) {
+  const params = new URLSearchParams({ page: '1', size: String(limit) })
   const response = await apiClient.get<ApiResponse<PageApiDto<JobSummaryApiDto>>>(
     `${JOBS_ENDPOINT}?${params}`,
     { signal, authenticated: false },
   )
-  return response.data.content
-    .filter((job) => job.id !== jobId)
-    .slice(0, SIMILAR_JOBS_LIMIT)
-    .map(toJobSummary)
+  return response.data.content.map(toJobSummary)
+}
+
+export async function getSimilarJobs(jobId: string, signal?: AbortSignal) {
+  const jobs = await getLatestJobs(SIMILAR_JOBS_LIMIT + 1, signal)
+  return jobs.filter((job) => job.id !== jobId).slice(0, SIMILAR_JOBS_LIMIT)
 }

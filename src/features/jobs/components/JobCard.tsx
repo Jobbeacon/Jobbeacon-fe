@@ -17,11 +17,12 @@ export function JobCard({ job }: { job: JobSummary }) {
     <article className={styles.card}>
       <div className={styles.top}>
         <CompanyLogo className={styles.logo} name={job.companyName} logoUrl={job.companyLogoUrl} />
-        {isNew ? <span className={styles.badgeNew}>Mới</span> : null}
+        <h3>
+          <Link to={`/jobs/${job.id}`} title={job.title}>
+            {job.title}
+          </Link>
+        </h3>
       </div>
-      <h3>
-        <Link to={`/jobs/${job.id}`}>{job.title}</Link>
-      </h3>
       <p className={styles.company}>{job.companyName}</p>
       <ul className={styles.meta}>
         {job.location.length > 0 ? (
@@ -50,6 +51,7 @@ export function JobCard({ job }: { job: JobSummary }) {
               {formatRelativeTime(job.postedDate)}
             </>
           ) : null}
+          {isNew ? <span className={styles.badgeNew}>Mới</span> : null}
         </span>
         <button
           className={`${styles.saveButton} ${isSaved ? styles.saved : ''}`}

@@ -1,11 +1,4 @@
-import type { HomeCategory, HomeJob } from '../types/home.types'
-
-const jobs: HomeJob[] = [
-  { id: 1, logo: 'FPT', title: 'Java Developer', company: 'FPT Software', location: 'Hà Nội', salary: '25 - 35 triệu', skills: ['Java', 'Spring', 'SQL'] },
-  { id: 2, logo: 'ABC', title: 'Backend Engineer', company: 'ABC Technology', location: 'Hồ Chí Minh', salary: '30 - 45 triệu', skills: ['Java', 'Kafka', 'Redis'] },
-  { id: 3, logo: 'T', title: 'Frontend Developer', company: 'TechViet', location: 'Hà Nội', salary: '20 - 35 triệu', skills: ['ReactJS', 'TypeScript', 'CSS'] },
-  { id: 4, logo: 'V', title: 'Data Analyst', company: 'Viettel Digital', location: 'Hồ Chí Minh', salary: '20 - 30 triệu', skills: ['SQL', 'Python', 'Data Visualization'] },
-]
+import type { HomeCategory } from '../types/home.types'
 
 const categories: HomeCategory[] = [
   { name: 'Công nghệ', count: 2430, icon: 'monitor' },
@@ -19,5 +12,5 @@ const categories: HomeCategory[] = [
 ]
 
 export function useHomeData() {
-  return { jobs, categories }
+  return { categories }
 }
