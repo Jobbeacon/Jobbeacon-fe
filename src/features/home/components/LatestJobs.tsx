@@ -1,49 +1,48 @@
-import { Clock3, Heart, MapPin } from "lucide-react";
-import type { HomeJob } from "../types/home.types";
 import { Link } from "react-router-dom";
+import { JobCard } from "../../jobs/components/JobCard";
+import { useLatestJobs } from "../hooks/useLatestJobs";
 import styles from "./LatestJobs.module.css";
 
-export default function LatestJobs({ jobs }: { jobs: HomeJob[] }) {
+const LATEST_JOBS_LIMIT = 4;
+
+export default function LatestJobs() {
+  const { jobs, isLoading, error, retry } = useLatestJobs(LATEST_JOBS_LIMIT);
+
   return (
     <section className={styles.section}>
       <div className={styles.heading}>
         <h2>Việc làm mới nhất</h2>
-        <a href="/jobs">Xem tất cả việc làm →</a>
+        <Link to="/jobs">Xem tất cả việc làm →</Link>
       </div>
-      <div className={styles.grid}>
-        {jobs.map((job) => (
-          <article className={styles.card} key={job.id}>
-            <div className={styles.cardTop}>
-              <span className={styles.logo}>{job.logo}</span>
-              <span className={styles.new}>Mới</span>
-            </div>
-            <h3>
-              <Link to={`/jobs/${job.id}`}>{job.title}</Link>
-            </h3>
-            <p>{job.company}</p>
-            <ul>
-              <li>
-                <MapPin />
-                {job.location}
-              </li>
-              <li>₫ {job.salary}</li>
-            </ul>
-            <div className={styles.tags}>
-              {job.skills.map((skill) => (
-                <span key={skill}>{skill}</span>
-              ))}
-            </div>
-            <footer>
-              <span>
-                <Clock3 />2 giờ trước
-              </span>
-              <button aria-label="Lưu việc làm">
-                <Heart />
-              </button>
-            </footer>
-          </article>
-        ))}
-      </div>
+
+      {isLoading ? (
+        <div className={styles.grid} aria-busy="true" aria-label="Đang tải việc làm mới nhất">
+          {Array.from({ length: LATEST_JOBS_LIMIT }, (_, index) => (
+            <div className={styles.skeleton} key={index} />
+          ))}
+        </div>
+      ) : null}
+
+      {error ? (
+        <p className={styles.state} role="alert">
+          {error}
+          <button type="button" onClick={retry}>
+            Thử lại
+          </button>
+        </p>
+      ) : null}
+
+      {!isLoading && !error && jobs.length === 0 ? (
+        <p className={styles.state}>Chưa có việc làm nào.</p>
+      ) : null}
+
+      {jobs.length > 0 ? (
+        <div className={styles.grid}>
+          {jobs.map((job) => (
+            <JobCard key={job.id} job={job} />
+          ))}
+        </div>
+      ) : null}
     </section>
   );
 }
