@@ -30,6 +30,7 @@
 }
 
 .card {
+  position: relative;
   padding: 18px;
   border: 1px solid #e5ebf2;
   border-radius: 8px;
@@ -198,4 +199,24 @@
 
 .new {
   font-weight: var(--font-weight-semibold);
+}
+
+.card h3 a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.card h3 a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+.card h3 a:hover {
+  color: #087cf0;
+}
+
+.card footer button {
+  position: relative;
+  z-index: 1;
 }
