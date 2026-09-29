@@ -1,0 +1,89 @@
+.filterCard {
+  position: sticky;
+  top: 92px;
+  padding: 18px 16px 20px;
+  border: 1px solid #e5ebf2;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 5px 14px rgba(30, 68, 107, 0.04);
+}
+
+.filterCard h2 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 0 6px;
+  color: #0b2b59;
+  font-size: 1.05rem;
+}
+
+.filterCard h2 button {
+  padding: 0;
+  border: 0;
+  color: #087cf0;
+  background: none;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.group {
+  min-width: 0;
+  margin: 0;
+  padding: 14px 2px 4px;
+  border: 0;
+  border-top: 1px solid #eef2f6;
+}
+
+.group legend {
+  float: left;
+  width: 100%;
+  margin-bottom: 4px;
+  padding: 0;
+  color: #7b8da3;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.option {
+  display: flex;
+  clear: both;
+  gap: 8px;
+  align-items: center;
+  margin: 8px 0;
+  color: #3e536c;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.option input {
+  accent-color: #087cf0;
+}
+
+.group:disabled .option {
+  color: #a3b1c2;
+  cursor: not-allowed;
+}
+
+.upcomingNote {
+  margin: 12px 2px 0;
+  padding-top: 12px;
+  border-top: 1px solid #eef2f6;
+  color: #93a3b5;
+  font-size: 0.78rem;
+  font-style: italic;
+}
+
+.upcomingNote + .group {
+  border-top: 0;
+}
+
+@media (max-width: 1100px) {
+  .filterCard {
+    position: static;
+  }
+}

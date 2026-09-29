@@ -1,8 +1,12 @@
 import { apiClient } from '../../../shared/api/api-client'
 import type { ApiResponse } from '../../../shared/types/api.types'
 import type {
+  CategoryApiDto,
+  JobCategory,
   JobDetail,
   JobDetailApiDto,
+  JobSearchParams,
+  JobSearchResult,
   JobSource,
   JobSourceApiDto,
   JobSummary,
@@ -31,6 +35,15 @@ function toSource(source: JobSourceApiDto): JobSource {
     name: sourceNames[domain] ?? domain,
     domain,
     url: source.job_url,
+  }
+}
+
+function toCategory(category: CategoryApiDto): JobCategory {
+  return {
+    id: category.id,
+    name: category.name,
+    level: category.level,
+    children: (category.children ?? []).map(toCategory),
   }
 }
 
@@ -69,7 +82,7 @@ function toJobDetail(job: JobDetailApiDto): JobDetail {
     employmentType: job.employment_type,
     expiredDate: job.expired_date,
     salaryPeriod: job.salary_period,
-    categories: job.categories ?? [],
+    categories: (job.categories ?? []).map(toCategory),
     sources: (job.job_sources ?? []).map(toSource),
   }
 }
@@ -82,13 +95,23 @@ export async function getJobDetail(jobId: string, signal?: AbortSignal) {
   return toJobDetail(response.data)
 }
 
-export async function getLatestJobs(limit: number, signal?: AbortSignal) {
-  const params = new URLSearchParams({ page: '1', size: String(limit) })
+export async function searchJobs(
+  { keyword, page, size }: JobSearchParams,
+  signal?: AbortSignal,
+): Promise<JobSearchResult> {
+  const params = new URLSearchParams({ page: String(page), size: String(size) })
+  if (keyword.trim()) params.set('keyword', keyword.trim())
+
   const response = await apiClient.get<ApiResponse<PageApiDto<JobSummaryApiDto>>>(
     `${JOBS_ENDPOINT}?${params}`,
     { signal, authenticated: false },
   )
-  return response.data.content.map(toJobSummary)
+  return { jobs: response.data.content.map(toJobSummary), total: response.data.amount }
+}
+
+export async function getLatestJobs(limit: number, signal?: AbortSignal) {
+  const { jobs } = await searchJobs({ keyword: '', page: 1, size: limit }, signal)
+  return jobs
 }
 
 export async function getSimilarJobs(jobId: string, signal?: AbortSignal) {
