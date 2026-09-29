@@ -69,13 +69,35 @@
 }
 
 .company {
-  margin: 6px 0 10px;
+  margin: 6px 0 6px;
   color: #142a47;
   font-weight: 500;
 }
 
 .company a:hover {
   color: #087cf0;
+}
+
+.categoryPath {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  margin: 0 0 10px;
+  padding: 0;
+  list-style: none;
+  color: #687d98;
+  font-size: var(--text-sm);
+}
+
+.categoryPath li + li::before {
+  content: "•";
+  margin: 0 8px;
+  color: #142a47;
+}
+
+.categoryPath li:last-child {
+  color: #142a47;
+  font-weight: 600;
 }
 
 .companyMark {

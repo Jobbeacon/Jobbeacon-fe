@@ -6,6 +6,9 @@ import {
   Star,
   Users,
 } from "lucide-react";
+import { useState } from "react";
+import type { FormEvent } from "react";
+import { useNavigate } from "react-router-dom";
 import heroImage from "../../../assets/home/lighthouse-hero.png";
 import styles from "./HeroSearch.module.css";
 
@@ -17,6 +20,19 @@ const stats = [
 ];
 
 export default function HeroSearch() {
+  const navigate = useNavigate();
+  const [keyword, setKeyword] = useState("");
+
+  const goToJobs = (value: string) => {
+    const trimmed = value.trim();
+    navigate(trimmed ? `/jobs?${new URLSearchParams({ keyword: trimmed })}` : "/jobs");
+  };
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    goToJobs(keyword);
+  };
+
   return (
     <section
       className={styles.hero}
@@ -29,15 +45,14 @@ export default function HeroSearch() {
           Tìm công việc <span>phù hợp với bạn</span>
         </h1>
         <p>Hàng nghìn cơ hội việc làm từ nhiều nguồn tuyển dụng</p>
-        <form
-          className={styles.searchBox}
-          onSubmit={(event) => event.preventDefault()}
-        >
+        <form className={styles.searchBox} role="search" onSubmit={handleSubmit}>
           <label>
             <Search aria-hidden="true" />
             <input
               aria-label="Từ khóa"
-              placeholder="Vị trí, kỹ năng, công việc..."
+              placeholder="Tên vị trí, công việc..."
+              value={keyword}
+              onChange={(event) => setKeyword(event.target.value)}
             />
           </label>
           <label>
@@ -60,7 +75,13 @@ export default function HeroSearch() {
             "Python",
             "Business Analyst",
           ].map((term) => (
-            <button key={term}>{term}</button>
+            <button
+              key={term}
+              type="button"
+              onClick={() => goToJobs(term)}
+            >
+              {term}
+            </button>
           ))}
         </div>
       </div>

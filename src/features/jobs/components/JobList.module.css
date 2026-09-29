@@ -1,0 +1,209 @@
+.list {
+  display: grid;
+  gap: 12px;
+}
+
+.row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 64px 1fr auto;
+  gap: 16px;
+  padding: 18px;
+  border: 1px solid #e5ebf2;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 5px 14px rgba(30, 68, 107, 0.04);
+  transition: border-color 0.16s, transform 0.16s;
+}
+
+.row:hover {
+  border-color: #c5def8;
+  transform: translateY(-1px);
+}
+
+.logo {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 10px;
+  color: #fff;
+  background: linear-gradient(135deg, #1288ed, #123e71);
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.logo[data-has-image] {
+  overflow: hidden;
+  border: 1px solid #e5ebf2;
+  background: #fff;
+}
+
+.logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.body {
+  min-width: 0;
+}
+
+.body h3 {
+  margin: 0;
+  overflow: hidden;
+  color: #142a47;
+  font-size: 1.08rem;
+  line-height: 1.4;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.body h3 a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Cả hàng bấm được; nút lưu nằm trên lớp link. */
+.body h3 a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+.body h3 a:hover {
+  color: #087cf0;
+}
+
+.company {
+  margin: 3px 0 8px;
+  overflow: hidden;
+  color: #62748a;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  color: #52667f;
+  font-size: 0.86rem;
+}
+
+.facts span {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.location span {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.facts svg,
+.time svg {
+  flex: none;
+  width: 15px;
+  height: 15px;
+  color: #8aa0b6;
+}
+
+.side {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-end;
+}
+
+.time {
+  display: inline-flex;
+  gap: 5px;
+  align-items: center;
+  color: #687d98;
+  font-size: 0.82rem;
+  white-space: nowrap;
+}
+
+.saveButton {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  padding: 4px;
+  border: 0;
+  color: #70849a;
+  background: none;
+  cursor: pointer;
+}
+
+.saveButton svg {
+  width: 17px;
+  height: 17px;
+}
+
+.saved {
+  color: #e11d48;
+}
+
+.saved svg {
+  fill: currentColor;
+}
+
+.skeleton {
+  height: 112px;
+  border: 1px solid #e5ebf2;
+  border-radius: 12px;
+  background: linear-gradient(90deg, #f2f6fa 25%, #e8eef5 50%, #f2f6fa 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.2s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  from { background-position: 100% 0; }
+  to { background-position: -100% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .row {
+    transition: none;
+  }
+
+  .row:hover {
+    transform: none;
+  }
+
+  .skeleton {
+    animation: none;
+  }
+}
+
+@media (max-width: 760px) {
+  .row {
+    grid-template-columns: 52px 1fr;
+    gap: 12px;
+    padding: 16px;
+  }
+
+  .logo {
+    width: 52px;
+    height: 52px;
+  }
+
+  .body h3 {
+    white-space: normal;
+  }
+
+  .side {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+}

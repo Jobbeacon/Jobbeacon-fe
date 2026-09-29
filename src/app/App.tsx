@@ -1,6 +1,7 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import HomePage from '../features/home/pages/HomePage'
 import { JobDetailPage } from '../features/jobs/pages/JobDetailPage'
+import { JobSearchPage } from '../features/jobs/pages/JobSearchPage'
 import { LoginPage } from '../features/auth/pages/LoginPage'
 import { RegisterPage } from '../features/auth/pages/RegisterPage'
 import { ForgotPasswordPage } from '../features/auth/pages/ForgotPasswordPage'
@@ -14,6 +15,7 @@ export function App() {
       <Routes>
         <Route element={<MainLayout />}>
           <Route path="/" element={<HomePage />} />
+          <Route path="/jobs" element={<JobSearchPage />} />
           <Route path="/jobs/:jobId" element={<JobDetailPage />} />
           <Route path="*" element={<HomePage />} />
         </Route>

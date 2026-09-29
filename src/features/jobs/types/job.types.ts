@@ -18,6 +18,8 @@ export type SkillApiDto = {
 export type CategoryApiDto = {
   id: string
   name: string
+  level: number | null
+  children: CategoryApiDto[] | null
 }
 
 export type CompanyApiDto = {
@@ -46,7 +48,6 @@ export type JobDetailApiDto = {
   currency: string | null
   salary_period: string | null
   location: string[] | null
-  // Backend vẫn trả benefits nhưng description đã chứa sẵn phần quyền lợi, nên FE không dùng.
   benefits: string | null
   skills: SkillApiDto[] | null
   categories: CategoryApiDto[] | null
@@ -61,6 +62,8 @@ export type JobSkill = {
 export type JobCategory = {
   id: string
   name: string
+  level: number | null
+  children: JobCategory[]
 }
 
 export type JobCompany = {
@@ -98,4 +101,15 @@ export type JobDetail = JobSummary & {
   salaryPeriod: string | null
   categories: JobCategory[]
   sources: JobSource[]
+}
+
+export type JobSearchParams = {
+  keyword: string
+  page: number
+  size: number
+}
+
+export type JobSearchResult = {
+  jobs: JobSummary[]
+  total: number
 }

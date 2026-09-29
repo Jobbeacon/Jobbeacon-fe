@@ -22,6 +22,7 @@ import { sanitizeHtml } from '../../../shared/utils/sanitize-html'
 import { CompanyLogo } from '../components/CompanyLogo'
 import { JobCard } from '../components/JobCard'
 import { useJobDetail } from '../hooks/useJobDetail'
+import { getCategoryPaths } from '../utils/category'
 import type { JobDetail } from '../types/job.types'
 import styles from './JobDetailPage.module.css'
 
@@ -49,6 +50,7 @@ function JobDetailContent({ job }: { job: JobDetail }) {
   const employmentType = formatEmploymentType(job.employmentType)
   const [primarySource, ...otherSources] = job.sources
   const companyName = job.company?.name ?? job.companyName
+  const categoryPaths = getCategoryPaths(job.categories)
   const companyMeta = [job.categories[0]?.name, job.location[0]].filter(Boolean).join(' · ')
 
   return (
@@ -62,10 +64,14 @@ function JobDetailContent({ job }: { job: JobDetail }) {
           />
           <div>
             <h1>{job.title}</h1>
-            <p className={styles.company}>
-              {companyName}
-              {job.categories.length > 0 ? ` · ${job.categories.map((category) => category.name).join(', ')}` : null}
-            </p>
+            <p className={styles.company}>{companyName}</p>
+            {categoryPaths.map((path) => (
+              <ol className={styles.categoryPath} key={path[path.length - 1].id} aria-label="Ngành nghề">
+                {path.map((category) => (
+                  <li key={category.id}>{category.name}</li>
+                ))}
+              </ol>
+            ))}
             {job.skills.length > 0 ? (
               <div className={styles.tags}>
                 {job.skills.map((skill) => (
