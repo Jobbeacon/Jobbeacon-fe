@@ -1,3 +1,5 @@
+import { useState } from 'react'
+import type { KeyboardEvent } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import styles from './Pagination.module.css'
 
@@ -7,9 +9,10 @@ type PaginationProps = {
   onChange: (page: number) => void
 }
 
-type PageItem = number | 'gap-start' | 'gap-end'
+type PageGap = 'gap-start' | 'gap-end'
 
-// Luôn hiện trang đầu, trang cuối và 1 trang mỗi bên trang hiện tại; phần còn lại thu gọn thành "…".
+type PageItem = number | PageGap
+
 function getPageItems(page: number, totalPages: number): PageItem[] {
   if (totalPages <= 7) {
     return Array.from({ length: totalPages }, (_, index) => index + 1)
@@ -25,9 +28,66 @@ function getPageItems(page: number, totalPages: number): PageItem[] {
   return items
 }
 
+type PageJumpInputProps = {
+  totalPages: number
+  onSubmit: (page: number) => void
+  onClose: () => void
+}
+
+function PageJumpInput({ totalPages, onSubmit, onClose }: PageJumpInputProps) {
+  const [value, setValue] = useState('')
+  const [isInvalid, setIsInvalid] = useState(false)
+
+  const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Escape') {
+      onClose()
+      return
+    }
+    if (event.key !== 'Enter') {
+      return
+    }
+
+    event.preventDefault()
+    const target = Number(value)
+    if (!Number.isInteger(target) || target < 1 || target > totalPages) {
+      setIsInvalid(true)
+      return
+    }
+    onSubmit(target)
+  }
+
+  return (
+    <input
+      className={`${styles.jumpInput} ${isInvalid ? styles.invalid : ''}`}
+      type="text"
+      inputMode="numeric"
+      pattern="[0-9]*"
+      maxLength={String(totalPages).length}
+      title={`Nhập số trang (1-${totalPages}) rồi nhấn Enter`}
+      aria-label={`Nhập số trang từ 1 đến ${totalPages}, nhấn Enter để đi tới`}
+      aria-invalid={isInvalid}
+      value={value}
+      autoFocus
+      onChange={(event) => {
+        setValue(event.target.value.replace(/\D/g, ''))
+        setIsInvalid(false)
+      }}
+      onKeyDown={handleKeyDown}
+      onBlur={onClose}
+    />
+  )
+}
+
 export function Pagination({ page, totalPages, onChange }: PaginationProps) {
+  const [editingGap, setEditingGap] = useState<PageGap | null>(null)
+
   if (totalPages <= 1) {
     return null
+  }
+
+  const jumpTo = (target: number) => {
+    setEditingGap(null)
+    onChange(target)
   }
 
   return (
@@ -51,10 +111,24 @@ export function Pagination({ page, totalPages, onChange }: PaginationProps) {
           >
             {item}
           </button>
+        ) : editingGap === item ? (
+          <PageJumpInput
+            key={item}
+            totalPages={totalPages}
+            onSubmit={jumpTo}
+            onClose={() => setEditingGap(null)}
+          />
         ) : (
-          <span key={item} aria-hidden="true">
+          <button
+            key={item}
+            type="button"
+            className={styles.gap}
+            aria-label="Nhập số trang để đi tới"
+            title="Nhập số trang"
+            onClick={() => setEditingGap(item)}
+          >
             …
-          </span>
+          </button>
         ),
       )}
       <button
