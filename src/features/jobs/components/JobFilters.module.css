@@ -37,9 +37,9 @@
 }
 
 .group legend {
-  float: left;
+  display: block;
   width: 100%;
-  margin-bottom: 4px;
+  margin-bottom: 8px;
   padding: 0;
   color: #7b8da3;
   font-size: 0.82rem;
@@ -48,9 +48,30 @@
   text-transform: uppercase;
 }
 
+.facetList {
+  max-height: 220px;
+  overflow: auto;
+}
+
+.facetSearch {
+  width: 100%;
+  margin-bottom: 8px;
+  padding: 7px 10px;
+  border: 1px solid #e5ebf2;
+  border-radius: 8px;
+  color: #263c58;
+  background: #fff;
+  font: inherit;
+  font-size: 0.84rem;
+}
+
+.facetSearch:focus {
+  outline: 2px solid rgba(8, 124, 240, 0.25);
+  border-color: #087cf0;
+}
+
 .option {
   display: flex;
-  clear: both;
   gap: 8px;
   align-items: center;
   margin: 8px 0;
@@ -60,26 +81,68 @@
   cursor: pointer;
 }
 
+.optionName {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  line-height: 1.3;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.optionCount {
+  flex: none;
+  color: #93a3b5;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.facetStatus {
+  margin: 0 0 8px;
+  color: #93a3b5;
+  font-size: 0.78rem;
+  line-height: 1.4;
+}
+
+.more {
+  margin: 2px 0 6px;
+  padding: 0;
+  border: 0;
+  color: #087cf0;
+  background: none;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
 .option input {
   accent-color: #087cf0;
 }
 
-.group:disabled .option {
-  color: #a3b1c2;
-  cursor: not-allowed;
+.salaryRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  clear: both;
+  margin-top: 8px;
 }
 
-.upcomingNote {
-  margin: 12px 2px 0;
-  padding-top: 12px;
-  border-top: 1px solid #eef2f6;
-  color: #93a3b5;
-  font-size: 0.78rem;
-  font-style: italic;
+.salaryRow input {
+  width: 100%;
+  min-width: 0;
+  padding: 8px 10px;
+  border: 1px solid #e5ebf2;
+  border-radius: 8px;
+  color: #263c58;
+  background: #fff;
+  font: inherit;
+  font-size: 0.88rem;
 }
 
-.upcomingNote + .group {
-  border-top: 0;
+.salaryRow input:focus {
+  outline: 2px solid rgba(8, 124, 240, 0.25);
+  border-color: #087cf0;
 }
 
 @media (max-width: 1100px) {

@@ -1,0 +1,281 @@
+.picker {
+  position: relative;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  min-width: 0;
+  min-height: 56px;
+  padding: 0 12px 0 16px;
+  border-right: 1px solid #e7edf5;
+  color: #52627c;
+  background: #fff;
+}
+
+.picker:focus-within {
+  box-shadow: inset 0 0 0 2px rgba(8, 124, 240, 0.25);
+}
+
+.picker > svg {
+  flex: none;
+  width: 18px;
+  height: 18px;
+}
+
+.trigger {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  border-radius: 0;
+  color: #263c58;
+  background: transparent;
+  font: inherit;
+  font-weight: 500;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.placeholder {
+  color: #8aa0b6;
+}
+
+.clear {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  color: #70849a;
+  background: transparent;
+  cursor: pointer;
+}
+
+.clear:hover {
+  color: #0b2b59;
+  background: #eef2f6;
+}
+
+.clear svg {
+  width: 16px;
+  height: 16px;
+}
+
+.panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  width: min(640px, calc(100vw - 36px));
+  height: 460px;
+  overflow: hidden;
+  border: 1px solid #e6e8ec;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 8px 28px rgba(20, 42, 71, 0.16);
+}
+
+.panelHead {
+  display: grid;
+  gap: 10px;
+  padding: 14px 14px 12px;
+  border-bottom: 1px solid #eef2f6;
+}
+
+.titleRow {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.titleRow strong {
+  color: #212f3f;
+  font-size: 1rem;
+}
+
+.titleRow span {
+  color: #7a8794;
+  font-size: 0.78rem;
+}
+
+.find {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 8px 10px;
+  border: 1px solid #d9e0e8;
+  border-radius: 6px;
+  color: #8aa0b6;
+}
+
+.find svg {
+  flex: none;
+  width: 16px;
+  height: 16px;
+}
+
+.find input {
+  width: 100%;
+  border: 0;
+  outline: 0;
+  color: #263c58;
+  background: transparent;
+  font: inherit;
+}
+
+.columns {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  min-height: 0;
+  flex: 1;
+}
+
+.column {
+  margin: 0;
+  padding: 6px 0;
+  overflow: auto;
+  list-style: none;
+}
+
+.column + .column {
+  border-left: 1px solid #eef2f6;
+}
+
+.column li {
+  display: flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 0 12px;
+  color: #263c58;
+}
+
+.column li:hover {
+  background: #f7f9fb;
+}
+
+.check,
+.option {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  cursor: pointer;
+}
+
+.option {
+  width: 100%;
+  min-height: 36px;
+}
+
+.column input[type='checkbox'] {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: #087cf0;
+}
+
+.column button {
+  display: flex;
+  flex: 1;
+  gap: 8px;
+  align-items: center;
+  justify-content: space-between;
+  min-width: 0;
+  padding: 8px 0;
+  border: 0;
+  color: inherit;
+  background: transparent;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.column button svg {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  color: #9aabbc;
+}
+
+.active {
+  background: #f3f8ff;
+}
+
+.active button {
+  color: #087cf0;
+  font-weight: 650;
+}
+
+.column li.hint,
+.column li.status {
+  display: block;
+  padding: 28px 16px;
+  color: #7a8794;
+  font-size: 0.9rem;
+}
+
+.footer {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border-top: 1px solid #eef2f6;
+}
+
+.reset {
+  padding: 0;
+  border: 0;
+  color: #52667f;
+  background: none;
+  font: inherit;
+  cursor: pointer;
+}
+
+.reset:hover {
+  color: #087cf0;
+}
+
+.apply {
+  min-width: 108px;
+  min-height: 36px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 6px;
+  color: #fff;
+  background: #087cf0;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.apply:hover {
+  background: #0558dc;
+}
+
+@media (max-width: 760px) {
+  .picker {
+    border-right: 0;
+    border-bottom: 1px solid #e7edf5;
+    min-height: 52px;
+  }
+
+  .panel {
+    right: 0;
+    width: auto;
+    height: 420px;
+  }
+
+  .columns {
+    grid-template-columns: 1fr 1fr;
+  }
+}

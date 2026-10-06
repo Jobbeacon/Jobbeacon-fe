@@ -103,8 +103,34 @@ export type JobDetail = JobSummary & {
   sources: JobSource[]
 }
 
+export type LocationItem = {
+  id: string
+  name: string
+}
+
+export type FacetItem = {
+  name: string
+  count: number
+}
+
+export type JobFacets = {
+  categories: FacetItem[]
+  skills: FacetItem[]
+}
+
 export type JobSearchParams = {
   keyword: string
+  location: string
+  locations: string[]
+  categories: string[]
+  skills: string[]
+  minSalary: string
+  maxSalary: string
+  experience: string[]
+  employmentTypes: string[]
+  postedWithin: string[]
+  sources: string[]
+  sortBy: string
   page: number
   size: number
 }

@@ -1,6 +1,8 @@
 import { apiClient } from '../../../shared/api/api-client'
 import type { ApiResponse } from '../../../shared/types/api.types'
 import type {
+  JobFacets,
+  LocationItem,
   CategoryApiDto,
   JobCategory,
   JobDetail,
@@ -14,6 +16,7 @@ import type {
 } from '../types/job.types'
 
 const JOBS_ENDPOINT = '/api/v1/jobs'
+const LOCATIONS_ENDPOINT = '/api/v1/locations'
 const SIMILAR_JOBS_LIMIT = 4
 
 type PageApiDto<T> = {
@@ -87,6 +90,30 @@ function toJobDetail(job: JobDetailApiDto): JobDetail {
   }
 }
 
+export async function getJobFacets(signal?: AbortSignal) {
+  const response = await apiClient.get<ApiResponse<JobFacets>>(`${JOBS_ENDPOINT}/facets`, {
+    signal,
+    authenticated: false,
+  })
+  return response.data
+}
+
+export async function getProvinces(signal?: AbortSignal) {
+  const response = await apiClient.get<ApiResponse<LocationItem[]>>(`${LOCATIONS_ENDPOINT}/provinces`, {
+    signal,
+    authenticated: false,
+  })
+  return response.data
+}
+
+export async function getWards(provinceId: string, signal?: AbortSignal) {
+  const response = await apiClient.get<ApiResponse<LocationItem[]>>(
+    `${LOCATIONS_ENDPOINT}/provinces/${encodeURIComponent(provinceId)}/wards`,
+    { signal, authenticated: false },
+  )
+  return response.data
+}
+
 export async function getJobDetail(jobId: string, signal?: AbortSignal) {
   const response = await apiClient.get<ApiResponse<JobDetailApiDto>>(
     `${JOBS_ENDPOINT}/${encodeURIComponent(jobId)}`,
@@ -95,12 +122,25 @@ export async function getJobDetail(jobId: string, signal?: AbortSignal) {
   return toJobDetail(response.data)
 }
 
-export async function searchJobs(
-  { keyword, page, size }: JobSearchParams,
-  signal?: AbortSignal,
-): Promise<JobSearchResult> {
-  const params = new URLSearchParams({ page: String(page), size: String(size) })
-  if (keyword.trim()) params.set('keyword', keyword.trim())
+function appendList(params: URLSearchParams, key: string, values: string[]) {
+  const joined = values.map((value) => value.trim()).filter(Boolean).join(',')
+  if (joined) params.set(key, joined)
+}
+
+export async function searchJobs(query: JobSearchParams, signal?: AbortSignal): Promise<JobSearchResult> {
+  const params = new URLSearchParams({ page: String(query.page), size: String(query.size) })
+  if (query.keyword.trim()) params.set('keyword', query.keyword.trim())
+  if (query.location.trim()) params.set('location', query.location.trim())
+  appendList(params, 'locations', query.locations)
+  appendList(params, 'categories', query.categories)
+  appendList(params, 'skills', query.skills)
+  if (query.minSalary.trim()) params.set('min_salary', query.minSalary.trim())
+  if (query.maxSalary.trim()) params.set('max_salary', query.maxSalary.trim())
+  appendList(params, 'experience', query.experience)
+  appendList(params, 'employment_types', query.employmentTypes)
+  appendList(params, 'posted_within', query.postedWithin)
+  appendList(params, 'sources', query.sources)
+  if (query.sortBy && query.sortBy !== 'posted_date') params.set('sort_by', query.sortBy)
 
   const response = await apiClient.get<ApiResponse<PageApiDto<JobSummaryApiDto>>>(
     `${JOBS_ENDPOINT}?${params}`,
@@ -110,7 +150,25 @@ export async function searchJobs(
 }
 
 export async function getLatestJobs(limit: number, signal?: AbortSignal) {
-  const { jobs } = await searchJobs({ keyword: '', page: 1, size: limit }, signal)
+  const { jobs } = await searchJobs(
+    {
+      keyword: '',
+      location: '',
+      locations: [],
+      categories: [],
+      skills: [],
+      minSalary: '',
+      maxSalary: '',
+      experience: [],
+      employmentTypes: [],
+      postedWithin: [],
+      sources: [],
+      sortBy: 'posted_date',
+      page: 1,
+      size: limit,
+    },
+    signal,
+  )
   return jobs
 }
 

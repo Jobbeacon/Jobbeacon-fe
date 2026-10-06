@@ -53,6 +53,10 @@
   scroll-margin-top: 92px;
 }
 
+.resultsBusy {
+  opacity: 0.72;
+}
+
 .resultsHead {
   display: flex;
   gap: 16px;
@@ -67,9 +71,14 @@
   font-size: 1.15rem;
 }
 
-.sortNote {
+.sortSelect {
   flex: none;
-  color: #687d98;
+  padding: 8px 12px;
+  border: 1px solid #e5ebf2;
+  border-radius: 8px;
+  color: #263c58;
+  background: #fff;
+  font: inherit;
   font-size: 0.86rem;
 }
 
