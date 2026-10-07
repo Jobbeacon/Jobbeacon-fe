@@ -1,6 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
-import { getJobFacets } from '../api/jobs.api'
-import type { FacetItem } from '../types/job.types'
+import { useRef, useState } from 'react'
 import styles from './JobFilters.module.css'
 
 type Option = {
@@ -15,9 +13,7 @@ type FilterGroup = {
 }
 
 type ListKey =
-  | 'locations'
   | 'categories'
-  | 'skills'
   | 'experience'
   | 'employmentTypes'
   | 'postedWithin'
@@ -36,16 +32,6 @@ export type JobFiltersState = {
 }
 
 const groups: FilterGroup[] = [
-  {
-    key: 'locations',
-    title: 'Địa điểm',
-    options: [
-      { value: 'Hà Nội', label: 'Hà Nội' },
-      { value: 'Hồ Chí Minh', label: 'Hồ Chí Minh' },
-      { value: 'Đà Nẵng', label: 'Đà Nẵng' },
-      { value: 'Remote', label: 'Remote' },
-    ],
-  },
   {
     key: 'experience',
     title: 'Kinh nghiệm',
@@ -91,6 +77,24 @@ function toggle(values: string[], value: string) {
   return values.includes(value) ? values.filter((item) => item !== value) : [...values, value]
 }
 
+const SALARY_SUGGESTIONS = [
+  { label: 'Dưới 10 triệu', min: '', max: '10' },
+  { label: '10 - 15 triệu', min: '10', max: '15' },
+  { label: '15 - 20 triệu', min: '15', max: '20' },
+  { label: '20 - 30 triệu', min: '20', max: '30' },
+  { label: '30 - 50 triệu', min: '30', max: '50' },
+  { label: 'Trên 50 triệu', min: '50', max: '' },
+]
+
+function digitsOnly(value: string) {
+  return value.replace(/\D/g, '')
+}
+
+function formatThousands(digits: string) {
+  if (!digits) return ''
+  return digits.replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+}
+
 type JobFiltersProps = {
   value: JobFiltersState
   onChange: (value: JobFiltersState) => void
@@ -117,20 +121,6 @@ export function JobFilters({ value, onChange, onReset }: JobFiltersProps) {
     }, 450)
   }
 
-  const [facets, setFacets] = useState<{ categories: FacetItem[]; skills: FacetItem[] } | null>(null)
-  const [facetsFailed, setFacetsFailed] = useState(false)
-
-  useEffect(() => {
-    const controller = new AbortController()
-    void getJobFacets(controller.signal)
-      .then((data) => setFacets(data))
-      .catch((error: unknown) => {
-        if (error instanceof DOMException && error.name === 'AbortError') return
-        setFacetsFailed(true)
-      })
-    return () => controller.abort()
-  }, [])
-
   return (
     <aside className={styles.filterCard} aria-label="Bộ lọc">
       <h2>
@@ -139,37 +129,38 @@ export function JobFilters({ value, onChange, onReset }: JobFiltersProps) {
           Xóa lọc
         </button>
       </h2>
-
-      <FilterGroupView group={groups[0]} value={value} onChange={onChange} />
-      <FacetGroup
-        title="Ngành nghề"
-        items={facets?.categories ?? null}
-        failed={facetsFailed}
-        selected={value.categories}
-        emptyNote="Chưa có tin nào được gán ngành."
-        searchLabel="Tìm ngành nghề"
-        onToggle={(name) => onChange({ ...value, categories: toggle(value.categories, name) })}
-      />
-      <FacetGroup
-        title="Kỹ năng"
-        items={facets?.skills ?? null}
-        failed={facetsFailed}
-        selected={value.skills}
-        emptyNote="Chưa có kỹ năng nào được lưu trên tin."
-        searchLabel="Tìm kỹ năng"
-        onToggle={(name) => onChange({ ...value, skills: toggle(value.skills, name) })}
-      />
-
+      <div className={styles.filterBody}>
       <fieldset className={styles.group}>
-        <legend>Mức lương (triệu)</legend>
+        <legend>Mức lương</legend>
+        <div className={styles.salaryOptions}>
+        {SALARY_SUGGESTIONS.map((suggestion) => {
+          const checked = minSalary === suggestion.min && maxSalary === suggestion.max
+          return (
+            <label className={styles.option} key={suggestion.label}>
+              <input
+                type="checkbox"
+                checked={checked}
+                onChange={() => {
+                  const nextMin = checked ? '' : suggestion.min
+                  const nextMax = checked ? '' : suggestion.max
+                  setMinSalary(nextMin)
+                  setMaxSalary(nextMax)
+                  commitSalary(nextMin, nextMax)
+                }}
+              />
+              <span>{suggestion.label}</span>
+            </label>
+          )
+        })}
+        </div>
         <div className={styles.salaryRow}>
           <input
             inputMode="numeric"
             placeholder="Từ"
-            aria-label="Lương từ"
-            value={minSalary}
+            aria-label="Lương từ, triệu đồng"
+            value={formatThousands(minSalary)}
             onChange={(event) => {
-              const nextMin = event.target.value.replace(/[^\d]/g, '')
+              const nextMin = digitsOnly(event.target.value)
               setMinSalary(nextMin)
               commitSalary(nextMin, maxSalary)
             }}
@@ -177,101 +168,23 @@ export function JobFilters({ value, onChange, onReset }: JobFiltersProps) {
           <input
             inputMode="numeric"
             placeholder="Đến"
-            aria-label="Lương đến"
-            value={maxSalary}
+            aria-label="Lương đến, triệu đồng"
+            value={formatThousands(maxSalary)}
             onChange={(event) => {
-              const nextMax = event.target.value.replace(/[^\d]/g, '')
+              const nextMax = digitsOnly(event.target.value)
               setMaxSalary(nextMax)
               commitSalary(minSalary, nextMax)
             }}
           />
         </div>
+        <p className={styles.facetStatus}>Đơn vị triệu đồng.</p>
       </fieldset>
 
-      {groups.slice(1).map((group) => (
+      {groups.map((group) => (
         <FilterGroupView key={group.key} group={group} value={value} onChange={onChange} />
       ))}
+      </div>
     </aside>
-  )
-}
-
-const FACET_PREVIEW = 6
-
-function fold(value: string) {
-  return value
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/đ/gi, 'd')
-    .toLowerCase()
-}
-
-function FacetGroup({
-  title,
-  items,
-  failed,
-  selected,
-  emptyNote,
-  searchLabel,
-  onToggle,
-}: {
-  title: string
-  items: FacetItem[] | null
-  failed: boolean
-  selected: string[]
-  emptyNote: string
-  searchLabel: string
-  onToggle: (name: string) => void
-}) {
-  const [query, setQuery] = useState('')
-  const [expanded, setExpanded] = useState(false)
-  const needle = fold(query.trim())
-  const matched = (items ?? []).filter((item) => {
-    if (needle) return fold(item.name).includes(needle)
-    return item.count > 0 || selected.includes(item.name)
-  })
-  const picked = matched.filter((item) => selected.includes(item.name))
-  const rest = matched.filter((item) => !selected.includes(item.name))
-  const ordered = [...picked, ...rest]
-  const visible = needle || expanded ? ordered : ordered.slice(0, Math.max(FACET_PREVIEW, picked.length))
-  const hiddenCount = ordered.length - visible.length
-
-  return (
-    <fieldset className={styles.group}>
-      <legend>{title}</legend>
-      {items === null && !failed ? <p className={styles.facetStatus}>Đang tải...</p> : null}
-      {failed ? <p className={styles.facetStatus}>Không tải được danh sách.</p> : null}
-      {items && items.length > FACET_PREVIEW && (needle || items.some((item) => item.count > 0)) ? (
-        <input
-          className={styles.facetSearch}
-          value={query}
-          placeholder={searchLabel}
-          aria-label={searchLabel}
-          onChange={(event) => setQuery(event.target.value)}
-        />
-      ) : null}
-      {visible.length > 0 ? (
-        <div className={needle || expanded ? styles.facetList : undefined}>
-          {visible.map((item) => (
-            <label className={styles.option} key={item.name} title={item.name}>
-              <input type="checkbox" checked={selected.includes(item.name)} onChange={() => onToggle(item.name)} />
-              <span className={styles.optionName}>{item.name}</span>
-              <span className={styles.optionCount}>{item.count.toLocaleString('vi-VN')}</span>
-            </label>
-          ))}
-        </div>
-      ) : null}
-      {items && ordered.length === 0 ? <p className={styles.facetStatus}>{needle ? 'Không có kết quả' : emptyNote}</p> : null}
-      {hiddenCount > 0 ? (
-        <button type="button" className={styles.more} onClick={() => setExpanded(true)}>
-          Xem thêm {hiddenCount}
-        </button>
-      ) : null}
-      {expanded && !needle && ordered.length > FACET_PREVIEW ? (
-        <button type="button" className={styles.more} onClick={() => setExpanded(false)}>
-          Thu gọn
-        </button>
-      ) : null}
-    </fieldset>
   )
 }
 

@@ -1,6 +1,7 @@
 import { apiClient } from '../../../shared/api/api-client'
 import type { ApiResponse } from '../../../shared/types/api.types'
 import type {
+  CategoryNode,
   JobFacets,
   LocationItem,
   CategoryApiDto,
@@ -17,6 +18,7 @@ import type {
 
 const JOBS_ENDPOINT = '/api/v1/jobs'
 const LOCATIONS_ENDPOINT = '/api/v1/locations'
+const CATEGORIES_ENDPOINT = '/api/v1/categories'
 const SIMILAR_JOBS_LIMIT = 4
 
 type PageApiDto<T> = {
@@ -98,6 +100,14 @@ export async function getJobFacets(signal?: AbortSignal) {
   return response.data
 }
 
+export async function getCategories(signal?: AbortSignal) {
+  const response = await apiClient.get<ApiResponse<CategoryNode[]>>(CATEGORIES_ENDPOINT, {
+    signal,
+    authenticated: false,
+  })
+  return response.data
+}
+
 export async function getProvinces(signal?: AbortSignal) {
   const response = await apiClient.get<ApiResponse<LocationItem[]>>(`${LOCATIONS_ENDPOINT}/provinces`, {
     signal,
@@ -122,6 +132,14 @@ export async function getJobDetail(jobId: string, signal?: AbortSignal) {
   return toJobDetail(response.data)
 }
 
+function toVnd(value: string) {
+  const digits = value.trim()
+  if (!digits) return ''
+  const amount = Number(digits)
+  if (!Number.isFinite(amount) || amount <= 0) return ''
+  return String(amount * 1_000_000)
+}
+
 function appendList(params: URLSearchParams, key: string, values: string[]) {
   const joined = values.map((value) => value.trim()).filter(Boolean).join(',')
   if (joined) params.set(key, joined)
@@ -134,8 +152,10 @@ export async function searchJobs(query: JobSearchParams, signal?: AbortSignal): 
   appendList(params, 'locations', query.locations)
   appendList(params, 'categories', query.categories)
   appendList(params, 'skills', query.skills)
-  if (query.minSalary.trim()) params.set('min_salary', query.minSalary.trim())
-  if (query.maxSalary.trim()) params.set('max_salary', query.maxSalary.trim())
+  const minSalary = toVnd(query.minSalary)
+  const maxSalary = toVnd(query.maxSalary)
+  if (minSalary) params.set('min_salary', minSalary)
+  if (maxSalary) params.set('max_salary', maxSalary)
   appendList(params, 'experience', query.experience)
   appendList(params, 'employment_types', query.employmentTypes)
   appendList(params, 'posted_within', query.postedWithin)

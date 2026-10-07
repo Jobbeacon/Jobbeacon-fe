@@ -1,6 +1,6 @@
 .searchBar {
   display: grid;
-  grid-template-columns: 1.5fr 1fr auto;
+  grid-template-columns: 1fr 1.4fr 1fr auto;
   margin-top: 18px;
   border: 1px solid #e5ebf2;
   border-radius: 10px;
@@ -15,7 +15,7 @@
   min-height: 56px;
   padding: 0 16px;
   border-right: 1px solid #e7edf5;
-  border-radius: 10px 0 0 10px;
+  border-radius: 0;
   color: #52627c;
 }
 
@@ -32,6 +32,10 @@
   color: #263c58;
   background: transparent;
   font: inherit;
+}
+
+.searchBar > :first-child {
+  border-radius: 10px 0 0 10px;
 }
 
 .searchBar > label:focus-within {

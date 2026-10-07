@@ -108,6 +108,12 @@ export type LocationItem = {
   name: string
 }
 
+export type CategoryNode = {
+  id: string
+  name: string
+  children: CategoryNode[]
+}
+
 export type FacetItem = {
   name: string
   count: number

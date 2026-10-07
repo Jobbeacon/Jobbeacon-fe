@@ -152,9 +152,11 @@
 
 .column li {
   display: flex;
-  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: flex-start;
   min-height: 36px;
-  padding: 0 12px;
+  padding: 8px 12px;
   color: #263c58;
 }
 
@@ -165,9 +167,14 @@
 .check,
 .option {
   display: flex;
-  gap: 8px;
-  align-items: center;
+  gap: 12px;
+  align-items: flex-start;
   cursor: pointer;
+}
+
+.check {
+  flex: none;
+  padding-top: 2px;
 }
 
 .option {
@@ -179,7 +186,7 @@
   flex: none;
   width: 16px;
   height: 16px;
-  margin: 0;
+  margin: 2px 0 0;
   accent-color: #087cf0;
 }
 
@@ -190,8 +197,9 @@
   align-items: center;
   justify-content: space-between;
   min-width: 0;
-  padding: 8px 0;
+  padding: 0;
   border: 0;
+  line-height: 1.35;
   color: inherit;
   background: transparent;
   font: inherit;

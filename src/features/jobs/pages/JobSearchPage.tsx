@@ -7,6 +7,7 @@ import { JobFilters } from '../components/JobFilters'
 import type { JobFiltersState } from '../components/JobFilters'
 import { JobList, JobListSkeleton } from '../components/JobList'
 import { JobSearchBar } from '../components/JobSearchBar'
+import { locationChipGroups } from '../components/LocationPicker'
 import { useJobs } from '../hooks/useJobs'
 import styles from './JobSearchPage.module.css'
 
@@ -31,9 +32,7 @@ const filterLabels: Record<string, string> = {
 }
 
 const listKeys = [
-  'locations',
   'categories',
-  'skills',
   'experience',
   'employment_types',
   'posted_within',
@@ -55,6 +54,10 @@ function labelOf(value: string) {
   return filterLabels[value] ?? value
 }
 
+function formatSalaryMillions(value: string) {
+  return value.replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+}
+
 function readPlaces(location: string) {
   return location.split('|').map((item) => item.trim()).filter(Boolean)
 }
@@ -74,6 +77,7 @@ export function JobSearchPage() {
 
   const keyword = searchParams.get('keyword') ?? ''
   const location = searchParams.get('location') ?? ''
+  const locationPlaces = readPlaces(location)
   const page = parsePage(searchParams.get('page'))
   const sortBy = searchParams.get('sort_by') ?? 'posted_date'
   const filters: JobFiltersState = {
@@ -91,9 +95,9 @@ export function JobSearchPage() {
   const { jobs, total, isLoading, isInitialLoading, error, retry } = useJobs({
     keyword,
     location,
-    locations: filters.locations,
+    locations: [],
     categories: filters.categories,
-    skills: filters.skills,
+    skills: [],
     minSalary: filters.minSalary,
     maxSalary: filters.maxSalary,
     experience: filters.experience,
@@ -123,15 +127,25 @@ export function JobSearchPage() {
 
   const clearSearch = () => setSearchParams(new URLSearchParams())
 
+  const revealResults = () => {
+    const results = resultsRef.current
+    if (!results) return
+    const top = results.getBoundingClientRect().top
+    const visible = top >= 72 && top < window.innerHeight * 0.55
+    if (!visible) {
+      results.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+  }
+
   const applyFilters = (nextFilters: JobFiltersState) => {
     replaceParams((next) => {
       const write = (key: ListParam, values: string[]) => {
         if (values.length) next.set(key, values.join(','))
         else next.delete(key)
       }
-      write('locations', nextFilters.locations)
+      next.delete('locations')
+      next.delete('skills')
       write('categories', nextFilters.categories)
-      write('skills', nextFilters.skills)
       write('experience', nextFilters.experience)
       write('employment_types', nextFilters.employmentTypes)
       write('posted_within', nextFilters.postedWithin)
@@ -141,15 +155,16 @@ export function JobSearchPage() {
       if (nextFilters.maxSalary) next.set('max_salary', nextFilters.maxSalary)
       else next.delete('max_salary')
     })
+    revealResults()
   }
 
   const chips = [
     ...(keyword ? [{ label: keyword, remove: () => replaceParams((next) => next.delete('keyword')) }] : []),
-    ...readPlaces(location).map((place) => ({
-      label: place,
+    ...locationChipGroups(locationPlaces).map((group) => ({
+      label: group.label,
       remove: () =>
         replaceParams((next) => {
-          const remaining = readPlaces(location).filter((item) => item !== place)
+          const remaining = locationPlaces.filter((item) => !group.places.includes(item))
           if (remaining.length) next.set('location', remaining.join('|'))
           else next.delete('location')
         }),
@@ -166,10 +181,10 @@ export function JobSearchPage() {
       })),
     ),
     ...(filters.minSalary
-      ? [{ label: `Từ ${filters.minSalary} triệu`, remove: () => replaceParams((next) => next.delete('min_salary')) }]
+      ? [{ label: `Từ ${formatSalaryMillions(filters.minSalary)} triệu`, remove: () => replaceParams((next) => next.delete('min_salary')) }]
       : []),
     ...(filters.maxSalary
-      ? [{ label: `Đến ${filters.maxSalary} triệu`, remove: () => replaceParams((next) => next.delete('max_salary')) }]
+      ? [{ label: `Đến ${formatSalaryMillions(filters.maxSalary)} triệu`, remove: () => replaceParams((next) => next.delete('max_salary')) }]
       : []),
   ]
 
@@ -187,6 +202,8 @@ export function JobSearchPage() {
         <JobSearchBar
           keyword={keyword}
           location={location}
+          categories={filters.categories}
+          onCategoriesChange={(categories) => applyFilters({ ...filters, categories })}
           onSearch={(nextKeyword, nextLocation) =>
             replaceParams((next) => {
               if (nextKeyword) next.set('keyword', nextKeyword)

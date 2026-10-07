@@ -25,6 +25,64 @@ function wardLabel(wardName: string, provinceName: string) {
   return `${wardName}, ${provinceName}`
 }
 
+function provinceOf(place: string) {
+  const splitAt = place.lastIndexOf(', ')
+  return splitAt === -1 ? null : place.slice(splitAt + 2)
+}
+
+export function locationChipGroups(places: string[]) {
+  const groups: { label: string; places: string[] }[] = []
+  const wards = new Map<string, string[]>()
+  for (const place of places) {
+    const province = provinceOf(place)
+    if (!province) {
+      groups.push({ label: place, places: [place] })
+      continue
+    }
+    const list = wards.get(province) ?? []
+    list.push(place)
+    wards.set(province, list)
+  }
+  for (const [province, list] of wards) {
+    if (list.length >= 4) groups.push({ label: `${province} · ${list.length} phường/xã`, places: list })
+    else list.forEach((place) => groups.push({ label: place, places: [place] }))
+  }
+  return groups
+}
+
+export function placeSummary(places: string[]) {
+  const labels = locationChipGroups(places).map((group) => group.label)
+  if (labels.length <= 2) return labels.join(', ')
+  return `${labels.length} địa điểm`
+}
+
+type CheckState = 'all' | 'some' | 'none'
+
+function ProvinceCheckbox({
+  state,
+  label,
+  onChange,
+}: {
+  state: CheckState
+  label: string
+  onChange: () => void
+}) {
+  const ref = useRef<HTMLInputElement>(null)
+  useEffect(() => {
+    if (ref.current) ref.current.indeterminate = state === 'some'
+  }, [state])
+
+  return (
+    <input
+      ref={ref}
+      type="checkbox"
+      checked={state === 'all'}
+      aria-label={label}
+      onChange={onChange}
+    />
+  )
+}
+
 export function LocationPicker({ value, onChange }: LocationPickerProps) {
   const panelId = useId()
   const rootRef = useRef<HTMLDivElement>(null)
@@ -111,31 +169,48 @@ export function LocationPicker({ value, onChange }: LocationPickerProps) {
   const visibleWards =
     activeProvince && needle ? wards.filter((ward) => fold(ward.name).includes(needle)) : wards
 
-  const provinceSelected = (province: LocationItem) => draft.includes(province.name)
-  const wardSelected = (ward: LocationItem, province: LocationItem) =>
-    draft.includes(wardLabel(ward.name, province.name))
+  const provinceState = (province: LocationItem): CheckState => {
+    if (draft.includes(province.name)) return 'all'
+    if (draft.some((item) => item.endsWith(`, ${province.name}`))) return 'some'
+    return 'none'
+  }
+  const wardChecked = (ward: LocationItem, province: LocationItem) =>
+    provinceState(province) === 'all' || draft.includes(wardLabel(ward.name, province.name))
 
   const toggleProvince = (province: LocationItem) => {
     setDraft((current) => {
-      if (current.includes(province.name)) {
-        return current.filter((item) => item !== province.name)
-      }
-      return [
-        ...current.filter((item) => !item.endsWith(`, ${province.name}`)),
-        province.name,
-      ]
+      const without = current.filter(
+        (item) => item !== province.name && !item.endsWith(`, ${province.name}`),
+      )
+      return current.includes(province.name) ? without : [...without, province.name]
     })
     void showWards(province)
   }
 
-  const toggleWard = (ward: LocationItem, province: LocationItem) => {
+  const toggleWard = async (ward: LocationItem, province: LocationItem) => {
+    let wardList = wardsRef.current[province.id]
+    if (!wardList) {
+      try {
+        wardList = await getWards(province.id)
+        wardsRef.current[province.id] = wardList
+        setWards(wardList)
+      } catch {
+        setError('Không tải được danh sách phường/xã.')
+        return
+      }
+    }
     const label = wardLabel(ward.name, province.name)
     setDraft((current) => {
-      const withoutProvince = current.filter((item) => item !== province.name)
-      if (withoutProvince.includes(label)) {
-        return withoutProvince.filter((item) => item !== label)
-      }
-      return [...withoutProvince, label]
+      const rest = current.filter((item) => item !== province.name && !item.endsWith(`, ${province.name}`))
+      const selected = new Set(
+        current.includes(province.name)
+          ? wardList.map((item) => wardLabel(item.name, province.name))
+          : current.filter((item) => item.endsWith(`, ${province.name}`)),
+      )
+      if (selected.has(label)) selected.delete(label)
+      else selected.add(label)
+      if (wardList.length > 0 && selected.size === wardList.length) return [...rest, province.name]
+      return [...rest, ...selected]
     })
   }
 
@@ -144,7 +219,7 @@ export function LocationPicker({ value, onChange }: LocationPickerProps) {
     setOpen(false)
   }
 
-  const selectedLabel = readPlaces(value).join(', ')
+  const selectedLabel = placeSummary(readPlaces(value))
 
   return (
     <div className={styles.picker} ref={rootRef}>
@@ -191,10 +266,9 @@ export function LocationPicker({ value, onChange }: LocationPickerProps) {
               {visibleProvinces.map((province) => (
                 <li key={province.id} className={activeProvince?.id === province.id ? styles.active : undefined}>
                   <label className={styles.check}>
-                    <input
-                      type="checkbox"
-                      checked={provinceSelected(province)}
-                      aria-label={province.name}
+                    <ProvinceCheckbox
+                      state={provinceState(province)}
+                      label={province.name}
                       onChange={() => toggleProvince(province)}
                     />
                   </label>
@@ -215,9 +289,9 @@ export function LocationPicker({ value, onChange }: LocationPickerProps) {
               {activeProvince && !loadingWards && !needle ? (
                 <li>
                   <label className={styles.option}>
-                    <input
-                      type="checkbox"
-                      checked={provinceSelected(activeProvince)}
+                    <ProvinceCheckbox
+                      state={provinceState(activeProvince)}
+                      label={`Tất cả ${activeProvince.name}`}
                       onChange={() => toggleProvince(activeProvince)}
                     />
                     Tất cả
@@ -230,8 +304,8 @@ export function LocationPicker({ value, onChange }: LocationPickerProps) {
                       <label className={styles.option}>
                         <input
                           type="checkbox"
-                          checked={wardSelected(ward, activeProvince)}
-                          onChange={() => toggleWard(ward, activeProvince)}
+                          checked={wardChecked(ward, activeProvince)}
+                          onChange={() => void toggleWard(ward, activeProvince)}
                         />
                         {ward.name}
                       </label>
