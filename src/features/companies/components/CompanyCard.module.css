@@ -1,0 +1,101 @@
+.card {
+  display: block;
+  padding: 20px;
+  border: 1px solid #e5ebf2;
+  border-radius: 14px;
+  color: inherit;
+  text-decoration: none;
+  background: #fff;
+  box-shadow: 0 5px 14px rgba(30, 68, 107, 0.04);
+}
+
+.card header {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+
+.logo {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 12px;
+  color: #fff;
+  background: linear-gradient(135deg, #1288ed, #123e71);
+  font-size: var(--text-lg);
+  font-weight: var(--font-weight-bold);
+}
+
+.logo[data-has-image] {
+  overflow: hidden;
+  border: 1px solid #e5ebf2;
+  background: #fff;
+}
+
+.logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.info {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Tên dài tối đa 2 dòng, dư thì cắt "…"; tên đầy đủ nằm trong title để hover. */
+.card h3 {
+  display: -webkit-box;
+  margin: 0;
+  overflow: hidden;
+  color: #142a47;
+  font-size: var(--text-lg);
+  line-height: var(--line-height-tight);
+  overflow-wrap: anywhere;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+
+.location {
+  margin-top: 2px;
+  overflow: hidden;
+  color: #687d98;
+  font-size: var(--text-sm);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.card footer {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 12px;
+  border-top: 1px solid #eef2f6;
+  color: #5f738a;
+  font-size: var(--text-sm);
+}
+
+.skeleton {
+  height: 150px;
+  border: 1px solid #e5ebf2;
+  border-radius: 14px;
+  background: linear-gradient(90deg, #f2f6fa 25%, #e8eef5 50%, #f2f6fa 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.2s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  from { background-position: 100% 0; }
+  to { background-position: -100% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton {
+    animation: none;
+  }
+}

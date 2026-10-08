@@ -16,7 +16,7 @@
   color: #142a47;
   background: #fff;
   font: inherit;
-  font-weight: 650;
+  font-weight: var(--font-weight-semibold);
 }
 
 .pagination button {
