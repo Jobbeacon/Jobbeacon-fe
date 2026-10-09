@@ -52,7 +52,7 @@ function toCategory(category: CategoryApiDto): JobCategory {
   }
 }
 
-function toJobSummary(job: JobSummaryApiDto): JobSummary {
+export function toJobSummary(job: JobSummaryApiDto): JobSummary {
   return {
     id: job.id,
     title: job.title,

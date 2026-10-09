@@ -19,7 +19,7 @@
   margin: 0;
   padding: 16px 16px 8px;
   color: #0b2b59;
-  font-size: 1.05rem;
+  font-size: var(--text-md);
 }
 
 .filterBody {
@@ -37,8 +37,8 @@
   color: #087cf0;
   background: none;
   font: inherit;
-  font-size: 0.82rem;
-  font-weight: 650;
+  font-size: var(--text-xs);
+  font-weight: var(--font-weight-semibold);
   cursor: pointer;
 }
 
@@ -61,8 +61,8 @@
   margin-bottom: 8px;
   padding: 0;
   color: #7b8da3;
-  font-size: 0.82rem;
-  font-weight: 700;
+  font-size: var(--text-xs);
+  font-weight: var(--font-weight-bold);
   letter-spacing: 0.04em;
   text-transform: uppercase;
 }
@@ -153,8 +153,8 @@
   align-items: center;
   margin: 8px 0;
   color: #3e536c;
-  font-size: 0.9rem;
-  font-weight: 500;
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-medium);
   cursor: pointer;
 }
 
@@ -177,7 +177,8 @@
 .facetStatus {
   margin: 0 0 8px;
   color: #93a3b5;
-  font-size: 0.78rem;
+  font-size: var(--text-2xs);
+  font-style: italic;
   line-height: 1.4;
 }
 
