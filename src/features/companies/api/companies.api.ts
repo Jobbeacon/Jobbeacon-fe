@@ -6,6 +6,8 @@ import type {
   CompanySearchResult,
   CompanySummaryApiDto,
 } from '../types/company.types'
+import type { JobSummary, JobSummaryApiDto } from '../../jobs/types/job.types'
+import { toJobSummary } from '../../jobs/api/jobs.api'
 
 const COMPANIES_ENDPOINT = '/api/v1/companies'
 
@@ -49,4 +51,26 @@ export async function searchCompanies(
     { signal, authenticated: false },
   )
   return { companies: response.data.content.map(toCompany), total: response.data.amount }
+}
+
+export async function getCompanyDetail(companyId: string, signal?: AbortSignal): Promise<Company> {
+  const response = await apiClient.get<ApiResponse<CompanySummaryApiDto>>(
+    `${COMPANIES_ENDPOINT}/${encodeURIComponent(companyId)}`,
+    { signal, authenticated: false },
+  )
+  return toCompany(response.data)
+}
+
+export async function getCompanyJobs(
+  companyId: string,
+  page: number = 1,
+  size: number = 10,
+  signal?: AbortSignal,
+): Promise<{ jobs: JobSummary[]; total: number }> {
+  const params = new URLSearchParams({ page: String(page), size: String(size) })
+  const response = await apiClient.get<ApiResponse<PageApiDto<JobSummaryApiDto>>>(
+    `${COMPANIES_ENDPOINT}/${encodeURIComponent(companyId)}/jobs?${params}`,
+    { signal, authenticated: false },
+  )
+  return { jobs: response.data.content.map(toJobSummary), total: response.data.amount }
 }
