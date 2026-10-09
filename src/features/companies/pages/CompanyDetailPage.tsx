@@ -59,9 +59,11 @@ export function CompanyDetailPage() {
           </div>
           <div>
             <h1 style={{ color: '#0b2b59' }}>{company.name}</h1>
-            <p style={{ color: '#687d98', marginTop: '6px' }}>
-              Công nghệ thông tin {company.locations.length > 0 && `· ${company.locations.join(', ')}`}
-            </p>
+            {company.locations.length > 0 && (
+              <p style={{ color: '#687d98', marginTop: '6px' }}>
+                {company.locations.join(' · ')}
+              </p>
+            )}
             <div className={styles.statPills}>
               <span>{company.openJobsCount || 0} việc đang tuyển</span>
               {company.sources.length > 0 && (
