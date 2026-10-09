@@ -1,0 +1,16 @@
+.panel {
+  left: 0;
+  width: min(760px, calc(100vw - 36px));
+}
+
+.nested {
+  flex: 1 0 100%;
+  margin: 0 0 4px;
+  padding: 0 0 0 28px;
+  list-style: none;
+}
+
+.nested li {
+  min-height: 32px;
+  padding-right: 0;
+}

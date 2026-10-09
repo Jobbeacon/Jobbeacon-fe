@@ -28,25 +28,31 @@ function getJobsError(error: unknown) {
 export function useJobs(params: JobSearchParams) {
   const [state, setState] = useState(initialState)
   const [requestVersion, setRequestVersion] = useState(0)
-  const { keyword, page, size } = params
-  const requestKey = JSON.stringify([keyword, page, size, requestVersion])
+  const requestKey = JSON.stringify({ ...params, requestVersion })
 
   useEffect(() => {
     const controller = new AbortController()
+    const query = JSON.parse(requestKey) as JobSearchParams & { requestVersion?: number }
+    delete query.requestVersion
 
-    void searchJobs({ keyword, page, size }, controller.signal)
+    void searchJobs(query, controller.signal)
       .then((result) => {
+        if (controller.signal.aborted) return
         setState({ requestKey, result, error: null })
       })
       .catch((error: unknown) => {
-        if (error instanceof DOMException && error.name === 'AbortError') {
+        if (controller.signal.aborted || (error instanceof DOMException && error.name === 'AbortError')) {
           return
         }
-        setState({ requestKey, result: emptyResult, error: getJobsError(error) })
+        setState((current) => ({
+          requestKey,
+          result: current.result,
+          error: getJobsError(error),
+        }))
       })
 
     return () => controller.abort()
-  }, [keyword, page, size, requestKey])
+  }, [requestKey])
 
   const retry = useCallback(() => {
     setRequestVersion((current) => current + 1)
@@ -54,9 +60,11 @@ export function useJobs(params: JobSearchParams) {
 
   const isCurrent = state.requestKey === requestKey
   return {
-    ...(isCurrent ? state.result : emptyResult),
+    jobs: state.result.jobs,
+    total: state.result.total,
     error: isCurrent ? state.error : null,
     isLoading: !isCurrent,
+    isInitialLoading: state.requestKey === null,
     retry,
   }
 }

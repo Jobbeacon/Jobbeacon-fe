@@ -1,25 +1,25 @@
 .searchBar {
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: 1fr 1.4fr 1fr auto;
   margin-top: 18px;
-  overflow: hidden;
   border: 1px solid #e5ebf2;
   border-radius: 10px;
   background: #fff;
   box-shadow: 0 10px 30px rgba(24, 89, 154, 0.13);
 }
 
-.searchBar label {
+.searchBar > label {
   display: flex;
   gap: 10px;
   align-items: center;
   min-height: 56px;
   padding: 0 16px;
   border-right: 1px solid #e7edf5;
+  border-radius: 0;
   color: #52627c;
 }
 
-.searchBar svg {
+.searchBar > label svg {
   flex: none;
   width: 18px;
   height: 18px;
@@ -34,13 +34,18 @@
   font: inherit;
 }
 
-.searchBar label:focus-within {
+.searchBar > :first-child {
+  border-radius: 10px 0 0 10px;
+}
+
+.searchBar > label:focus-within {
   box-shadow: inset 0 0 0 2px rgba(8, 124, 240, 0.25);
 }
 
-.searchBar button {
+.searchBar > button {
   padding: 0 24px;
   border: 0;
+  border-radius: 0 9px 9px 0;
   color: #fff;
   background: #087cf0;
   font: inherit;
@@ -48,7 +53,7 @@
   cursor: pointer;
 }
 
-.searchBar button:hover {
+.searchBar > button:hover {
   background: #0558dc;
 }
 
@@ -57,13 +62,14 @@
     grid-template-columns: 1fr;
   }
 
-  .searchBar label {
+  .searchBar > label {
     border-right: 0;
     border-bottom: 1px solid #e7edf5;
+    border-radius: 0;
     min-height: 52px;
   }
 
-  .searchBar button {
+  .searchBar > button {
     min-height: 52px;
   }
 }

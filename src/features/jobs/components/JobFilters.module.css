@@ -1,7 +1,10 @@
 .filterCard {
   position: sticky;
-  top: 92px;
-  padding: 18px 16px 20px;
+  top: 88px;
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100dvh - 104px);
+  overflow: hidden;
   border: 1px solid #e5ebf2;
   border-radius: 12px;
   background: #fff;
@@ -10,11 +13,22 @@
 
 .filterCard h2 {
   display: flex;
+  flex: none;
   align-items: center;
   justify-content: space-between;
-  margin: 0 0 6px;
+  margin: 0;
+  padding: 16px 16px 8px;
   color: #0b2b59;
   font-size: var(--text-md);
+}
+
+.filterBody {
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 0 16px 16px;
+  scrollbar-color: #d5deea transparent;
+  scrollbar-width: thin;
 }
 
 .filterCard h2 button {
@@ -36,10 +50,15 @@
   border-top: 1px solid #eef2f6;
 }
 
+.filterBody > .group:first-child {
+  border-top: 0;
+  padding-top: 4px;
+}
+
 .group legend {
-  float: left;
+  display: block;
   width: 100%;
-  margin-bottom: 4px;
+  margin-bottom: 8px;
   padding: 0;
   color: #7b8da3;
   font-size: var(--text-xs);
@@ -48,9 +67,88 @@
   text-transform: uppercase;
 }
 
+.industryToggle {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px;
+  border: 1px solid #e5ebf2;
+  border-radius: 8px;
+  color: #263c58;
+  background: #fff;
+  font: inherit;
+  font-size: 0.86rem;
+  text-align: left;
+  cursor: pointer;
+}
+
+.industryToggle:hover,
+.industryToggle[aria-expanded='true'] {
+  border-color: #087cf0;
+}
+
+.industryTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.industryTags button {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  max-width: 100%;
+  padding: 4px 8px;
+  border: 0;
+  border-radius: 999px;
+  color: #087cf0;
+  background: #edf7ff;
+  font: inherit;
+  font-size: 0.75rem;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.industryTags button span {
+  color: #5b89b5;
+  font-size: 0.9rem;
+  line-height: 1;
+}
+
+.industryPanel {
+  margin-top: 8px;
+  padding: 8px;
+  border: 1px solid #e5ebf2;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.facetList {
+  max-height: 220px;
+  overflow: auto;
+}
+
+.facetSearch {
+  width: 100%;
+  margin-bottom: 8px;
+  padding: 7px 10px;
+  border: 1px solid #e5ebf2;
+  border-radius: 8px;
+  color: #263c58;
+  background: #fff;
+  font: inherit;
+  font-size: 0.84rem;
+}
+
+.facetSearch:focus {
+  outline: 2px solid rgba(8, 124, 240, 0.25);
+  border-color: #087cf0;
+}
+
 .option {
   display: flex;
-  clear: both;
   gap: 8px;
   align-items: center;
   margin: 8px 0;
@@ -60,30 +158,89 @@
   cursor: pointer;
 }
 
+.optionName {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  line-height: 1.3;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.optionCount {
+  flex: none;
+  color: #93a3b5;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.facetStatus {
+  margin: 0 0 8px;
+  color: #93a3b5;
+  font-size: var(--text-2xs);
+  font-style: italic;
+  line-height: 1.4;
+}
+
+.more {
+  margin: 2px 0 6px;
+  padding: 0;
+  border: 0;
+  color: #087cf0;
+  background: none;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
 .option input {
   accent-color: #087cf0;
 }
 
-.group:disabled .option {
-  color: #a3b1c2;
-  cursor: not-allowed;
+.salaryOptions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 10px;
 }
 
-.upcomingNote {
-  margin: 12px 2px 0;
-  padding-top: 12px;
-  border-top: 1px solid #eef2f6;
-  color: #93a3b5;
-  font-size: var(--text-2xs);
-  font-style: italic;
+.salaryOptions .option {
+  margin: 4px 0;
+  font-size: 0.82rem;
 }
 
-.upcomingNote + .group {
-  border-top: 0;
+.salaryRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  clear: both;
+  margin-top: 8px;
+}
+
+.salaryRow input {
+  width: 100%;
+  min-width: 0;
+  padding: 8px 10px;
+  border: 1px solid #e5ebf2;
+  border-radius: 8px;
+  color: #263c58;
+  background: #fff;
+  font: inherit;
+  font-size: 0.88rem;
+}
+
+.salaryRow input:focus {
+  outline: 2px solid rgba(8, 124, 240, 0.25);
+  border-color: #087cf0;
 }
 
 @media (max-width: 1100px) {
   .filterCard {
     position: static;
+    max-height: none;
+  }
+
+  .filterBody {
+    overflow: visible;
   }
 }
