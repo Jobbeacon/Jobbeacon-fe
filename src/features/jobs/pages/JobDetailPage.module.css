@@ -138,13 +138,21 @@
   gap: 5px;
 }
 
-.tags span {
+.tags a {
   padding: 4px 8px;
   border-radius: 4px;
   color: #416685;
   background: #f2f7fb;
   font-size: var(--text-2xs);
   font-weight: 500;
+  text-decoration: none;
+  transition: color 0.15s, background 0.15s;
+}
+
+.tags a:hover,
+.tags a:focus-visible {
+  color: #087cf0;
+  background: #e3f1ff;
 }
 
 .facts {

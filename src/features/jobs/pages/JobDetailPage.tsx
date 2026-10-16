@@ -75,7 +75,9 @@ function JobDetailContent({ job }: { job: JobDetail }) {
             {job.skills.length > 0 ? (
               <div className={styles.tags}>
                 {job.skills.map((skill) => (
-                  <span key={skill.id}>{skill.name}</span>
+                  <Link key={skill.id} to={`/jobs?${new URLSearchParams({ skills: skill.name })}`}>
+                    {skill.name}
+                  </Link>
                 ))}
               </div>
             ) : null}

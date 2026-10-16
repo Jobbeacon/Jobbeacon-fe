@@ -97,7 +97,7 @@ export function JobSearchPage() {
     location,
     locations: [],
     categories: filters.categories,
-    skills: [],
+    skills: filters.skills,
     minSalary: filters.minSalary,
     maxSalary: filters.maxSalary,
     experience: filters.experience,
@@ -139,12 +139,12 @@ export function JobSearchPage() {
 
   const applyFilters = (nextFilters: JobFiltersState) => {
     replaceParams((next) => {
-      const write = (key: ListParam, values: string[]) => {
+      const write = (key: ListParam | 'skills', values: string[]) => {
         if (values.length) next.set(key, values.join(','))
         else next.delete(key)
       }
       next.delete('locations')
-      next.delete('skills')
+      write('skills', nextFilters.skills)
       write('categories', nextFilters.categories)
       write('experience', nextFilters.experience)
       write('employment_types', nextFilters.employmentTypes)
@@ -167,6 +167,15 @@ export function JobSearchPage() {
           const remaining = locationPlaces.filter((item) => !group.places.includes(item))
           if (remaining.length) next.set('location', remaining.join('|'))
           else next.delete('location')
+        }),
+    })),
+    ...filters.skills.map((skill) => ({
+      label: `Skill: ${skill}`,
+      remove: () =>
+        replaceParams((next) => {
+          const remaining = filters.skills.filter((item) => item !== skill)
+          if (remaining.length) next.set('skills', remaining.join(','))
+          else next.delete('skills')
         }),
     })),
     ...listKeys.flatMap((key) =>
