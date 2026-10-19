@@ -24,7 +24,8 @@ export class ApiError extends Error {
     super(message)
     this.name = 'ApiError'
     this.status = status
-    this.code = body?.code
+    // Ưu tiên mã lỗi nghiệp vụ trong data.code (ResponseGeneral của backend)
+    this.code = body?.data?.code ?? body?.code
     this.details = body?.details
   }
 }
@@ -110,6 +111,9 @@ async function request<T>(
   const execute = async (forceRefresh = false) => {
     const headers = new Headers(initialHeaders)
     headers.set('Accept', 'application/json')
+    if (!headers.has('Accept-Language')) {
+      headers.set('Accept-Language', 'vi')
+    }
 
     if (authenticated) {
       const token = await apiConfig.getAccessToken?.(forceRefresh)
