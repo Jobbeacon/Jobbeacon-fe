@@ -21,6 +21,22 @@ export function App() {
           <Route path="/jobs/:jobId" element={<JobDetailPage />} />
           <Route path="/companies" element={<CompaniesPage />} />
           <Route path="/companies/:companyId" element={<CompanyDetailPage />} />
+          <Route
+            path="/profile"
+            element={
+              <AuthGuard>
+                <CandidateProfilePage />
+              </AuthGuard>
+            }
+          />
+          <Route
+            path="/ho-so"
+            element={
+              <AuthGuard>
+                <CandidateProfilePage />
+              </AuthGuard>
+            }
+          />
           <Route path="*" element={<HomePage />} />
         </Route>
         <Route path="/login" element={<LoginPage />} />
@@ -28,22 +44,6 @@ export function App() {
         <Route path="/dang-ky" element={<RegisterPage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/quen-mat-khau" element={<ForgotPasswordPage />} />
-        <Route
-          path="/profile"
-          element={
-            <AuthGuard>
-              <CandidateProfilePage />
-            </AuthGuard>
-          }
-        />
-        <Route
-          path="/ho-so"
-          element={
-            <AuthGuard>
-              <CandidateProfilePage />
-            </AuthGuard>
-          }
-        />
       </Routes>
     </BrowserRouter>
   )
