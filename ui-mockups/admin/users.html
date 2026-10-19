@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Người dùng · Quản trị JobBeacon</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23163E70'/%3E%3Ccircle cx='16' cy='16' r='6' fill='none' stroke='%231687FF' stroke-width='2.5'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body data-page="users">
+  <header class="top">
+    <a class="brand" href="index.html"><img src="assets/logo.svg" alt="JobBeacon"></a>
+    <nav class="nav">
+      <a href="index.html">Tổng quan</a>
+      <a href="jobs.html">Việc làm</a>
+      <a href="companies.html">Công ty</a>
+      <a href="users.html" aria-current="page">Người dùng</a>
+      <a href="sources.html">Nguồn</a>
+      <a href="catalog.html">Danh mục</a>
+    </nav>
+    <span class="top-meta">19 tháng 10, 2026 · <a href="login.html">Thoát</a></span>
+  </header>
+  <main class="stage">
+    <header class="stage-head">
+      <h1>Người dùng</h1>
+      <p class="lead">Đổi vai trò hoặc khóa tài khoản. Hồ sơ CV và nguyện vọng việc làm chỉ để xem.</p>
+    </header>
+    <section class="sheet">
+      <div class="toolbar">
+        <div class="filters">
+          <label class="field"><span>Tìm</span><input id="user-q" type="search" placeholder="Tên hoặc email"></label>
+          <label class="field"><span>Vai trò</span>
+            <select id="user-role">
+              <option value="">Tất cả</option>
+              <option value="ADMIN">Quản trị</option>
+              <option value="USER">Người dùng</option>
+            </select>
+          </label>
+          <label class="field"><span>Trạng thái</span>
+            <select id="user-status">
+              <option value="">Tất cả</option>
+              <option value="ACTIVE">Đang dùng</option>
+              <option value="SUSPENDED">Đã khóa</option>
+              <option value="DELETED">Đã xóa</option>
+            </select>
+          </label>
+        </div>
+        <p class="count" id="user-count"></p>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Người dùng</th>
+              <th>Vai trò</th>
+              <th>Trạng thái</th>
+              <th>CV</th>
+              <th>Đăng nhập gần nhất</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="user-rows"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <dialog class="drawer" id="editor">
+    <form id="user-form" spellcheck="false">
+      <div class="drawer-bar"><h2>Tài khoản</h2></div>
+      <div class="drawer-body">
+        <label class="field"><span>Tên hiển thị</span><input name="name" required maxlength="150"></label>
+        <div class="pair">
+          <label class="field"><span>Vai trò</span>
+            <select name="role">
+              <option value="ADMIN">Quản trị</option>
+              <option value="USER">Người dùng</option>
+            </select>
+          </label>
+          <label class="field"><span>Trạng thái</span>
+            <select name="status">
+              <option value="ACTIVE">Đang dùng</option>
+              <option value="SUSPENDED">Đã khóa</option>
+              <option value="DELETED">Đã xóa</option>
+            </select>
+          </label>
+        </div>
+        <dl class="meta" id="user-account"></dl>
+        <div>
+          <p class="block-title">Hồ sơ CV</p>
+          <div id="user-cv"></div>
+        </div>
+        <div>
+          <p class="block-title">Nguyện vọng việc làm</p>
+          <div id="user-preference"></div>
+          <p class="fine">Người dùng tự sửa phần này. Mật khẩu nằm ở Firebase.</p>
+        </div>
+      </div>
+      <div class="drawer-actions">
+        <button class="btn ghost" type="button" data-close>Hủy</button>
+        <button class="btn" type="submit">Lưu</button>
+      </div>
+    </form>
+  </dialog>
+  <script src="js/admin.js"></script>
+</body>
+</html>

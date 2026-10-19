@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Danh mục · Quản trị JobBeacon</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23163E70'/%3E%3Ccircle cx='16' cy='16' r='6' fill='none' stroke='%231687FF' stroke-width='2.5'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body data-page="catalog">
+  <header class="top">
+    <a class="brand" href="index.html"><img src="assets/logo.svg" alt="JobBeacon"></a>
+    <nav class="nav">
+      <a href="index.html">Tổng quan</a>
+      <a href="jobs.html">Việc làm</a>
+      <a href="companies.html">Công ty</a>
+      <a href="users.html">Người dùng</a>
+      <a href="sources.html">Nguồn</a>
+      <a href="catalog.html" aria-current="page">Danh mục</a>
+    </nav>
+    <span class="top-meta">19 tháng 10, 2026 · <a href="login.html">Thoát</a></span>
+  </header>
+  <main class="stage">
+    <header class="stage-head">
+      <h1>Danh mục và kỹ năng</h1>
+      <p class="lead">Sửa tên danh mục, kỹ năng và tên gọi khác. Vector embedding dùng để phân loại không sửa ở trang này.</p>
+    </header>
+    <div class="stack">
+      <section class="sheet">
+        <div class="toolbar">
+          <h2>Danh mục</h2>
+          <button class="btn" type="button" id="add-category">Thêm danh mục</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Tên</th>
+                <th>Thuộc</th>
+                <th>Tin đã gán</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="category-rows"></tbody>
+          </table>
+        </div>
+      </section>
+      <section class="sheet">
+        <div class="toolbar">
+          <h2>Kỹ năng</h2>
+          <button class="btn" type="button" id="add-skill">Thêm kỹ năng</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Tên</th>
+                <th>Tên chuẩn</th>
+                <th>Tên gọi khác</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="skill-rows"></tbody>
+          </table>
+        </div>
+        <p class="fine">Tên gọi khác là <code>skill_alias</code>. Trùng tên chuẩn thì không lưu.</p>
+      </section>
+    </div>
+  </main>
+
+  <dialog class="editor" id="category-editor">
+    <form id="category-form" spellcheck="false">
+      <div class="editor-bar"><h2 id="category-heading">Danh mục</h2></div>
+      <div class="editor-body">
+        <label class="field"><span>Tên</span><input name="name" required maxlength="255"></label>
+        <label class="field"><span>Thuộc</span><select name="parent"></select></label>
+      </div>
+      <div class="editor-actions">
+        <button class="btn ghost" type="button" data-close>Hủy</button>
+        <button class="btn" type="submit">Lưu</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog class="editor" id="skill-editor">
+    <form id="skill-form" spellcheck="false">
+      <div class="editor-bar"><h2 id="skill-heading">Kỹ năng</h2></div>
+      <div class="editor-body">
+        <label class="field"><span>Tên</span><input name="name" required maxlength="255"></label>
+        <p class="fine" id="skill-key">Tên chuẩn hiện khi gõ.</p>
+        <label class="field"><span>Tên gọi khác</span><input name="aliases" placeholder="reactjs, react.js"></label>
+        <p class="fine">Ngăn cách bằng dấu phẩy. Tên trùng sẽ được bỏ.</p>
+      </div>
+      <div class="editor-actions">
+        <button class="btn ghost" type="button" data-close>Hủy</button>
+        <button class="btn" type="submit">Lưu</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog class="modal" id="confirm">
+    <form method="dialog">
+      <div class="modal-bar"><h2>Gỡ mục này?</h2></div>
+      <p></p>
+      <div class="modal-actions">
+        <button class="btn ghost" value="cancel">Giữ lại</button>
+        <button class="btn danger" value="ok">Xóa</button>
+      </div>
+    </form>
+  </dialog>
+  <script src="js/admin.js"></script>
+</body>
+</html>

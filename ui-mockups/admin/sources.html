@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Nguồn · Quản trị JobBeacon</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23163E70'/%3E%3Ccircle cx='16' cy='16' r='6' fill='none' stroke='%231687FF' stroke-width='2.5'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body data-page="sources">
+  <header class="top">
+    <a class="brand" href="index.html"><img src="assets/logo.svg" alt="JobBeacon"></a>
+    <nav class="nav">
+      <a href="index.html">Tổng quan</a>
+      <a href="jobs.html">Việc làm</a>
+      <a href="companies.html">Công ty</a>
+      <a href="users.html">Người dùng</a>
+      <a href="sources.html" aria-current="page">Nguồn</a>
+      <a href="catalog.html">Danh mục</a>
+    </nav>
+    <span class="top-meta">19 tháng 10, 2026 · <a href="login.html">Thoát</a></span>
+  </header>
+  <main class="stage">
+    <header class="stage-head">
+      <h1>Nguồn crawl</h1>
+      <p class="lead">Bật hoặc tắt nguồn đã có crawler. Tắt nguồn không xóa các dòng đã ghi nhận. VietnamWorks và Joboko chưa có seed.</p>
+    </header>
+    <section class="sheet">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Nguồn</th>
+              <th>Trạng thái</th>
+              <th>Crawl gần nhất</th>
+              <th>30 ngày</th>
+              <th>Nhận tin</th>
+            </tr>
+          </thead>
+          <tbody id="source-rows"></tbody>
+        </table>
+      </div>
+      <p class="fine">Cột 30 ngày đếm dòng ánh xạ, cùng cách với trang Tổng quan. TopCV 2.757, ITviec 1.384.</p>
+    </section>
+  </main>
+
+  <dialog class="modal" id="confirm">
+    <form method="dialog">
+      <div class="modal-bar"><h2>Tắt nguồn này?</h2></div>
+      <p></p>
+      <div class="modal-actions">
+        <button class="btn ghost" value="cancel">Giữ chạy</button>
+        <button class="btn danger" value="ok">Tắt</button>
+      </div>
+    </form>
+  </dialog>
+  <script src="js/admin.js"></script>
+</body>
+</html>

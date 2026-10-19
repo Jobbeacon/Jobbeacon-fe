@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tổng quan · Quản trị JobBeacon</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23163E70'/%3E%3Ccircle cx='16' cy='16' r='6' fill='none' stroke='%231687FF' stroke-width='2.5'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body data-page="overview">
+  <header class="top">
+    <a class="brand" href="index.html"><img src="assets/logo.svg" alt="JobBeacon"></a>
+    <nav class="nav">
+      <a href="index.html" aria-current="page">Tổng quan</a>
+      <a href="jobs.html">Việc làm</a>
+      <a href="companies.html">Công ty</a>
+      <a href="users.html">Người dùng</a>
+      <a href="sources.html">Nguồn</a>
+      <a href="catalog.html">Danh mục</a>
+    </nav>
+    <span class="top-meta">19 tháng 10, 2026 · <a href="login.html">Thoát</a></span>
+  </header>
+  <main class="stage">
+    <header class="stage-head">
+      <h1>Vận hành crawl</h1>
+      <p class="lead">Mỗi dòng là một lần ghi nhận tin trên một nguồn. Cùng một tin ở hai nguồn được tính hai lần.</p>
+    </header>
+    <div class="stack">
+      <section class="sheet">
+        <div class="metric-band" id="kpis" aria-label="Chỉ số"></div>
+        <div class="chart-tools">
+          <h2 id="chart-title">30 ngày gần nhất</h2>
+          <div class="legend" id="legend">
+            <span><i class="swatch"></i> TopCV</span>
+            <span><i class="swatch swatch--itviec"></i> ITviec</span>
+          </div>
+          <div class="switch" role="tablist">
+            <button type="button" role="tab" data-range="day" aria-selected="true">Ngày</button>
+            <button type="button" role="tab" data-range="month" aria-selected="false">Tháng</button>
+          </div>
+        </div>
+        <div class="plot-wrap">
+          <div class="plot" id="plot"></div>
+          <div class="tip" id="tip" hidden></div>
+        </div>
+        <p class="aside" id="chart-read"></p>
+      </section>
+      <section class="sheet split-sheet">
+        <div class="split-pane">
+          <h2>Theo nền tảng</h2>
+          <div class="plats" id="platforms"></div>
+          <p class="fine" id="platform-caption"></p>
+        </div>
+        <div class="split-pane">
+          <h2>Khung giờ ghi nhận</h2>
+          <div class="hours-wrap">
+            <div class="hours" id="hours"></div>
+            <div class="hour-labels" id="hour-labels"></div>
+          </div>
+          <p class="fine" id="hour-caption"></p>
+        </div>
+      </section>
+      <section class="sheet">
+        <div class="sheet-head">
+          <h2>Ghi nhận gần đây</h2>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Thời điểm</th>
+                <th>Nguồn</th>
+                <th>Việc làm</th>
+                <th>Công ty</th>
+                <th>URL gốc</th>
+              </tr>
+            </thead>
+            <tbody id="crawl-rows"></tbody>
+          </table>
+        </div>
+        <p class="fine">Cùng một tin có thể có hai dòng nếu thu từ hai nguồn. Sửa và xóa nằm ở Việc làm và Công ty.</p>
+      </section>
+    </div>
+  </main>
+  <script src="js/admin.js"></script>
+</body>
+</html>
