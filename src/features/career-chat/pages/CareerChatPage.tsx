@@ -1,3 +1,4 @@
+import { useCallback, useState } from 'react'
 import { Bot, BriefcaseBusiness, FileText, LogIn, MapPin, SquarePen, Wallet } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../../auth/hooks/useAuth'
@@ -22,12 +23,40 @@ function AgentChat() {
     enabled: messages.length > 0,
     onConfirmLeave: leaveConversation,
   })
+  const [isResetConfirmOpen, setIsResetConfirmOpen] = useState(false)
+  const [isResetting, setIsResetting] = useState(false)
+
+  const closeResetConfirm = useCallback(() => setIsResetConfirmOpen(false), [])
+
+  const confirmReset = async () => {
+    setIsResetting(true)
+    try {
+      await resetConversation()
+    } finally {
+      setIsResetting(false)
+      setIsResetConfirmOpen(false)
+    }
+  }
 
   return (
     <main className={styles.page}>
       <LeaveChatDialog open={isConfirmOpen} isLeaving={isLeaving} onConfirm={confirmLeave} onCancel={cancelLeave} />
+      <LeaveChatDialog
+        open={isResetConfirmOpen}
+        isLeaving={isResetting}
+        title="Bắt đầu cuộc trò chuyện mới?"
+        description="Cuộc trò chuyện hiện tại sẽ bị xóa và không thể khôi phục. Bạn có chắc muốn tiếp tục?"
+        confirmLabel="Trò chuyện mới"
+        onConfirm={confirmReset}
+        onCancel={closeResetConfirm}
+      />
       {messages.length > 0 && (
-        <button className={styles.newChatButton} type="button" disabled={isSending} onClick={resetConversation}>
+        <button
+          className={styles.newChatButton}
+          type="button"
+          disabled={isSending}
+          onClick={() => setIsResetConfirmOpen(true)}
+        >
           <SquarePen aria-hidden="true" />
           <span>Cuộc trò chuyện mới</span>
         </button>

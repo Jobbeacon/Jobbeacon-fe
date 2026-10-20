@@ -18,7 +18,8 @@ export function useLeaveChatGuard({ enabled, onConfirmLeave }: UseLeaveChatGuard
 
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
       event.preventDefault()
-      event.returnValue = ''
+      // Một số trình duyệt cũ chỉ hiện hộp thoại khi returnValue khác rỗng.
+      event.returnValue = true
     }
 
     window.addEventListener('beforeunload', handleBeforeUnload)
