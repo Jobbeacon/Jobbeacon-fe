@@ -48,6 +48,12 @@ const router = createBrowserRouter(
           </AuthGuard>
         }
       />
+      <Route path="*" element={<HomePage />} />
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/register" element={<RegisterPage />} />
+      <Route path="/dang-ky" element={<RegisterPage />} />
+      <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+      <Route path="/quen-mat-khau" element={<ForgotPasswordPage />} />
     </>,
   ),
 )
