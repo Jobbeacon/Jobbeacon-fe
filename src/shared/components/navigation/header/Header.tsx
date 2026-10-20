@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { BriefcaseBusiness, Building2, Menu, X } from 'lucide-react'
+import { Bot, BriefcaseBusiness, Building2, Menu, X } from 'lucide-react'
 import { NavLink } from 'react-router-dom'
 import logo from '../../../../assets/logo/jobbeacon-logo.svg'
 import styles from './Header.module.css'
@@ -7,6 +7,7 @@ import styles from './Header.module.css'
 const navigationItems = [
   { label: 'Việc làm', to: '/jobs', Icon: BriefcaseBusiness },
   { label: 'Công ty', to: '/companies', Icon: Building2 },
+  { label: 'JobBeacon Agent', to: '/agent', Icon: Bot },
 ]
 
 export default function Header() {
