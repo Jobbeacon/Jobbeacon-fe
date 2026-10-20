@@ -21,37 +21,42 @@
       <a href="sources.html">Nguồn</a>
       <a href="catalog.html">Danh mục</a>
     </nav>
-    <span class="top-meta">19 tháng 10, 2026 · <a href="login.html">Thoát</a></span>
+    <span class="top-meta"><span class="who-name">Minh Anh</span><a href="login.html">Thoát</a></span>
   </header>
   <main class="stage">
       <header class="stage-head">
         <div>
           <h1>Việc làm</h1>
-          <p class="lead">Sửa nội dung tin hoặc gỡ khỏi nền tảng. Nguồn và thời điểm crawl chỉ để xem.</p>
+          <p class="lead">Sửa nội dung tin. Nguồn và thời điểm crawl chỉ để xem.</p>
+        </div>
+        <div class="seg" id="job-seg" role="group" aria-label="Lọc nhanh">
+          <button type="button" data-term="" aria-pressed="true">Tất cả</button>
+          <button type="button" data-term="open">Còn hạn</button>
+          <button type="button" data-term="closed">Hết hạn</button>
+          <button type="button" data-term="multi">Trùng nguồn</button>
         </div>
       </header>
       <section class="sheet">
         <div class="toolbar">
           <div class="filters">
-            <label class="field"><span>Tìm</span><input id="q" type="search" placeholder="Tên tin, công ty, địa điểm"></label>
+            <label class="field"><span>Tìm</span><input id="q" type="search" placeholder="Tên tin hoặc địa điểm"></label>
             <label class="field"><span>Nguồn</span>
               <select id="source">
                 <option value="">Mọi nguồn</option>
                 <option value="topcv.vn">topcv.vn</option>
                 <option value="itviec.com">itviec.com</option>
-                <option value="multi">Tin trùng nguồn</option>
               </select>
             </label>
-            <label class="field"><span>Hạn</span>
-              <select id="term">
-                <option value="">Tất cả</option>
-                <option value="open">Còn hạn</option>
-                <option value="closed">Hết hạn</option>
+            <label class="field"><span>Sắp xếp</span>
+              <select id="sort">
+                <option value="new">Crawl mới nhất</option>
+                <option value="old">Crawl cũ nhất</option>
               </select>
             </label>
           </div>
           <p class="count" id="job-count"></p>
         </div>
+        <p class="scope" id="job-scope" hidden></p>
         <div class="table-wrap">
           <table>
             <thead>
@@ -60,6 +65,7 @@
                 <th>Công ty</th>
                 <th>Địa điểm</th>
                 <th>Lương</th>
+                <th>Trạng thái</th>
                 <th>Nguồn</th>
                 <th>Crawl gần nhất</th>
                 <th></th>
@@ -75,6 +81,7 @@
     <form id="job-form" spellcheck="false">
       <div class="drawer-bar"><h2>Sửa tin</h2></div>
       <div class="drawer-body">
+        <p class="fine"><a id="public-job" href="http://127.0.0.1:5173/jobs" target="_blank" rel="noreferrer">Xem trên trang tìm việc</a></p>
         <label class="field"><span>Tiêu đề</span><input name="title" required maxlength="255"></label>
         <div class="pair">
           <label class="field"><span>Công ty</span><select name="company"></select></label>
@@ -118,9 +125,12 @@
           <p class="fine">Thời điểm crawl chỉ để xem.</p>
         </div>
       </div>
-      <div class="drawer-actions">
-        <button class="btn ghost" type="button" data-close>Hủy</button>
-        <button class="btn" type="submit">Lưu</button>
+      <div class="drawer-actions split">
+        <button class="btn text-danger" type="button" id="delete-job">Xóa</button>
+        <div class="actions-end">
+          <button class="btn ghost" type="button" data-close>Hủy</button>
+          <button class="btn" type="submit">Lưu</button>
+        </div>
       </div>
     </form>
   </dialog>

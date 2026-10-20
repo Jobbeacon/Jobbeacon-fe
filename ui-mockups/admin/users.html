@@ -21,7 +21,7 @@
       <a href="sources.html">Nguồn</a>
       <a href="catalog.html">Danh mục</a>
     </nav>
-    <span class="top-meta">19 tháng 10, 2026 · <a href="login.html">Thoát</a></span>
+    <span class="top-meta"><span class="who-name">Minh Anh</span><a href="login.html">Thoát</a></span>
   </header>
   <main class="stage">
     <header class="stage-head">
@@ -45,6 +45,13 @@
               <option value="ACTIVE">Đang dùng</option>
               <option value="SUSPENDED">Đã khóa</option>
               <option value="DELETED">Đã xóa</option>
+            </select>
+          </label>
+          <label class="field"><span>CV</span>
+            <select id="user-cv">
+              <option value="">Tất cả</option>
+              <option value="yes">Có CV</option>
+              <option value="no">Chưa có CV</option>
             </select>
           </label>
         </div>
@@ -91,7 +98,7 @@
         <dl class="meta" id="user-account"></dl>
         <div>
           <p class="block-title">Hồ sơ CV</p>
-          <div id="user-cv"></div>
+          <div id="user-cv-view"></div>
         </div>
         <div>
           <p class="block-title">Nguyện vọng việc làm</p>
@@ -102,6 +109,16 @@
       <div class="drawer-actions">
         <button class="btn ghost" type="button" data-close>Hủy</button>
         <button class="btn" type="submit">Lưu</button>
+      </div>
+    </form>
+  </dialog>
+  <dialog class="modal" id="confirm">
+    <form method="dialog">
+      <div class="modal-bar"><h2>Khóa tài khoản?</h2></div>
+      <p></p>
+      <div class="modal-actions">
+        <button class="btn ghost" value="cancel">Hủy</button>
+        <button class="btn danger" value="ok">Khóa</button>
       </div>
     </form>
   </dialog>

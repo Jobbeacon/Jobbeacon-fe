@@ -10,6 +10,7 @@ const jobs = [
   {
     id: "j1",
     title: "Java Backend Developer",
+    category: "Backend",
     company: "FPT Software",
     type: "Toàn thời gian",
     exp: 24,
@@ -30,6 +31,7 @@ const jobs = [
   {
     id: "j2",
     title: "Product Designer",
+    category: "",
     company: "Tiki",
     type: "Toàn thời gian",
     exp: 12,
@@ -49,6 +51,7 @@ const jobs = [
   {
     id: "j3",
     title: "Data Analyst",
+    category: "Dữ liệu",
     company: "VNG",
     type: "Toàn thời gian",
     exp: 18,
@@ -68,6 +71,7 @@ const jobs = [
   {
     id: "j4",
     title: "DevOps Engineer",
+    category: "Vận hành",
     company: "MoMo",
     type: "Toàn thời gian",
     exp: 36,
@@ -88,6 +92,7 @@ const jobs = [
   {
     id: "j5",
     title: "Business Analyst",
+    category: "Kinh doanh",
     company: "Viettel Digital",
     type: "Toàn thời gian",
     exp: 12,
@@ -107,6 +112,7 @@ const jobs = [
   {
     id: "j6",
     title: "Frontend React",
+    category: "Frontend",
     company: "KMS Technology",
     type: "Toàn thời gian",
     exp: 24,
@@ -127,6 +133,7 @@ const jobs = [
   {
     id: "j7",
     title: "QA Automation",
+    category: "Kiểm thử",
     company: "NashTech",
     type: "Toàn thời gian",
     exp: 12,
@@ -146,6 +153,7 @@ const jobs = [
   {
     id: "j8",
     title: "Nhân viên nhân sự",
+    category: "Nhân sự",
     company: "Thế Giới Di Động",
     type: "Toàn thời gian",
     exp: 0,
@@ -299,7 +307,7 @@ function swatch(name) {
 
 function chips(domains) {
   return domains.map((domain) => (
-    `<span class="chip"><i data-domain="${esc(domain)}"></i>${esc(domain)}</span>`
+    `<a class="chip chip-link" href="jobs.html?source=${encodeURIComponent(domain)}"><i data-domain="${esc(domain)}"></i>${esc(domain)}</a>`
   )).join("");
 }
 
@@ -339,10 +347,12 @@ function toast(message) {
   }, 2400);
 }
 
-function confirmAction({ title, copy }) {
+function confirmAction({ title, copy, ok = "Xóa", cancel = "Giữ lại" }) {
   const dialog = document.getElementById("confirm");
   dialog.querySelector("h2").textContent = title;
   dialog.querySelector("p").textContent = copy;
+  dialog.querySelector("[value=cancel]").textContent = cancel;
+  dialog.querySelector("[value=ok]").textContent = ok;
   return new Promise((resolve) => {
     const done = () => {
       dialog.removeEventListener("close", done);
@@ -606,13 +616,26 @@ function renderKpis() {
   const windowTotal = sum(DAYS, "total");
   const topcvShare = Math.round((sum(DAYS, "topcv.vn") / windowTotal) * 100);
   const cards = [
-    ["30 ngày", fmt.format(windowTotal), `${DAYS[0].label} – ${today.label}`],
-    ["Hôm nay", fmt.format(today.total), `TopCV ${fmt.format(today["topcv.vn"])} · ITviec ${fmt.format(today["itviec.com"])}`],
-    ["Tháng 10", fmt.format(month), "Đến 19.10, chưa hết tháng"],
-    ["TopCV", `${topcvShare}%`, `${fmt.format(sum(DAYS, "topcv.vn"))} dòng trong 30 ngày`],
+    ["30 ngày", fmt.format(windowTotal), `${DAYS[0].label} – ${today.label}`, "jobs.html"],
+    ["Hôm nay", fmt.format(today.total), `TopCV ${fmt.format(today["topcv.vn"])} · ITviec ${fmt.format(today["itviec.com"])}`, "jobs.html?crawled=today"],
+    ["Tháng 10", fmt.format(month), "Đến 19.10, chưa hết tháng", "jobs.html?crawled=month"],
+    ["TopCV", `${topcvShare}%`, `${fmt.format(sum(DAYS, "topcv.vn"))} dòng trong 30 ngày`, "jobs.html?source=topcv.vn"],
   ];
-  document.getElementById("kpis").innerHTML = cards.map(([label, value, note]) => `
-    <div class="metric"><span>${label}</span><strong>${value}</strong><small>${note}</small></div>`).join("");
+  document.getElementById("kpis").innerHTML = cards.map(([label, value, note, href]) => `
+    <a class="metric" href="${href}"><span>${label}</span><strong>${value}</strong><small>${note}</small></a>`).join("");
+}
+
+function renderQuietSources() {
+  const quiet = sources.filter((source) => source.connected && source.enabled && !jobs.some((job) => (
+    job.mappings.some((mapping) => mapping.domain === source.domain && mapping.at.startsWith(TODAY))
+  )));
+  const node = document.getElementById("quiet");
+  if (!quiet.length) {
+    node.hidden = true;
+    return;
+  }
+  node.hidden = false;
+  node.textContent = quiet.map((source) => `${source.name} đang bật nhưng hôm nay chưa có ghi nhận.`).join(" ");
 }
 
 function renderCrawls() {
@@ -622,42 +645,106 @@ function renderCrawls() {
     <tr>
       <td class="when">${stamp(row.at)}</td>
       <td>${chips([row.domain])}</td>
-      <td><span class="name">${esc(row.job.title)}</span></td>
-      <td>${esc(row.job.company)}</td>
+      <td><a class="row-link" href="jobs.html?job=${esc(row.job.id)}">${esc(row.job.title)}</a></td>
+      <td><a class="row-link" href="jobs.html?company=${encodeURIComponent(row.job.company)}">${esc(row.job.company)}</a></td>
       <td><div class="url" title="${esc(row.url)}">${esc(row.url.replace(/^https?:\/\//, ""))}</div></td>
     </tr>`).join("");
+}
+
+const jobScope = { company: "", category: "", crawled: "", term: "" };
+
+function jobInCategory(job, name) {
+  if (!name) return true;
+  if (job.category === name) return true;
+  const selected = categories.find((item) => item.name === name);
+  if (!selected) return false;
+  return categories.some((item) => item.parent === selected.id && item.name === job.category);
+}
+
+function crawledIn(job, mode) {
+  if (!mode) return true;
+  return job.mappings.some((mapping) => {
+    const day = mapping.at.slice(0, 10);
+    if (mode === "today") return day === TODAY;
+    if (mode === "month") return day.startsWith("2026-10");
+    return true;
+  });
+}
+
+function emptyJobCopy() {
+  if (jobScope.term === "closed") return "Không có tin hết hạn.";
+  if (jobScope.term === "open") return "Không có tin còn hạn.";
+  if (jobScope.term === "multi") return "Không có tin trùng nguồn.";
+  if (jobScope.company) return `Không có tin của ${jobScope.company}.`;
+  if (jobScope.category) return `Không có tin trong danh mục ${jobScope.category}.`;
+  if (jobScope.crawled === "today") return "Hôm nay chưa có tin được ghi nhận.";
+  if (jobScope.crawled === "month") return "Tháng 10 chưa có tin được ghi nhận.";
+  const source = document.getElementById("source").value;
+  if (source) return `Không có tin từ ${source}.`;
+  if (document.getElementById("q").value.trim()) return "Không có tin khớp từ khóa.";
+  return "Không có tin nào.";
+}
+
+function renderJobScope() {
+  const bits = [];
+  if (jobScope.company) bits.push(`Công ty: ${jobScope.company}`);
+  if (jobScope.category) bits.push(`Danh mục: ${jobScope.category}`);
+  if (jobScope.crawled === "today") bits.push("Ghi nhận hôm nay");
+  if (jobScope.crawled === "month") bits.push("Ghi nhận tháng 10");
+  const node = document.getElementById("job-scope");
+  if (!bits.length) {
+    node.hidden = true;
+    node.textContent = "";
+    return;
+  }
+  node.hidden = false;
+  node.innerHTML = `${esc(bits.join(" · "))} <button type="button" data-action="clear-scope">Bỏ lọc</button>`;
+}
+
+function termPill(job) {
+  return isExpired(job)
+    ? `<span class="pill pill--off"><i></i>Hết hạn</span>`
+    : `<span class="pill"><i></i>Còn hạn</span>`;
 }
 
 function renderJobs() {
   const query = document.getElementById("q").value.trim().toLowerCase();
   const source = document.getElementById("source").value;
-  const term = document.getElementById("term").value;
+  const sort = document.getElementById("sort").value;
   const matched = jobs.filter((job) => {
-    const haystack = `${job.title} ${job.company} ${job.location}`.toLowerCase();
+    const haystack = `${job.title} ${job.location}`.toLowerCase();
     if (query && !haystack.includes(query)) return false;
-    if (source === "multi" && job.mappings.length < 2) return false;
-    if (source && source !== "multi" && !job.mappings.some((mapping) => mapping.domain === source)) return false;
-    if (term === "open" && isExpired(job)) return false;
-    if (term === "closed" && !isExpired(job)) return false;
+    if (jobScope.company && job.company !== jobScope.company) return false;
+    if (!jobInCategory(job, jobScope.category)) return false;
+    if (!crawledIn(job, jobScope.crawled)) return false;
+    if (jobScope.term === "multi" && job.mappings.length < 2) return false;
+    if (source && !job.mappings.some((mapping) => mapping.domain === source)) return false;
+    if (jobScope.term === "open" && isExpired(job)) return false;
+    if (jobScope.term === "closed" && !isExpired(job)) return false;
     return true;
+  });
+  matched.sort((left, right) => {
+    const order = latestMapping(left).at < latestMapping(right).at ? -1 : 1;
+    return sort === "old" ? order : -order;
   });
   const body = document.getElementById("job-rows");
   document.getElementById("job-count").textContent = `Đang hiện ${matched.length} / ${jobs.length} tin`;
+  renderJobScope();
   if (!matched.length) {
-    body.innerHTML = `<tr><td class="empty" colspan="7">Không có tin nào khớp bộ lọc.</td></tr>`;
+    body.innerHTML = `<tr><td class="empty" colspan="8">${esc(emptyJobCopy())}</td></tr>`;
     return;
   }
   body.innerHTML = matched.map((job) => {
     const latest = latestMapping(job);
-    const flag = isExpired(job) ? `<em class="flag">Hết hạn</em>` : "";
     return `<tr data-id="${job.id}">
-      <td><span class="name">${esc(job.title)}</span><span class="sub">${esc(job.type)}${flag}</span></td>
-      <td>${esc(job.company)}</td>
+      <td><button class="name-btn" type="button" data-action="edit">${esc(job.title)}</button><span class="sub">${esc(job.type)}</span></td>
+      <td><a class="row-link" href="jobs.html?company=${encodeURIComponent(job.company)}">${esc(job.company)}</a></td>
       <td>${esc(job.location)}</td>
       <td>${esc(money(job.min, job.max))}</td>
+      <td>${termPill(job)}</td>
       <td><div class="sources">${chips(job.mappings.map((mapping) => mapping.domain))}</div></td>
       <td class="when">${stamp(latest.at)}</td>
-      <td class="actions"><button class="linkish" type="button" data-action="edit">Sửa</button><button class="linkish danger" type="button" data-action="delete">Xóa</button></td>
+      <td class="actions"><button class="linkish" type="button" data-action="edit">Sửa</button></td>
     </tr>`;
   }).join("");
 }
@@ -680,6 +767,7 @@ function openJob(id) {
   form.elements.min.value = trieuText(job.min);
   form.elements.max.value = trieuText(job.max);
   form.elements.max.setCustomValidity("");
+  document.getElementById("public-job").href = `http://127.0.0.1:5173/jobs?keyword=${encodeURIComponent(job.title)}`;
   document.getElementById("job-mappings").innerHTML = job.mappings
     .slice()
     .sort((a, b) => (a.at < b.at ? 1 : -1))
@@ -697,13 +785,13 @@ async function deleteJob(id) {
   const job = jobs.find((item) => item.id === id);
   const ok = await confirmAction({
     title: "Gỡ tin này?",
-    copy: `“${job.title}” sẽ bị gỡ khỏi danh sách. Thao tác này chỉ trên bản xem trước, không ghi cơ sở dữ liệu.`,
+    copy: `“${job.title}” sẽ bị gỡ khỏi danh sách việc làm.`,
   });
-  if (!ok) return;
-  const index = jobs.findIndex((item) => item.id === id);
-  jobs.splice(index, 1);
+  if (!ok) return false;
+  jobs.splice(jobs.findIndex((item) => item.id === id), 1);
   renderJobs();
   toast(`Đã gỡ ${job.title}.`);
+  return true;
 }
 
 function saveJob(event) {
@@ -751,13 +839,13 @@ function renderCompanies() {
       <td>
         <div class="who">
           <span class="mono-mark" style="background:${swatch(company.name)}">${company.logo ? `<img alt="" src="${esc(company.logo)}">` : esc(initials(company.name))}</span>
-          <span class="name">${esc(company.name)}</span>
+          <a class="row-link" href="jobs.html?company=${encodeURIComponent(company.name)}">${esc(company.name)}</a>
         </div>
       </td>
       <td>${fmt.format(company.jobs)}</td>
       <td><div class="sources">${chips(company.sources)}</div></td>
       <td class="when">${stamp(company.crawled)}</td>
-      <td class="actions"><button class="linkish" type="button" data-action="edit">Sửa</button><button class="linkish danger" type="button" data-action="delete">Xóa</button></td>
+      <td class="actions"><button class="linkish" type="button" data-action="edit">Sửa</button></td>
     </tr>`).join("");
 }
 
@@ -794,12 +882,13 @@ async function deleteCompany(id) {
   const company = companies.find((item) => item.id === id);
   const ok = await confirmAction({
     title: "Gỡ công ty này?",
-    copy: `“${company.name}” sẽ bị gỡ khỏi danh sách. Tin ở trang Việc làm không tự mất theo. Thao tác này không ghi cơ sở dữ liệu.`,
+    copy: `“${company.name}” sẽ bị gỡ khỏi danh sách. Tin việc làm không mất theo.`,
   });
-  if (!ok) return;
+  if (!ok) return false;
   companies.splice(companies.findIndex((item) => item.id === id), 1);
   renderCompanies();
   toast(`Đã gỡ ${company.name}.`);
+  return true;
 }
 
 function saveCompany(event) {
@@ -825,6 +914,7 @@ function bindDialog(dialog) {
 
 function bootOverview() {
   renderKpis();
+  renderQuietSources();
   renderHours(sum(DAYS, "total"));
   renderCrawls();
   const tabs = document.querySelectorAll(".switch button");
@@ -839,19 +929,50 @@ function bootOverview() {
 }
 
 function bootJobs() {
+  const params = new URLSearchParams(window.location.search);
+  jobScope.company = params.get("company") || "";
+  jobScope.category = params.get("category") || "";
+  jobScope.crawled = params.get("crawled") || "";
+  jobScope.term = params.get("term") || "";
+  const source = params.get("source");
+  if (source) document.getElementById("source").value = source;
+  document.querySelectorAll("#job-seg button").forEach((button) => {
+    button.setAttribute("aria-pressed", String(button.dataset.term === jobScope.term));
+  });
   renderJobs();
   document.getElementById("q").addEventListener("input", renderJobs);
   document.getElementById("source").addEventListener("change", renderJobs);
-  document.getElementById("term").addEventListener("change", renderJobs);
-  document.getElementById("job-rows").addEventListener("click", (event) => {
+  document.getElementById("sort").addEventListener("change", renderJobs);
+  document.getElementById("job-seg").addEventListener("click", (event) => {
     const button = event.target.closest("button");
     if (!button) return;
-    const id = button.closest("tr").dataset.id;
-    if (button.dataset.action === "edit") openJob(id);
-    if (button.dataset.action === "delete") deleteJob(id);
+    jobScope.term = button.dataset.term;
+    document.querySelectorAll("#job-seg button").forEach((item) => {
+      item.setAttribute("aria-pressed", String(item === button));
+    });
+    renderJobs();
+  });
+  document.getElementById("job-scope").addEventListener("click", (event) => {
+    if (event.target.dataset.action !== "clear-scope") return;
+    jobScope.company = "";
+    jobScope.category = "";
+    jobScope.crawled = "";
+    const url = new URL(window.location.href);
+    ["company", "category", "crawled", "job"].forEach((key) => url.searchParams.delete(key));
+    history.replaceState(null, "", url);
+    renderJobs();
+  });
+  document.getElementById("job-rows").addEventListener("click", (event) => {
+    const button = event.target.closest("button");
+    if (!button || button.dataset.action !== "edit") return;
+    openJob(button.closest("tr").dataset.id);
   });
   const jobForm = document.getElementById("job-form");
   jobForm.addEventListener("submit", saveJob);
+  document.getElementById("delete-job").addEventListener("click", async () => {
+    const removed = await deleteJob(jobForm.dataset.id);
+    if (removed) document.getElementById("editor").close();
+  });
   ["min", "max"].forEach((name) => {
     jobForm.elements[name].addEventListener("input", () => {
       jobForm.elements.min.setCustomValidity("");
@@ -863,6 +984,8 @@ function bootJobs() {
   });
   bindDialog(document.getElementById("editor"));
   bindDialog(document.getElementById("confirm"));
+  const openId = params.get("job");
+  if (openId && jobs.some((job) => job.id === openId)) openJob(openId);
 }
 
 function bootCompanies() {
@@ -870,12 +993,15 @@ function bootCompanies() {
   document.getElementById("company-q").addEventListener("input", renderCompanies);
   document.getElementById("company-rows").addEventListener("click", (event) => {
     const button = event.target.closest("button");
-    if (!button) return;
-    const id = button.closest("tr").dataset.id;
-    if (button.dataset.action === "edit") openCompany(id);
-    if (button.dataset.action === "delete") deleteCompany(id);
+    if (!button || button.dataset.action !== "edit") return;
+    openCompany(button.closest("tr").dataset.id);
   });
   document.getElementById("company-form").addEventListener("submit", saveCompany);
+  document.getElementById("delete-company").addEventListener("click", async () => {
+    const form = document.getElementById("company-form");
+    const removed = await deleteCompany(form.dataset.id);
+    if (removed) document.getElementById("editor").close();
+  });
   document.getElementById("company-form").elements.name.addEventListener("input", previewLogo);
   document.getElementById("company-form").elements.logo.addEventListener("input", previewLogo);
   document.querySelector("#editor [data-close]").addEventListener("click", () => {
@@ -1034,29 +1160,47 @@ function bootLogin() {
     event.preventDefault();
     const email = form.elements.email.value.trim();
     const password = form.elements.password.value;
-    if (!email.includes("@") || password.length < 4) {
-      error.textContent = "Nhập email hợp lệ và mật khẩu ít nhất 4 ký tự để vào bản xem trước.";
+    if (email.toLowerCase() !== "minh.anh@jobbeacon.vn" || password !== "admin") {
+      error.textContent = "Sai tài khoản. Dùng minh.anh@jobbeacon.vn và mật khẩu admin.";
       return;
     }
     window.location.href = "index.html";
   });
 }
 
+function emptyUserCopy(status, cv) {
+  if (status === "SUSPENDED") return "Không có tài khoản đã khóa.";
+  if (status === "DELETED") return "Không có tài khoản đã xóa.";
+  if (status === "ACTIVE") return "Không có tài khoản đang dùng.";
+  if (cv === "yes") return "Không có tài khoản đã có CV.";
+  if (cv === "no") return "Không có tài khoản chưa có CV.";
+  return "Không có tài khoản khớp bộ lọc.";
+}
+
+function lockLabel(account) {
+  if (account.status === "DELETED") return "";
+  const label = account.status === "SUSPENDED" ? "Mở khóa" : "Khóa";
+  return `<button class="linkish" type="button" data-action="lock">${label}</button>`;
+}
+
 function renderUsers() {
   const query = document.getElementById("user-q").value.trim().toLowerCase();
   const role = document.getElementById("user-role").value;
   const status = document.getElementById("user-status").value;
+  const cv = document.getElementById("user-cv").value;
   const matched = accounts.filter((account) => {
     const haystack = `${account.name} ${account.email}`.toLowerCase();
     if (query && !haystack.includes(query)) return false;
     if (role && account.role !== role) return false;
     if (status && account.status !== status) return false;
+    if (cv === "yes" && !account.cv) return false;
+    if (cv === "no" && account.cv) return false;
     return true;
   });
   document.getElementById("user-count").textContent = `Đang hiện ${matched.length} / ${accounts.length} tài khoản`;
   const body = document.getElementById("user-rows");
   if (!matched.length) {
-    body.innerHTML = `<tr><td class="empty" colspan="6">Không có tài khoản nào khớp bộ lọc.</td></tr>`;
+    body.innerHTML = `<tr><td class="empty" colspan="6">${esc(emptyUserCopy(status, cv))}</td></tr>`;
     return;
   }
   body.innerHTML = matched.map((account) => `
@@ -1065,16 +1209,16 @@ function renderUsers() {
         <div class="who">
           <span class="mono-mark">${esc(initials(account.name))}</span>
           <span>
-            <span class="name">${esc(account.name)}</span>
+            <button class="name-btn" type="button" data-action="edit">${esc(account.name)}</button>
             <span class="sub">${esc(account.email)}${account.verified ? "" : " · chưa xác minh"}</span>
           </span>
         </div>
       </td>
       <td>${ROLE_LABEL[account.role]}</td>
       <td>${statusMark(account.status)}</td>
-      <td>${account.cv ? esc(account.cv.status) : "Chưa có"}</td>
+      <td>${account.cv ? "Có CV" : "Chưa có"}</td>
       <td class="when">${account.login ? stamp(account.login) : "—"}</td>
-      <td class="actions"><button class="linkish" type="button" data-action="edit">Sửa</button></td>
+      <td class="actions">${lockLabel(account)}<button class="linkish" type="button" data-action="edit">Sửa</button></td>
     </tr>`).join("");
 }
 
@@ -1102,7 +1246,7 @@ function openUser(id) {
     <div><dt>Email</dt><dd>${esc(account.email)}</dd></div>
     <div><dt>Xác minh</dt><dd>${account.verified ? "Đã xác minh" : "Chưa xác minh"}</dd></div>
     <div><dt>Đăng nhập</dt><dd>${account.login ? stamp(account.login) : "—"}</dd></div>`;
-  const cv = document.getElementById("user-cv");
+  const cv = document.getElementById("user-cv-view");
   cv.innerHTML = account.cv ? `<dl class="meta">
     <div><dt>Vị trí</dt><dd>${esc(account.cv.title)}</dd></div>
     <div><dt>Kinh nghiệm</dt><dd>${fmt.format(account.cv.months)} tháng</dd></div>
@@ -1135,21 +1279,50 @@ function saveUser(event) {
   toast(`Đã lưu “${account.name}”.`);
 }
 
+function livingAdmins(exceptId) {
+  return accounts.filter((item) => item.id !== exceptId && item.role === "ADMIN" && item.status === "ACTIVE");
+}
+
+async function lockUser(id) {
+  const account = accounts.find((item) => item.id === id);
+  if (!account || account.status === "DELETED") return;
+  const next = account.status === "SUSPENDED" ? "ACTIVE" : "SUSPENDED";
+  if (account.role === "ADMIN" && account.status === "ACTIVE" && next === "SUSPENDED" && livingAdmins(account.id).length === 0) {
+    toast("Cần giữ ít nhất một quản trị đang dùng.");
+    return;
+  }
+  const locking = next === "SUSPENDED";
+  const ok = await confirmAction({
+    title: locking ? `Khóa ${account.name}?` : `Mở khóa ${account.name}?`,
+    copy: locking ? "Tài khoản không đăng nhập được cho đến khi mở khóa." : "Tài khoản được dùng lại.",
+    ok: locking ? "Khóa" : "Mở khóa",
+    cancel: "Hủy",
+  });
+  if (!ok) return;
+  account.status = next;
+  renderUsers();
+  toast(locking ? `Đã khóa ${account.name}.` : `Đã mở khóa ${account.name}.`);
+}
+
 function bootUsers() {
   renderUsers();
   document.getElementById("user-q").addEventListener("input", renderUsers);
   document.getElementById("user-role").addEventListener("change", renderUsers);
   document.getElementById("user-status").addEventListener("change", renderUsers);
+  document.getElementById("user-cv").addEventListener("change", renderUsers);
   document.getElementById("user-rows").addEventListener("click", (event) => {
     const button = event.target.closest("button");
-    if (!button || button.dataset.action !== "edit") return;
-    openUser(button.closest("tr").dataset.id);
+    if (!button) return;
+    const id = button.closest("tr").dataset.id;
+    if (button.dataset.action === "edit") openUser(id);
+    if (button.dataset.action === "lock") lockUser(id);
   });
   document.getElementById("user-form").addEventListener("submit", saveUser);
   document.querySelector("#editor [data-close]").addEventListener("click", () => {
     document.getElementById("editor").close();
   });
   bindDialog(document.getElementById("editor"));
+  bindDialog(document.getElementById("confirm"));
 }
 
 function sourceState(source) {
@@ -1165,9 +1338,12 @@ function renderSources() {
       <td>${sourceState(source)}</td>
       <td class="when">${source.last ? stamp(source.last) : "—"}</td>
       <td>${source.volume == null ? "—" : fmt.format(source.volume)}</td>
-      <td>
-        <button class="toggle" type="button" data-action="toggle" aria-pressed="${source.enabled ? "true" : "false"}" ${source.connected ? "" : "disabled"} aria-label="${source.enabled ? "Tắt" : "Bật"} ${esc(source.name)}"></button>
-      </td>
+      <td>${source.connected
+        ? `<button class="toggle" type="button" data-action="toggle" aria-pressed="${source.enabled ? "true" : "false"}" aria-label="${source.enabled ? "Tắt" : "Bật"} ${esc(source.name)}"></button>`
+        : "—"}</td>
+      <td class="actions">${source.connected
+        ? `<a class="text-link" href="jobs.html?source=${encodeURIComponent(source.domain)}">Xem tin</a>`
+        : ""}</td>
     </tr>`).join("");
 }
 
@@ -1177,7 +1353,9 @@ async function toggleSource(id) {
   if (source.enabled) {
     const ok = await confirmAction({
       title: `Tắt ${source.name}?`,
-      copy: `Nguồn ngừng nhận tin mới trên bản xem trước. ${fmt.format(source.volume)} dòng trong 30 ngày vẫn giữ trên Tổng quan.`,
+      copy: `Nguồn ngừng nhận tin mới. ${fmt.format(source.volume)} dòng trong 30 ngày vẫn giữ trên Tổng quan.`,
+      ok: "Tắt",
+      cancel: "Giữ chạy",
     });
     if (!ok) return;
   }
@@ -1215,13 +1393,10 @@ function categoryName(id) {
 function renderCategories() {
   document.getElementById("category-rows").innerHTML = orderedCategories().map((category) => `
     <tr data-id="${category.id}">
-      <td><span class="name${category.parent ? " child-name" : ""}">${esc(category.name)}</span></td>
+      <td><button class="name-btn${category.parent ? " child-name" : ""}" type="button" data-action="edit">${esc(category.name)}</button></td>
       <td>${category.parent ? esc(categoryName(category.parent)) : "—"}</td>
-      <td>${fmt.format(category.jobs)}</td>
-      <td class="actions">
-        <button class="linkish" type="button" data-action="edit">Sửa</button>
-        <button class="linkish danger" type="button" data-action="delete">Xóa</button>
-      </td>
+      <td><a class="text-link" href="jobs.html?category=${encodeURIComponent(category.name)}">${fmt.format(category.jobs)}</a></td>
+      <td class="actions"><button class="linkish" type="button" data-action="edit">Sửa</button></td>
     </tr>`).join("");
 }
 
@@ -1250,6 +1425,7 @@ function openCategory(id) {
   form.elements.name.value = category ? category.name : "";
   fillCategoryParents(id || "", category ? category.parent : "");
   document.getElementById("category-heading").textContent = category ? "Sửa danh mục" : "Thêm danh mục";
+  document.getElementById("delete-category").hidden = !category;
   document.getElementById("category-editor").showModal();
   form.elements.name.focus();
 }
@@ -1274,31 +1450,40 @@ function saveCategory(event) {
 
 async function deleteCategory(id) {
   const category = categories.find((item) => item.id === id);
+  if (!category) return false;
   if (categories.some((item) => item.parent === id)) {
     toast("Còn danh mục con. Gỡ những mục đó trước.");
-    return;
+    return false;
   }
   const ok = await confirmAction({
     title: "Gỡ danh mục này?",
-    copy: `“${category.name}” sẽ biến mất khỏi danh sách mẫu. Tin đã gán không tự mất theo.`,
+    copy: `“${category.name}” sẽ bị gỡ khỏi danh sách. Tin đã gán không mất theo.`,
   });
-  if (!ok) return;
+  if (!ok) return false;
   categories.splice(categories.findIndex((item) => item.id === id), 1);
   renderCategories();
   toast(`Đã gỡ ${category.name}.`);
+  return true;
 }
 
 function renderSkills() {
+  const query = document.getElementById("skill-q").value.trim().toLowerCase();
+  const matched = skills.filter((skill) => {
+    if (!query) return true;
+    const haystack = [skill.name, ...skill.aliases].join(" ").toLowerCase();
+    return haystack.includes(query);
+  });
   const body = document.getElementById("skill-rows");
-  body.innerHTML = skills.map((skill) => `
+  if (!matched.length) {
+    body.innerHTML = `<tr><td class="empty" colspan="4">Không có kỹ năng khớp “${esc(query)}”.</td></tr>`;
+    return;
+  }
+  body.innerHTML = matched.map((skill) => `
     <tr data-id="${skill.id}">
-      <td><span class="name">${esc(skill.name)}</span></td>
+      <td><button class="name-btn" type="button" data-action="edit">${esc(skill.name)}</button></td>
       <td>${esc(normalizeName(skill.name))}</td>
       <td>${skill.aliases.length ? esc(skill.aliases.join(", ")) : "—"}</td>
-      <td class="actions">
-        <button class="linkish" type="button" data-action="edit">Sửa</button>
-        <button class="linkish danger" type="button" data-action="delete">Xóa</button>
-      </td>
+      <td class="actions"><button class="linkish" type="button" data-action="edit">Sửa</button></td>
     </tr>`).join("");
 }
 
@@ -1323,6 +1508,7 @@ function openSkill(id) {
   form.elements.name.value = skill ? skill.name : "";
   form.elements.aliases.value = skill ? skill.aliases.join(", ") : "";
   document.getElementById("skill-heading").textContent = skill ? "Sửa kỹ năng" : "Thêm kỹ năng";
+  document.getElementById("delete-skill").hidden = !skill;
   showSkillKey();
   document.getElementById("skill-editor").showModal();
   form.elements.name.focus();
@@ -1359,14 +1545,16 @@ function saveSkill(event) {
 
 async function deleteSkill(id) {
   const skill = skills.find((item) => item.id === id);
+  if (!skill) return false;
   const ok = await confirmAction({
     title: "Gỡ kỹ năng này?",
-    copy: `“${skill.name}” và tên gọi khác của nó sẽ biến mất khỏi danh sách mẫu.`,
+    copy: `“${skill.name}” và tên gọi khác của nó sẽ bị gỡ khỏi danh sách.`,
   });
-  if (!ok) return;
+  if (!ok) return false;
   skills.splice(skills.findIndex((item) => item.id === id), 1);
   renderSkills();
   toast(`Đã gỡ ${skill.name}.`);
+  return true;
 }
 
 function bootCatalog() {
@@ -1374,19 +1562,24 @@ function bootCatalog() {
   renderSkills();
   document.getElementById("add-category").addEventListener("click", () => openCategory(""));
   document.getElementById("add-skill").addEventListener("click", () => openSkill(""));
+  document.getElementById("skill-q").addEventListener("input", renderSkills);
   document.getElementById("category-rows").addEventListener("click", (event) => {
     const button = event.target.closest("button");
-    if (!button) return;
-    const id = button.closest("tr").dataset.id;
-    if (button.dataset.action === "edit") openCategory(id);
-    if (button.dataset.action === "delete") deleteCategory(id);
+    if (!button || button.dataset.action !== "edit") return;
+    openCategory(button.closest("tr").dataset.id);
   });
   document.getElementById("skill-rows").addEventListener("click", (event) => {
     const button = event.target.closest("button");
-    if (!button) return;
-    const id = button.closest("tr").dataset.id;
-    if (button.dataset.action === "edit") openSkill(id);
-    if (button.dataset.action === "delete") deleteSkill(id);
+    if (!button || button.dataset.action !== "edit") return;
+    openSkill(button.closest("tr").dataset.id);
+  });
+  document.getElementById("delete-category").addEventListener("click", async () => {
+    const id = document.getElementById("category-form").dataset.id;
+    if (await deleteCategory(id)) document.getElementById("category-editor").close();
+  });
+  document.getElementById("delete-skill").addEventListener("click", async () => {
+    const id = document.getElementById("skill-form").dataset.id;
+    if (await deleteSkill(id)) document.getElementById("skill-editor").close();
   });
   document.getElementById("category-form").addEventListener("submit", saveCategory);
   document.getElementById("skill-form").addEventListener("submit", saveSkill);

@@ -21,12 +21,12 @@
       <a href="sources.html">Nguồn</a>
       <a href="catalog.html" aria-current="page">Danh mục</a>
     </nav>
-    <span class="top-meta">19 tháng 10, 2026 · <a href="login.html">Thoát</a></span>
+    <span class="top-meta"><span class="who-name">Minh Anh</span><a href="login.html">Thoát</a></span>
   </header>
   <main class="stage">
     <header class="stage-head">
       <h1>Danh mục và kỹ năng</h1>
-      <p class="lead">Sửa tên danh mục, kỹ năng và tên gọi khác. Vector embedding dùng để phân loại không sửa ở trang này.</p>
+      <p class="lead">Sửa tên danh mục, kỹ năng và tên gọi khác.</p>
     </header>
     <div class="stack">
       <section class="sheet">
@@ -51,6 +51,7 @@
       <section class="sheet">
         <div class="toolbar">
           <h2>Kỹ năng</h2>
+          <label class="field"><span>Tìm</span><input id="skill-q" type="search" placeholder="Tên kỹ năng"></label>
           <button class="btn" type="button" id="add-skill">Thêm kỹ năng</button>
         </div>
         <div class="table-wrap">
@@ -66,7 +67,6 @@
             <tbody id="skill-rows"></tbody>
           </table>
         </div>
-        <p class="fine">Tên gọi khác là <code>skill_alias</code>. Trùng tên chuẩn thì không lưu.</p>
       </section>
     </div>
   </main>
@@ -78,9 +78,12 @@
         <label class="field"><span>Tên</span><input name="name" required maxlength="255"></label>
         <label class="field"><span>Thuộc</span><select name="parent"></select></label>
       </div>
-      <div class="editor-actions">
-        <button class="btn ghost" type="button" data-close>Hủy</button>
-        <button class="btn" type="submit">Lưu</button>
+      <div class="editor-actions split">
+        <button class="btn text-danger" type="button" id="delete-category" hidden>Xóa</button>
+        <div class="actions-end">
+          <button class="btn ghost" type="button" data-close>Hủy</button>
+          <button class="btn" type="submit">Lưu</button>
+        </div>
       </div>
     </form>
   </dialog>
@@ -94,9 +97,12 @@
         <label class="field"><span>Tên gọi khác</span><input name="aliases" placeholder="reactjs, react.js"></label>
         <p class="fine">Ngăn cách bằng dấu phẩy. Tên trùng sẽ được bỏ.</p>
       </div>
-      <div class="editor-actions">
-        <button class="btn ghost" type="button" data-close>Hủy</button>
-        <button class="btn" type="submit">Lưu</button>
+      <div class="editor-actions split">
+        <button class="btn text-danger" type="button" id="delete-skill" hidden>Xóa</button>
+        <div class="actions-end">
+          <button class="btn ghost" type="button" data-close>Hủy</button>
+          <button class="btn" type="submit">Lưu</button>
+        </div>
       </div>
     </form>
   </dialog>

@@ -21,7 +21,7 @@
       <a href="sources.html">Nguồn</a>
       <a href="catalog.html">Danh mục</a>
     </nav>
-    <span class="top-meta">19 tháng 10, 2026 · <a href="login.html">Thoát</a></span>
+    <span class="top-meta"><span class="who-name">Minh Anh</span><a href="login.html">Thoát</a></span>
   </header>
   <main class="stage">
       <header class="stage-head">
@@ -68,9 +68,12 @@
         <label class="field"><span>Tên</span><input name="name" required maxlength="255"></label>
         <label class="field"><span>Logo</span><input name="logo" type="url" placeholder="https://"></label>
       </div>
-      <div class="editor-actions">
-        <button class="btn ghost" type="button" data-close>Hủy</button>
-        <button class="btn" type="submit">Lưu</button>
+      <div class="editor-actions split">
+        <button class="btn text-danger" type="button" id="delete-company">Xóa</button>
+        <div class="actions-end">
+          <button class="btn ghost" type="button" data-close>Hủy</button>
+          <button class="btn" type="submit">Lưu</button>
+        </div>
       </div>
     </form>
   </dialog>
