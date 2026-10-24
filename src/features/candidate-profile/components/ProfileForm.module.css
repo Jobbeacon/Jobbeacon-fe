@@ -1,0 +1,220 @@
+.card {
+  padding: 24px;
+  border: 1px solid #e5ebf2;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 5px 14px rgba(30, 68, 107, 0.04);
+}
+
+.header {
+  margin-bottom: 16px;
+}
+
+.header h2 {
+  margin: 0;
+  color: #142a47;
+  font-size: var(--text-xl);
+}
+
+.header p {
+  margin: 6px 0 0;
+  color: #687d98;
+  font-size: var(--text-sm);
+}
+
+.field {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+  margin: 0 0 14px;
+  padding: 0;
+  border: 0;
+}
+
+.field > legend {
+  margin-bottom: 6px;
+  padding: 0;
+}
+
+.hint {
+  color: #8a9ab0;
+  font-size: var(--text-2xs);
+  font-weight: 400;
+}
+
+.toggle,
+.choice {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #142a47;
+  font-size: var(--text-sm);
+  cursor: pointer;
+}
+
+.toggle {
+  margin-bottom: 18px;
+  font-weight: 650;
+}
+
+.toggle input,
+.choice input {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: #087cf0;
+}
+
+.choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 18px;
+}
+
+.salaryRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) 90px 100px;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.salaryDash {
+  color: #8a9ab0;
+}
+
+@media (max-width: 640px) {
+  .salaryRow {
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  }
+}
+
+.field > label,
+.field > legend {
+  color: #142a47;
+  font-size: 0.9rem;
+  font-weight: 650;
+}
+
+.field input:not([type='checkbox']),
+.field select,
+.field textarea {
+  width: 100%;
+  min-height: 46px;
+  padding: 10px 14px;
+  border: 1px solid #e5ebf2;
+  border-radius: 10px;
+  outline: none;
+  color: #142a47;
+  background: #fff;
+  font: inherit;
+  transition: border-color 0.16s ease, box-shadow 0.16s ease;
+}
+
+.field input::placeholder,
+.field textarea::placeholder {
+  color: #a9b2bb;
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  border-color: #087cf0;
+  box-shadow: 0 0 0 4px rgba(8, 124, 240, 0.12);
+}
+
+.field textarea {
+  min-height: 110px;
+  resize: vertical;
+  line-height: 1.6;
+}
+
+.tagEditor {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 7px 6px 7px 10px;
+  border-radius: 999px;
+  color: #416685;
+  background: #f2f7fb;
+  font-size: var(--text-2xs);
+  font-weight: 500;
+}
+
+.tag button {
+  display: grid;
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  color: inherit;
+  background: transparent;
+  cursor: pointer;
+}
+
+.tag button:hover {
+  color: #087cf0;
+  background: #e1eefb;
+}
+
+.tag svg {
+  width: 12px;
+  height: 12px;
+}
+
+.field .tagInput,
+.field .tagSelect {
+  width: 180px;
+  min-height: 34px;
+  padding: 6px 12px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+}
+
+.submit {
+  padding: 12px 22px;
+  border: 0;
+  border-radius: 9px;
+  color: #fff;
+  background: linear-gradient(135deg, #1688ff, #0865f3);
+  box-shadow: 0 12px 25px rgba(15, 111, 245, 0.24);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.submit:hover {
+  background: linear-gradient(135deg, #0878ed, #0558dc);
+  transform: translateY(-1px);
+}
+
+.submit:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+  transform: none;
+}
+
+.notice {
+  margin: 0;
+  color: #687d98;
+  font-size: var(--text-sm);
+}
+
+.noticeError {
+  color: #d64545;
+}

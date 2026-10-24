@@ -1,89 +1,261 @@
-import type { UserProfile } from '../types/candidate-profile.types'
+import { useState } from 'react'
+import type { FormEvent, KeyboardEvent } from 'react'
+import { X } from 'lucide-react'
+import type { LocationItem } from '../../jobs/types/job.types'
+import {
+  EMPLOYMENT_TYPE_LABELS,
+  SALARY_PERIOD_LABELS,
+} from '../types/candidate-profile.types'
+import type {
+  EmploymentType,
+  JobPreferenceFormValues,
+  SalaryCurrency,
+  SalaryPeriod,
+} from '../types/candidate-profile.types'
+import { MAX_DESIRED_TITLES, MAX_PROVINCES, MAX_TITLE_LENGTH } from '../utils/job-preference-form'
+import styles from './ProfileForm.module.css'
+
+const EMPLOYMENT_TYPES = Object.keys(EMPLOYMENT_TYPE_LABELS) as EmploymentType[]
+const CURRENCIES: SalaryCurrency[] = ['VND', 'USD']
+const UI_SALARY_PERIODS: SalaryPeriod[] = ['MONTH', 'YEAR']
 
 type ProfileFormProps = {
-  profile: UserProfile
+  value: JobPreferenceFormValues
+  provinces: LocationItem[]
+  onChange: (value: JobPreferenceFormValues) => void
+  onSubmit: (value: JobPreferenceFormValues) => void
+  isSubmitting?: boolean
+  isNew?: boolean
+  notice?: { message: string; tone: 'success' | 'error' } | null
 }
 
-function getInitials(name: string, email: string) {
-  const source = name.trim() || email.trim() || 'U'
-  return source
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(-2)
-    .map((word) => word[0]?.toUpperCase())
-    .join('')
-}
+export function ProfileForm({
+  value,
+  provinces,
+  onChange,
+  onSubmit,
+  isSubmitting = false,
+  isNew = false,
+  notice,
+}: ProfileFormProps) {
+  const [titleInput, setTitleInput] = useState('')
 
-function formatDate(value: string | null) {
-  if (!value) {
-    return 'Chưa cập nhật'
+  const update = <K extends keyof JobPreferenceFormValues>(key: K, next: JobPreferenceFormValues[K]) => {
+    onChange({ ...value, [key]: next })
   }
 
-  const date = new Date(value)
-  if (Number.isNaN(date.getTime())) {
-    return value
+  const canAddTitle = value.desiredTitles.length < MAX_DESIRED_TITLES
+
+  const addTitle = () => {
+    const title = titleInput.trim().replace(/,$/, '').trim()
+    setTitleInput('')
+    if (!title || !canAddTitle) return
+    const exists = value.desiredTitles.some((item) => item.toLowerCase() === title.toLowerCase())
+    if (!exists) update('desiredTitles', [...value.desiredTitles, title])
   }
 
-  return new Intl.DateTimeFormat('vi-VN', {
-    dateStyle: 'medium',
-    timeStyle: 'short',
-  }).format(date)
-}
+  const handleTitleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter' || event.key === ',') {
+      event.preventDefault()
+      addTitle()
+    } else if (event.key === 'Backspace' && !titleInput && value.desiredTitles.length > 0) {
+      update('desiredTitles', value.desiredTitles.slice(0, -1))
+    }
+  }
 
-function ProfileItem({ label, value }: { label: string; value: string }) {
+  const provinceName = (id: string) => provinces.find((province) => province.id === id)?.name ?? id
+  const availableProvinces = provinces.filter((province) => !value.provinceIds.includes(province.id))
+
+  const addProvince = (id: string) => {
+    if (!id || value.provinceIds.includes(id) || value.provinceIds.length >= MAX_PROVINCES) return
+    update('provinceIds', [...value.provinceIds, id])
+  }
+
+  const toggleEmploymentType = (type: EmploymentType) => {
+    update(
+      'employmentTypes',
+      value.employmentTypes.includes(type)
+        ? value.employmentTypes.filter((item) => item !== type)
+        : [...value.employmentTypes, type],
+    )
+  }
+
+  // Giữ kỳ trả lương đang lưu (HOUR/DAY) nếu khác các lựa chọn của UI.
+  const salaryPeriods = UI_SALARY_PERIODS.includes(value.salaryPeriod)
+    ? UI_SALARY_PERIODS
+    : [...UI_SALARY_PERIODS, value.salaryPeriod]
+  const salaryUnit = value.currency === 'VND' ? 'triệu' : 'USD'
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    onSubmit(value)
+  }
+
   return (
-    <div className="profile-item">
-      <dt>{label}</dt>
-      <dd>{value || 'Chưa cập nhật'}</dd>
-    </div>
-  )
-}
+    <form className={styles.card} onSubmit={handleSubmit}>
+      <div className={styles.header}>
+        <h2>Sở thích tìm việc</h2>
+        {isNew ? <p>Bạn chưa khai sở thích tìm việc. Điền thông tin để nhận gợi ý phù hợp hơn.</p> : null}
+      </div>
 
-export function ProfileForm({ profile }: ProfileFormProps) {
-  return (
-    <section className="profile-card" aria-labelledby="profile-card-title">
-      <div className="profile-card__summary">
-        {profile.avatarUrl ? (
-          <img src={profile.avatarUrl} alt="" className="profile-card__avatar" />
-        ) : (
-          <span className="profile-card__avatar profile-card__avatar--fallback" aria-hidden="true">
-            {getInitials(profile.fullName, profile.email)}
-          </span>
-        )}
+      <label className={styles.toggle}>
+        <input
+          type="checkbox"
+          checked={value.openToWork}
+          onChange={(event) => update('openToWork', event.target.checked)}
+        />
+        <span>Tôi đang tìm việc</span>
+      </label>
 
-        <div>
-          <h2 id="profile-card-title">{profile.fullName || 'Người dùng JobBeacon'}</h2>
-          <p>{profile.email || 'Chưa cập nhật email'}</p>
-          {profile.status ? <span className="profile-status">{profile.status}</span> : null}
+      <div className={styles.field}>
+        <label htmlFor="titleInput">
+          Vị trí mong muốn <span className={styles.hint}>(tối đa {MAX_DESIRED_TITLES})</span>
+        </label>
+        <div className={styles.tagEditor}>
+          {value.desiredTitles.map((title) => (
+            <span key={title} className={styles.tag}>
+              {title}
+              <button
+                type="button"
+                onClick={() => update('desiredTitles', value.desiredTitles.filter((item) => item !== title))}
+                aria-label={`Xóa vị trí ${title}`}
+              >
+                <X aria-hidden="true" />
+              </button>
+            </span>
+          ))}
+          {canAddTitle ? (
+            <input
+              id="titleInput"
+              className={styles.tagInput}
+              value={titleInput}
+              maxLength={MAX_TITLE_LENGTH}
+              placeholder="VD: Backend Developer"
+              onChange={(event) => setTitleInput(event.target.value)}
+              onKeyDown={handleTitleKeyDown}
+              onBlur={addTitle}
+            />
+          ) : null}
         </div>
       </div>
 
-      <div className="profile-card__divider" />
+      <div className={styles.field}>
+        <label htmlFor="provinceSelect">
+          Tỉnh/thành <span className={styles.hint}>(tối đa {MAX_PROVINCES})</span>
+        </label>
+        <div className={styles.tagEditor}>
+          {value.provinceIds.map((id) => (
+            <span key={id} className={styles.tag}>
+              {provinceName(id)}
+              <button
+                type="button"
+                onClick={() => update('provinceIds', value.provinceIds.filter((item) => item !== id))}
+                aria-label={`Xóa ${provinceName(id)}`}
+              >
+                <X aria-hidden="true" />
+              </button>
+            </span>
+          ))}
+          {value.provinceIds.length < MAX_PROVINCES ? (
+            <select
+              id="provinceSelect"
+              className={styles.tagSelect}
+              value=""
+              onChange={(event) => addProvince(event.target.value)}
+            >
+              <option value="">Thêm tỉnh/thành</option>
+              {availableProvinces.map((province) => (
+                <option key={province.id} value={province.id}>{province.name}</option>
+              ))}
+            </select>
+          ) : null}
+        </div>
+      </div>
 
-      <dl className="profile-details">
-        <ProfileItem label="Họ và tên" value={profile.fullName} />
-        <ProfileItem label="Email" value={profile.email} />
-        <ProfileItem
-          label="Vai trò"
-          value={profile.roles.length > 0 ? profile.roles.join(', ') : 'Người dùng'}
-        />
-        <ProfileItem
-          label="Trạng thái email"
-          value={
-            profile.emailVerified === null
-              ? 'Chưa cập nhật'
-              : profile.emailVerified
-                ? 'Đã xác minh'
-                : 'Chưa xác minh'
-          }
-        />
-        {profile.id ? <ProfileItem label="Mã người dùng" value={profile.id} /> : null}
-        {profile.firebaseUid ? (
-          <ProfileItem label="Firebase UID" value={profile.firebaseUid} />
+      <fieldset className={styles.field}>
+        <legend>Hình thức làm việc</legend>
+        <div className={styles.choices}>
+          {EMPLOYMENT_TYPES.map((type) => (
+            <label key={type} className={styles.choice}>
+              <input
+                type="checkbox"
+                checked={value.employmentTypes.includes(type)}
+                onChange={() => toggleEmploymentType(type)}
+              />
+              <span>{EMPLOYMENT_TYPE_LABELS[type]}</span>
+            </label>
+          ))}
+          <label className={styles.choice}>
+            <input
+              type="checkbox"
+              checked={value.remoteOk}
+              onChange={(event) => update('remoteOk', event.target.checked)}
+            />
+            <span>Chấp nhận remote</span>
+          </label>
+        </div>
+      </fieldset>
+
+      <fieldset className={styles.field}>
+        <legend>Mức lương kỳ vọng</legend>
+        <div className={styles.salaryRow}>
+          <input
+            aria-label={`Lương tối thiểu (${salaryUnit})`}
+            inputMode="decimal"
+            value={value.salaryMin}
+            placeholder={`Từ (${salaryUnit})`}
+            onChange={(event) => update('salaryMin', event.target.value)}
+          />
+          <span className={styles.salaryDash}>–</span>
+          <input
+            aria-label={`Lương tối đa (${salaryUnit})`}
+            inputMode="decimal"
+            value={value.salaryMax}
+            placeholder={`Đến (${salaryUnit})`}
+            onChange={(event) => update('salaryMax', event.target.value)}
+          />
+          <select
+            aria-label="Tiền tệ"
+            value={value.currency}
+            onChange={(event) => update('currency', event.target.value as SalaryCurrency)}
+          >
+            {CURRENCIES.map((currency) => (
+              <option key={currency} value={currency}>{currency}</option>
+            ))}
+          </select>
+          <select
+            aria-label="Kỳ trả lương"
+            value={value.salaryPeriod}
+            onChange={(event) => update('salaryPeriod', event.target.value as SalaryPeriod)}
+          >
+            {salaryPeriods.map((period) => (
+              <option key={period} value={period}>{SALARY_PERIOD_LABELS[period]}</option>
+            ))}
+          </select>
+        </div>
+        <label className={styles.choice}>
+          <input
+            type="checkbox"
+            checked={value.salaryNegotiable}
+            onChange={(event) => update('salaryNegotiable', event.target.checked)}
+          />
+          <span>Có thể thỏa thuận</span>
+        </label>
+      </fieldset>
+
+      <div className={styles.actions}>
+        <button className={styles.submit} type="submit" disabled={isSubmitting}>
+          {isSubmitting ? 'Đang lưu...' : 'Lưu sở thích'}
+        </button>
+        {notice ? (
+          <p
+            className={notice.tone === 'error' ? `${styles.notice} ${styles.noticeError}` : styles.notice}
+            role={notice.tone === 'error' ? 'alert' : 'status'}
+          >
+            {notice.message}
+          </p>
         ) : null}
-        <ProfileItem label="Ngày tạo" value={formatDate(profile.createdAt)} />
-        <ProfileItem label="Cập nhật gần nhất" value={formatDate(profile.updatedAt)} />
-      </dl>
-    </section>
+      </div>
+    </form>
   )
 }

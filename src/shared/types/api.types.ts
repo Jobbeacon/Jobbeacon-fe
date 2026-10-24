@@ -1,6 +1,8 @@
 export type ApiResponse<T> = {
   data: T
+  status?: number
   message?: string
+  timestamp?: string
   success?: boolean
   code?: string | number
 }

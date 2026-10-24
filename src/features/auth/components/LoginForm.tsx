@@ -1,4 +1,5 @@
 import type { FormEvent } from 'react'
+import logo from '../../../assets/logo/jobbeacon-logo.svg'
 import { useAuth } from '../hooks/useAuth'
 import { AuthFeedback } from './AuthFeedback'
 import { PasswordField } from './PasswordField'
@@ -53,11 +54,13 @@ export function LoginForm() {
 
   return (
     <div className="auth-content auth-content--login">
-      {/* Logo JobBeacon sẽ được đặt vào vùng này sau. */}
-      <div className="auth-logo-slot" aria-hidden="true" />
+      <a className="auth-logo" href="/" aria-label="JobBeacon - Trang chủ">
+        <img src={logo} alt="JobBeacon" />
+      </a>
 
       <header className="auth-heading">
         <h1>Chào mừng bạn trở lại</h1>
+        <p>Đăng nhập để lưu việc, tạo Job Alert và nhận gợi ý phù hợp.</p>
       </header>
 
       <button
