@@ -26,13 +26,6 @@ import { getCategoryPaths } from '../utils/category'
 import type { JobDetail } from '../types/job.types'
 import styles from './JobDetailPage.module.css'
 
-const sourceClassNames: Record<string, string> = {
-  'topcv.vn': styles.sourceTopcv,
-  'itviec.com': styles.sourceItviec,
-  'vietnamworks.com': styles.sourceVnworks,
-  'careerviet.vn': styles.sourceCareerviet,
-}
-
 function JobDescription({ html }: { html: string }) {
   const safeHtml = useMemo(() => sanitizeHtml(html), [html])
 
@@ -116,7 +109,7 @@ function JobDetailContent({ job }: { job: JobDetail }) {
 
         {primarySource ? (
           <p className={styles.sourceRow}>
-            <span className={`${styles.source} ${sourceClassNames[primarySource.domain] ?? ''}`}>
+            <span className={styles.source}>
               Nguồn: {primarySource.name}
             </span>
             {otherSources.length > 0 ? (
