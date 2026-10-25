@@ -11,18 +11,26 @@
   <link rel="stylesheet" href="css/admin.css">
 </head>
 <body data-page="users">
-  <header class="top">
-    <a class="brand" href="index.html"><img src="assets/logo.svg" alt="JobBeacon"></a>
-    <nav class="nav">
-      <a href="index.html">Tổng quan</a>
-      <a href="jobs.html">Việc làm</a>
-      <a href="companies.html">Công ty</a>
-      <a href="users.html" aria-current="page">Người dùng</a>
-      <a href="sources.html">Nguồn</a>
-      <a href="catalog.html">Danh mục</a>
-    </nav>
-    <span class="top-meta"><span class="who-name">Minh Anh</span><a href="login.html">Thoát</a></span>
-  </header>
+  <div class="shell">
+    <aside class="sidebar">
+      <a class="sidebar-brand" href="index.html"><img src="assets/logo.svg" alt="JobBeacon"></a>
+      <nav class="sidebar-nav">
+        <a href="index.html"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="3" width="7" height="7" rx="1.5"></rect><rect x="3" y="14" width="7" height="7" rx="1.5"></rect><rect x="14" y="14" width="7" height="7" rx="1.5"></rect></svg>Tổng quan</a>
+        <a href="jobs.html"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"></rect><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><path d="M3 12h18"></path></svg>Việc làm</a>
+        <a href="companies.html"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="1.5"></rect><path d="M9 8h1M14 8h1M9 12h1M14 12h1M9 16h1M14 16h1"></path></svg>Công ty</a>
+        <a href="users.html" aria-current="page"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2"></circle><path d="M3 20c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5"></path><path d="M16 8.5a3 3 0 1 1 3 3.3"></path><path d="M21 20c0-2.6-1.7-4.5-4-5.2"></path></svg>Người dùng</a>
+        <a href="sources.html"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="18" r="1.6" fill="currentColor" stroke="none"></circle><path d="M5 11a7 7 0 0 1 7 7"></path><path d="M5 5a13 13 0 0 1 13 13"></path></svg>Nguồn</a>
+        <a href="catalog.html"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 3 8l9 5 9-5-9-5Z"></path><path d="m3 13 9 5 9-5"></path></svg>Danh mục</a>
+      </nav>
+      <div class="sidebar-foot">
+        <span class="mono-mark">MA</span>
+        <div class="who">
+          <span class="who-name">Minh Anh</span>
+          <a class="signout" href="login.html"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><path d="m16 17 5-5-5-5"></path><path d="M21 12H9"></path></svg>Thoát</a>
+        </div>
+      </div>
+    </aside>
+    <div class="main">
   <main class="stage">
     <header class="stage-head">
       <h1>Người dùng</h1>
@@ -74,6 +82,8 @@
       </div>
     </section>
   </main>
+    </div>
+  </div>
 
   <dialog class="drawer" id="editor">
     <form id="user-form" spellcheck="false">

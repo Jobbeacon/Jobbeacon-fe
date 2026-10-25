@@ -170,18 +170,155 @@ const jobs = [
       { domain: "topcv.vn", at: "2026-10-17T08:33", url: "https://www.topcv.vn/viec-lam/nhan-vien-nhan-su/154220" },
     ],
   },
+  {
+    id: "j9",
+    title: "Fullstack Java Developer",
+    category: "Backend",
+    company: "FPT Software",
+    type: "Toàn thời gian",
+    exp: 36,
+    location: "Hà Nội",
+    min: 30000000,
+    max: 45000000,
+    currency: "VND",
+    period: "tháng",
+    posted: "2026-10-15",
+    expired: "2026-11-15",
+    description: "Phát triển dịch vụ nội bộ phục vụ đối soát dữ liệu tuyển dụng.",
+    benefits: "Lương tháng 13, bảo hiểm, hai ngày làm từ xa.",
+    mappings: [
+      { domain: "topcv.vn", at: "2026-10-19T04:02", url: "https://www.topcv.vn/viec-lam/fullstack-java-developer/224988" },
+      { domain: "itviec.com", at: "2026-10-19T01:18", url: "https://itviec.com/it-jobs/fullstack-java-developer-fpt" },
+    ],
+  },
+  {
+    id: "j10",
+    title: "UI/UX Designer",
+    category: "",
+    company: "Tiki",
+    type: "Toàn thời gian",
+    exp: 24,
+    location: "TP.HCM",
+    min: 22000000,
+    max: 32000000,
+    currency: "VND",
+    period: "tháng",
+    posted: "2026-10-14",
+    expired: "2026-11-14",
+    description: "Thiết kế trải nghiệm cho luồng thanh toán và theo dõi đơn hàng.",
+    benefits: "Khám sức khỏe năm, ngân sách học thiết kế.",
+    mappings: [
+      { domain: "topcv.vn", at: "2026-10-18T09:27", url: "https://www.topcv.vn/viec-lam/ui-ux-designer/199015" },
+    ],
+  },
+  {
+    id: "j11",
+    title: "DevOps/SRE Engineer",
+    category: "Vận hành",
+    company: "MoMo",
+    type: "Toàn thời gian",
+    exp: 30,
+    location: "Hà Nội",
+    min: 28000000,
+    max: 42000000,
+    currency: "VND",
+    period: "tháng",
+    posted: "2026-10-16",
+    expired: "2026-11-20",
+    description: "Theo dõi độ ổn định cụm dịch vụ đồng bộ và cảnh báo sự cố.",
+    benefits: "Thưởng theo quý, hỗ trợ chứng chỉ cloud.",
+    mappings: [
+      { domain: "topcv.vn", at: "2026-10-18T20:44", url: "https://www.topcv.vn/viec-lam/devops-sre-engineer/188560" },
+      { domain: "itviec.com", at: "2026-10-18T19:30", url: "https://itviec.com/it-jobs/devops-sre-engineer-momo" },
+    ],
+  },
+  {
+    id: "j12",
+    title: "Backend Developer (NodeJS)",
+    category: "Backend",
+    company: "VNG",
+    type: "Toàn thời gian",
+    exp: 18,
+    location: "TP.HCM",
+    min: 22000000,
+    max: 32000000,
+    currency: "VND",
+    period: "tháng",
+    posted: "2026-10-13",
+    expired: "2026-11-13",
+    description: "Xây API cho sản phẩm nội bộ, làm việc cùng nhóm dữ liệu.",
+    benefits: "Lịch làm linh hoạt, bảo hiểm sức khỏe.",
+    mappings: [
+      { domain: "itviec.com", at: "2026-10-18T07:52", url: "https://itviec.com/it-jobs/backend-developer-nodejs-vng" },
+    ],
+  },
+  {
+    id: "j13",
+    title: "React Native Developer",
+    category: "Frontend",
+    company: "KMS Technology",
+    type: "Toàn thời gian",
+    exp: 18,
+    location: "TP.HCM",
+    min: 22000000,
+    max: 30000000,
+    currency: "VND",
+    period: "tháng",
+    posted: "2026-10-05",
+    expired: "2026-11-05",
+    description: "Dựng ứng dụng di động cho một khách hàng thương mại điện tử.",
+    benefits: "Laptop công ty, review lương hai lần một năm.",
+    mappings: [
+      { domain: "itviec.com", at: "2026-10-17T13:48", url: "https://itviec.com/it-jobs/react-native-developer-kms" },
+      { domain: "topcv.vn", at: "2026-10-17T10:05", url: "https://www.topcv.vn/viec-lam/react-native-developer/165901" },
+    ],
+  },
+  {
+    id: "j14",
+    title: "Nhân viên tuyển dụng",
+    category: "Nhân sự",
+    company: "Thế Giới Di Động",
+    type: "Toàn thời gian",
+    exp: 6,
+    location: "Hà Nội",
+    min: 10000000,
+    max: 14000000,
+    currency: "VND",
+    period: "tháng",
+    posted: "2026-10-14",
+    expired: "2026-11-14",
+    description: "Đăng tin, sàng lọc hồ sơ và sắp lịch phỏng vấn cho khối vận hành.",
+    benefits: "Giảm giá nội bộ, thưởng lễ.",
+    mappings: [
+      { domain: "topcv.vn", at: "2026-10-17T07:50", url: "https://www.topcv.vn/viec-lam/nhan-vien-tuyen-dung/154401" },
+    ],
+  },
 ];
 
 const companies = [
-  { id: "c1", name: "FPT Software", logo: "", jobs: 128, sources: ["topcv.vn", "itviec.com"], crawled: "2026-10-19T06:14" },
-  { id: "c2", name: "Tiki", logo: "", jobs: 46, sources: ["topcv.vn"], crawled: "2026-10-19T05:58" },
-  { id: "c3", name: "VNG", logo: "", jobs: 39, sources: ["itviec.com"], crawled: "2026-10-19T05:40" },
-  { id: "c4", name: "MoMo", logo: "", jobs: 52, sources: ["topcv.vn", "itviec.com"], crawled: "2026-10-18T22:16" },
-  { id: "c5", name: "Viettel Digital", logo: "", jobs: 33, sources: ["topcv.vn"], crawled: "2026-10-18T21:40" },
-  { id: "c6", name: "KMS Technology", logo: "", jobs: 31, sources: ["itviec.com", "topcv.vn"], crawled: "2026-10-18T14:05" },
-  { id: "c7", name: "NashTech", logo: "", jobs: 18, sources: ["itviec.com"], crawled: "2026-10-17T09:12" },
-  { id: "c8", name: "Thế Giới Di Động", logo: "", jobs: 22, sources: ["topcv.vn"], crawled: "2026-10-17T08:33" },
+  { id: "c1", name: "FPT Software", logo: "" },
+  { id: "c2", name: "Tiki", logo: "" },
+  { id: "c3", name: "VNG", logo: "" },
+  { id: "c4", name: "MoMo", logo: "" },
+  { id: "c5", name: "Viettel Digital", logo: "" },
+  { id: "c6", name: "KMS Technology", logo: "" },
+  { id: "c7", name: "NashTech", logo: "" },
+  { id: "c8", name: "Thế Giới Di Động", logo: "" },
 ];
+
+function companyJobs(name) {
+  return jobs.filter((job) => job.company === name);
+}
+
+function companyStats(name) {
+  const own = companyJobs(name);
+  const sources = [...new Set(own.flatMap((job) => job.mappings.map((mapping) => mapping.domain)))]
+    .sort((a, b) => SOURCE_ORDER.indexOf(a) - SOURCE_ORDER.indexOf(b));
+  const crawled = own.flatMap((job) => job.mappings).reduce((latest, mapping) => (
+    !latest || mapping.at > latest ? mapping.at : latest
+  ), null);
+  return { count: own.length, sources, crawled };
+}
 
 function hash(i, salt) {
   const x = Math.sin(i * 12.9898 + salt * 78.233) * 43758.5453;
@@ -196,8 +333,8 @@ function buildDays() {
     const weekend = date.getDay() === 0 || date.getDay() === 6;
     const wave = 1 + 0.14 * Math.sin((29 - i) / 3.2);
     const factor = (weekend ? 0.46 : 1) * wave;
-    const topcv = Math.round((92 + hash(i, 1) * 26) * factor);
-    const itviec = Math.round((46 + hash(i, 2) * 14) * factor);
+    const topcv = Math.round((7 + hash(i, 1) * 4) * factor);
+    const itviec = Math.round((4 + hash(i, 2) * 3) * factor);
     const dd = String(date.getDate()).padStart(2, "0");
     const mm = String(date.getMonth() + 1).padStart(2, "0");
     days.push({
@@ -215,11 +352,11 @@ const DAYS = buildDays();
 const OCTOBER = DAYS.filter((day) => day.label.endsWith(".10"));
 
 const MONTHS = [
-  { label: "T5", hint: "", "topcv.vn": 2140, "itviec.com": 1010 },
-  { label: "T6", hint: "", "topcv.vn": 2380, "itviec.com": 1160 },
-  { label: "T7", hint: "", "topcv.vn": 1960, "itviec.com": 980 },
-  { label: "T8", hint: "", "topcv.vn": 2620, "itviec.com": 1290 },
-  { label: "T9", hint: "", "topcv.vn": 2810, "itviec.com": 1420 },
+  { label: "T5", hint: "", "topcv.vn": 150, "itviec.com": 72 },
+  { label: "T6", hint: "", "topcv.vn": 168, "itviec.com": 84 },
+  { label: "T7", hint: "", "topcv.vn": 142, "itviec.com": 70 },
+  { label: "T8", hint: "", "topcv.vn": 186, "itviec.com": 95 },
+  { label: "T9", hint: "", "topcv.vn": 201, "itviec.com": 103 },
   {
     label: "T10",
     hint: "1–19",
@@ -363,17 +500,32 @@ function confirmAction({ title, copy, ok = "Xóa", cancel = "Giữ lại" }) {
   });
 }
 
-function placeTip(event, html) {
+function placeTip(clientX, clientY, html) {
   const tip = document.getElementById("tip");
   const plot = document.getElementById("plot");
   const bounds = plot.getBoundingClientRect();
   tip.innerHTML = html;
   tip.hidden = false;
   const width = tip.offsetWidth;
-  let left = event.clientX - bounds.left + 14;
-  if (left + width > bounds.width - 8) left = event.clientX - bounds.left - width - 14;
+  let left = clientX - bounds.left + 14;
+  if (left + width > bounds.width - 8) left = clientX - bounds.left - width - 14;
   tip.style.left = `${Math.max(8, left)}px`;
-  tip.style.top = `${Math.max(8, event.clientY - bounds.top - 28)}px`;
+  tip.style.top = `${Math.max(8, clientY - bounds.top - 28)}px`;
+}
+
+function bindHit(hit, label, html) {
+  hit.setAttribute("tabindex", "0");
+  hit.setAttribute("role", "img");
+  hit.setAttribute("aria-label", label);
+  const showAtPointer = (event) => placeTip(event.clientX, event.clientY, html);
+  const showAtFocus = () => {
+    const rect = hit.getBoundingClientRect();
+    placeTip(rect.left + rect.width / 2, rect.top, html);
+  };
+  hit.addEventListener("mousemove", showAtPointer);
+  hit.addEventListener("mouseleave", hideTip);
+  hit.addEventListener("focus", showAtFocus);
+  hit.addEventListener("blur", hideTip);
 }
 
 function hideTip() {
@@ -475,10 +627,9 @@ function drawDays() {
       height: innerH,
       fill: "transparent",
     });
-    hit.addEventListener("mousemove", (event) => {
-      placeTip(event, `<strong>${day.label}</strong><br>${sourceLines(day)}<br>Cộng ${fmt.format(day.total)}`);
-    });
-    hit.addEventListener("mouseleave", hideTip);
+    const html = `<strong>${day.label}</strong><br>${sourceLines(day)}<br>Cộng ${fmt.format(day.total)}`;
+    const label = `${day.label}: ${SOURCE_ORDER.map((domain) => `${SOURCE_LABEL[domain]} ${fmt.format(day[domain])}`).join(", ")}, cộng ${fmt.format(day.total)}`;
+    bindHit(hit, label, html);
     root.append(hit);
   });
 
@@ -552,11 +703,10 @@ function drawMonths() {
       height: innerH,
       fill: "transparent",
     });
-    hit.addEventListener("mousemove", (event) => {
-      const partial = month.partial ? "<br>Chưa đủ tháng" : "";
-      placeTip(event, `<strong>${month.label}</strong><br>${sourceLines(month)}<br>Cộng ${fmt.format(month.total)}${partial}`);
-    });
-    hit.addEventListener("mouseleave", hideTip);
+    const partial = month.partial ? "<br>Chưa đủ tháng" : "";
+    const html = `<strong>${month.label}</strong><br>${sourceLines(month)}<br>Cộng ${fmt.format(month.total)}${partial}`;
+    const label = `${month.label}: ${SOURCE_ORDER.map((domain) => `${SOURCE_LABEL[domain]} ${fmt.format(month[domain])}`).join(", ")}, cộng ${fmt.format(month.total)}${month.partial ? ", chưa đủ tháng" : ""}`;
+    bindHit(hit, label, html);
     root.append(hit);
   });
 
@@ -602,7 +752,7 @@ function renderHours(total) {
     const hot = (hour >= 2 && hour <= 4) || (hour >= 21 && hour <= 22);
     const height = Math.max(2, (value / peak) * 100);
     const label = `${String(hour).padStart(2, "0")}:00 · ${fmt.format(value)} dòng`;
-    return `<span${hot ? ' data-hot="1"' : ""} style="height:${height}%" title="${label}"></span>`;
+    return `<span${hot ? ' data-hot="1"' : ""} style="height:${height}%" title="${esc(label)}" tabindex="0" role="img" aria-label="${esc(label)}"></span>`;
   }).join("");
   document.getElementById("hour-labels").innerHTML = hours.map((_, hour) => (
     hour % 3 === 0 ? `<span>${String(hour).padStart(2, "0")}</span>` : "<span></span>"
@@ -767,7 +917,7 @@ function openJob(id) {
   form.elements.min.value = trieuText(job.min);
   form.elements.max.value = trieuText(job.max);
   form.elements.max.setCustomValidity("");
-  document.getElementById("public-job").href = `http://127.0.0.1:5173/jobs?keyword=${encodeURIComponent(job.title)}`;
+  document.getElementById("public-job").href = "../jobs.html";
   document.getElementById("job-mappings").innerHTML = job.mappings
     .slice()
     .sort((a, b) => (a.at < b.at ? 1 : -1))
@@ -834,7 +984,9 @@ function renderCompanies() {
     body.innerHTML = `<tr><td class="empty" colspan="5">Không có công ty nào khớp.</td></tr>`;
     return;
   }
-  body.innerHTML = matched.map((company) => `
+  body.innerHTML = matched.map((company) => {
+    const stats = companyStats(company.name);
+    return `
     <tr data-id="${company.id}">
       <td>
         <div class="who">
@@ -842,11 +994,12 @@ function renderCompanies() {
           <a class="row-link" href="jobs.html?company=${encodeURIComponent(company.name)}">${esc(company.name)}</a>
         </div>
       </td>
-      <td>${fmt.format(company.jobs)}</td>
-      <td><div class="sources">${chips(company.sources)}</div></td>
-      <td class="when">${stamp(company.crawled)}</td>
+      <td>${fmt.format(stats.count)}</td>
+      <td><div class="sources">${chips(stats.sources)}</div></td>
+      <td class="when">${stats.crawled ? stamp(stats.crawled) : "—"}</td>
       <td class="actions"><button class="linkish" type="button" data-action="edit">Sửa</button></td>
-    </tr>`).join("");
+    </tr>`;
+  }).join("");
 }
 
 function previewLogo() {
@@ -869,10 +1022,13 @@ function previewLogo() {
 function openCompany(id) {
   const company = companies.find((item) => item.id === id);
   const form = document.getElementById("company-form");
+  const stats = companyStats(company.name);
   form.dataset.id = id;
   form.elements.name.value = company.name;
   form.elements.logo.value = company.logo;
-  document.getElementById("company-facts").textContent = `${fmt.format(company.jobs)} tin · crawl ${stamp(company.crawled)} · ${company.sources.join(", ")}`;
+  const crawlBit = stats.crawled ? ` · crawl ${stamp(stats.crawled)}` : "";
+  const sourceBit = stats.sources.length ? ` · ${stats.sources.join(", ")}` : "";
+  document.getElementById("company-facts").textContent = `${fmt.format(stats.count)} tin${crawlBit}${sourceBit}`;
   previewLogo();
   document.getElementById("editor").showModal();
   form.elements.name.focus();
@@ -905,10 +1061,7 @@ function saveCompany(event) {
 
 function bindDialog(dialog) {
   dialog.addEventListener("click", (event) => {
-    const rect = dialog.getBoundingClientRect();
-    const inside = event.clientX >= rect.left && event.clientX <= rect.right
-      && event.clientY >= rect.top && event.clientY <= rect.bottom;
-    if (!inside) dialog.close();
+    if (event.target === dialog) dialog.close();
   });
 }
 
@@ -1114,22 +1267,32 @@ const accounts = [
 ];
 
 const sources = [
-  { id: "s1", name: "TopCV", domain: "topcv.vn", connected: true, enabled: true, last: "2026-10-19T06:14", volume: 2757 },
-  { id: "s2", name: "ITviec", domain: "itviec.com", connected: true, enabled: true, last: "2026-10-19T05:40", volume: 1384 },
+  { id: "s1", name: "TopCV", domain: "topcv.vn", connected: true, enabled: true, last: "2026-10-19T06:14", volume: sum(DAYS, "topcv.vn") },
+  { id: "s2", name: "ITviec", domain: "itviec.com", connected: true, enabled: true, last: "2026-10-19T05:40", volume: sum(DAYS, "itviec.com") },
   { id: "s3", name: "VietnamWorks", domain: "vietnamworks.com", connected: false, enabled: false, last: null, volume: null },
   { id: "s4", name: "Joboko", domain: "joboko.com", connected: false, enabled: false, last: null, volume: null },
 ];
 
 const categories = [
-  { id: "cat1", name: "Công nghệ thông tin", parent: "", jobs: 214 },
-  { id: "cat2", name: "Backend", parent: "cat1", jobs: 86 },
-  { id: "cat3", name: "Frontend", parent: "cat1", jobs: 74 },
-  { id: "cat4", name: "Dữ liệu", parent: "cat1", jobs: 28 },
-  { id: "cat5", name: "Vận hành", parent: "cat1", jobs: 19 },
-  { id: "cat6", name: "Kiểm thử", parent: "cat1", jobs: 7 },
-  { id: "cat7", name: "Kinh doanh", parent: "", jobs: 41 },
-  { id: "cat8", name: "Nhân sự", parent: "cat7", jobs: 16 },
+  { id: "cat1", name: "Công nghệ thông tin", parent: "" },
+  { id: "cat2", name: "Backend", parent: "cat1" },
+  { id: "cat3", name: "Frontend", parent: "cat1" },
+  { id: "cat4", name: "Dữ liệu", parent: "cat1" },
+  { id: "cat5", name: "Vận hành", parent: "cat1" },
+  { id: "cat6", name: "Kiểm thử", parent: "cat1" },
+  { id: "cat7", name: "Kinh doanh", parent: "" },
+  { id: "cat8", name: "Nhân sự", parent: "cat7" },
 ];
+
+function directJobCount(categoryId) {
+  const name = categoryName(categoryId);
+  return jobs.filter((job) => job.category === name).length;
+}
+
+function totalJobCount(categoryId) {
+  const children = categories.filter((item) => item.parent === categoryId);
+  return directJobCount(categoryId) + children.reduce((total, child) => total + totalJobCount(child.id), 0);
+}
 
 const skills = [
   { id: "sk1", name: "Java", aliases: ["java", "j2ee"] },
@@ -1258,18 +1421,31 @@ function openUser(id) {
   form.elements.name.focus();
 }
 
-function saveUser(event) {
+function otherActiveAdmins(exceptId) {
+  return accounts.filter((item) => item.id !== exceptId && item.role === "ADMIN" && item.status === "ACTIVE");
+}
+
+async function saveUser(event) {
   event.preventDefault();
   const form = event.currentTarget;
   if (!form.reportValidity()) return;
   const account = accounts.find((item) => item.id === form.dataset.id);
   const nextRole = form.elements.role.value;
   const nextStatus = form.elements.status.value;
-  const staysAdmin = nextRole === "ADMIN" && nextStatus !== "DELETED";
-  const livingAdmins = accounts.filter((item) => item.id !== account.id && item.role === "ADMIN" && item.status !== "DELETED");
-  if (account.role === "ADMIN" && account.status !== "DELETED" && !staysAdmin && livingAdmins.length === 0) {
+  const wasActiveAdmin = account.role === "ADMIN" && account.status === "ACTIVE";
+  const staysActiveAdmin = nextRole === "ADMIN" && nextStatus === "ACTIVE";
+  if (wasActiveAdmin && !staysActiveAdmin && otherActiveAdmins(account.id).length === 0) {
     toast("Cần giữ ít nhất một quản trị đang dùng.");
     return;
+  }
+  if (nextStatus === "DELETED" && account.status !== "DELETED") {
+    const ok = await confirmAction({
+      title: `Xóa ${account.name}?`,
+      copy: "Tài khoản sẽ không đăng nhập được nữa.",
+      ok: "Xóa",
+      cancel: "Hủy",
+    });
+    if (!ok) return;
   }
   account.name = form.elements.name.value.trim();
   account.role = nextRole;
@@ -1279,15 +1455,11 @@ function saveUser(event) {
   toast(`Đã lưu “${account.name}”.`);
 }
 
-function livingAdmins(exceptId) {
-  return accounts.filter((item) => item.id !== exceptId && item.role === "ADMIN" && item.status === "ACTIVE");
-}
-
 async function lockUser(id) {
   const account = accounts.find((item) => item.id === id);
   if (!account || account.status === "DELETED") return;
   const next = account.status === "SUSPENDED" ? "ACTIVE" : "SUSPENDED";
-  if (account.role === "ADMIN" && account.status === "ACTIVE" && next === "SUSPENDED" && livingAdmins(account.id).length === 0) {
+  if (account.role === "ADMIN" && account.status === "ACTIVE" && next === "SUSPENDED" && otherActiveAdmins(account.id).length === 0) {
     toast("Cần giữ ít nhất một quản trị đang dùng.");
     return;
   }
@@ -1395,7 +1567,7 @@ function renderCategories() {
     <tr data-id="${category.id}">
       <td><button class="name-btn${category.parent ? " child-name" : ""}" type="button" data-action="edit">${esc(category.name)}</button></td>
       <td>${category.parent ? esc(categoryName(category.parent)) : "—"}</td>
-      <td><a class="text-link" href="jobs.html?category=${encodeURIComponent(category.name)}">${fmt.format(category.jobs)}</a></td>
+      <td><a class="text-link" href="jobs.html?category=${encodeURIComponent(category.name)}">${fmt.format(totalJobCount(category.id))}</a></td>
       <td class="actions"><button class="linkish" type="button" data-action="edit">Sửa</button></td>
     </tr>`).join("");
 }
@@ -1441,7 +1613,7 @@ function saveCategory(event) {
     category.name = name;
     category.parent = parent;
   } else {
-    categories.push({ id: `cat-${Date.now()}`, name, parent, jobs: 0 });
+    categories.push({ id: `cat-${Date.now()}`, name, parent });
   }
   document.getElementById("category-editor").close();
   renderCategories();
@@ -1587,7 +1759,7 @@ function bootCatalog() {
   document.querySelectorAll("dialog [data-close]").forEach((button) => {
     button.addEventListener("click", () => button.closest("dialog").close());
   });
-  document.querySelectorAll("dialog.drawer, dialog.editor, #confirm").forEach((dialog) => bindDialog(dialog));
+  document.querySelectorAll("dialog.drawer, #confirm").forEach((dialog) => bindDialog(dialog));
 }
 
 document.addEventListener("DOMContentLoaded", () => {
