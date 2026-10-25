@@ -8,6 +8,7 @@ import { LoginPage } from '../features/auth/pages/LoginPage'
 import { RegisterPage } from '../features/auth/pages/RegisterPage'
 import { ForgotPasswordPage } from '../features/auth/pages/ForgotPasswordPage'
 import { CandidateProfilePage } from '../features/candidate-profile/pages/CandidateProfilePage'
+import { SavedJobsPage } from '../features/saved-jobs/pages/SavedJobsPage'
 import { AuthGuard } from './router/guards/AuthGuard'
 import { MainLayout } from './layouts/MainLayout'
 
@@ -34,6 +35,14 @@ export function App() {
             element={
               <AuthGuard>
                 <CandidateProfilePage />
+              </AuthGuard>
+            }
+          />
+          <Route
+            path="/saved-jobs"
+            element={
+              <AuthGuard>
+                <SavedJobsPage />
               </AuthGuard>
             }
           />

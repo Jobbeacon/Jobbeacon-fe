@@ -1,8 +1,8 @@
-import { useState } from 'react'
 import { Clock3, DollarSign, Heart, MapPin } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { formatRelativeTime, isWithinHours } from '../../../shared/utils/date'
 import { formatSalaryRange } from '../../../shared/utils/format'
+import { useSavedJob } from '../../saved-jobs/hooks/useSavedJob'
 import type { JobSummary } from '../types/job.types'
 import { CompanyLogo } from './CompanyLogo'
 import styles from './JobCard.module.css'
@@ -10,7 +10,7 @@ import styles from './JobCard.module.css'
 const NEW_JOB_HOURS = 24
 
 export function JobCard({ job }: { job: JobSummary }) {
-  const [isSaved, setIsSaved] = useState(false)
+  const { isSaved, toggleSaved } = useSavedJob(job.id)
   const isNew = job.postedDate ? isWithinHours(job.postedDate, NEW_JOB_HOURS) : false
 
   return (
@@ -58,7 +58,7 @@ export function JobCard({ job }: { job: JobSummary }) {
           type="button"
           aria-label={isSaved ? 'Bỏ lưu việc làm' : 'Lưu việc làm'}
           aria-pressed={isSaved}
-          onClick={() => setIsSaved((current) => !current)}
+          onClick={toggleSaved}
         >
           <Heart aria-hidden="true" />
         </button>
