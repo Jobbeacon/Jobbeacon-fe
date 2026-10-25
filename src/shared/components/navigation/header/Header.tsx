@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { BriefcaseBusiness, Building2, Menu, UserRound, X } from 'lucide-react'
+import { BriefcaseBusiness, Building2, Heart, Menu, UserRound, X } from 'lucide-react'
 import { NavLink } from 'react-router-dom'
 import logo from '../../../../assets/logo/jobbeacon-logo.svg'
 import { useAuth } from '../../../../features/auth/hooks/useAuth'
@@ -80,6 +80,7 @@ export default function Header() {
               </button>
               <div className={styles.userMenu} role="menu">
                 <NavLink to="/profile" role="menuitem">Hồ sơ của tôi</NavLink>
+                <NavLink to="/saved-jobs" role="menuitem">Việc làm đã lưu</NavLink>
                 <button
                   type="button"
                   role="menuitem"
@@ -119,6 +120,16 @@ export default function Header() {
           >
             <UserRound aria-hidden="true" />
             <span>Hồ sơ</span>
+          </NavLink>
+        ) : null}
+        {user ? (
+          <NavLink
+            className={({ isActive }) => `${styles.mobileNavLink} ${isActive ? styles.mobileActive : ''}`}
+            to="/saved-jobs"
+            onClick={() => setIsMenuOpen(false)}
+          >
+            <Heart aria-hidden="true" />
+            <span>Đã lưu</span>
           </NavLink>
         ) : null}
       </nav>
