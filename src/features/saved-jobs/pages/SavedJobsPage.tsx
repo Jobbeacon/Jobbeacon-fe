@@ -24,7 +24,8 @@ export function SavedJobsPage() {
   const { isReady, isSaved } = useSavedJobsState()
   // job vừa bỏ lưu biến mất ngay, không cần tải lại trang
   const visibleJobs = isReady ? jobs.filter((job) => isSaved(job.id)) : jobs
-  const totalPages = Math.ceil(total / PAGE_SIZE)
+  const visibleTotal = Math.max(total - (jobs.length - visibleJobs.length), 0)
+  const totalPages = Math.ceil(visibleTotal / PAGE_SIZE)
 
   const handlePageChange = (nextPage: number) => {
     const next = new URLSearchParams(searchParams)
@@ -46,7 +47,7 @@ export function SavedJobsPage() {
       <section className={styles.section} ref={resultsRef}>
         <div className={styles.resultsHead}>
           <h2 aria-live="polite">
-            {isLoading ? 'Đang tải việc làm đã lưu...' : `${total.toLocaleString('vi-VN')} việc làm đã lưu`}
+            {isLoading ? 'Đang tải việc làm đã lưu...' : `${visibleTotal.toLocaleString('vi-VN')} việc làm đã lưu`}
           </h2>
         </div>
 
