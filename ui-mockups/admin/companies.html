@@ -13,14 +13,14 @@
 <body data-page="companies">
   <div class="shell">
     <aside class="sidebar">
-      <a class="sidebar-brand" href="index.html"><img src="assets/logo.svg" alt="JobBeacon"></a>
+      <a class="sidebar-brand" href="index.html" aria-label="JobBeacon"><img class="brand-logo" src="assets/logo.svg" alt="JobBeacon"><span class="brand-tag">Admin</span></a>
       <nav class="sidebar-nav">
         <a href="index.html"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="3" width="7" height="7" rx="1.5"></rect><rect x="3" y="14" width="7" height="7" rx="1.5"></rect><rect x="14" y="14" width="7" height="7" rx="1.5"></rect></svg>Tổng quan</a>
         <a href="jobs.html"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"></rect><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><path d="M3 12h18"></path></svg>Việc làm</a>
         <a href="companies.html" aria-current="page"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="1.5"></rect><path d="M9 8h1M14 8h1M9 12h1M14 12h1M9 16h1M14 16h1"></path></svg>Công ty</a>
         <a href="users.html"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2"></circle><path d="M3 20c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5"></path><path d="M16 8.5a3 3 0 1 1 3 3.3"></path><path d="M21 20c0-2.6-1.7-4.5-4-5.2"></path></svg>Người dùng</a>
-        <a href="sources.html"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="18" r="1.6" fill="currentColor" stroke="none"></circle><path d="M5 11a7 7 0 0 1 7 7"></path><path d="M5 5a13 13 0 0 1 13 13"></path></svg>Nguồn</a>
-        <a href="catalog.html"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 3 8l9 5 9-5-9-5Z"></path><path d="m3 13 9 5 9-5"></path></svg>Danh mục</a>
+        <a href="categories.html"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 3 8l9 5 9-5-9-5Z"></path><path d="m3 13 9 5 9-5"></path></svg>Danh mục ngành</a>
+        <a href="skills.html"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8Z"></path><circle cx="7.5" cy="7.5" r="1.5"></circle></svg>Kỹ năng</a>
       </nav>
       <div class="sidebar-foot">
         <span class="mono-mark">MA</span>
@@ -35,23 +35,27 @@
       <header class="stage-head">
         <div>
           <h1>Công ty</h1>
-          <p class="lead">Sửa tên và logo. Số tin và lần crawl gần nhất lấy từ dữ liệu việc làm.</p>
+          <p class="lead">Crawler tạo công ty theo đúng tên ghi trên nguồn, nên một công ty có thể thành nhiều bản. Gộp bản trùng và sửa tên, logo ở đây.</p>
         </div>
       </header>
+      <div class="stat-row" id="company-stats"></div>
       <section class="sheet">
-        <div class="toolbar">
-          <div class="filters">
-            <label class="field"><span>Tìm</span><input id="company-q" type="search" placeholder="Tên công ty"></label>
-          </div>
-          <p class="count" id="company-count"></p>
+        <div class="toolbar list-toolbar">
+          <input class="search-input" id="company-q" type="search" placeholder="Tìm tên công ty" aria-label="Tìm công ty" autocomplete="off">
+          <select id="company-sort" aria-label="Sắp xếp">
+            <option value="jobs">Nhiều tin nhất</option>
+            <option value="recent">Mới thêm</option>
+            <option value="name">Tên A–Z</option>
+          </select>
         </div>
         <div class="table-wrap">
           <table>
             <thead>
               <tr>
                 <th>Công ty</th>
-                <th>Số tin</th>
-                <th>Nguồn gặp</th>
+                <th class="num">Tin</th>
+                <th>Nguồn</th>
+                <th>Tạo lúc</th>
                 <th>Crawl gần nhất</th>
                 <th></th>
               </tr>
@@ -59,24 +63,40 @@
             <tbody id="company-rows"></tbody>
           </table>
         </div>
+        <div class="pager">
+          <span class="count" id="company-range"></span>
+          <nav class="pages" id="company-pages" aria-label="Phân trang"></nav>
+        </div>
       </section>
     </main>
     </div>
   </div>
 
-  <dialog class="drawer" id="editor">
+  <dialog class="modal form-modal" id="editor">
     <form id="company-form" spellcheck="false">
-      <div class="drawer-bar"><h2>Sửa công ty</h2></div>
-      <div class="drawer-body">
+      <div class="drawer-bar">
         <div class="identity">
-          <span class="mono-mark lg" id="logo-preview">CT</span>
+          <span class="logo-mark lg" id="logo-preview"></span>
           <div>
-            <strong id="company-preview-name">Công ty</strong>
-            <p class="fine" id="company-facts"></p>
+            <h2 id="company-preview-name">Công ty</h2>
+            <a id="company-public" class="pill-link" href="../company-detail.html" target="_blank" rel="noreferrer">Xem trang công ty</a>
           </div>
         </div>
-        <label class="field"><span>Tên</span><input name="name" required maxlength="255"></label>
-        <label class="field"><span>Logo</span><input name="logo" type="url" placeholder="https://"></label>
+      </div>
+      <div class="drawer-body">
+        <label class="field"><span>Tên công ty</span><input name="name" required maxlength="255"></label>
+        <label class="field"><span>URL logo</span><input name="logo" type="url" placeholder="https://"></label>
+        <dl class="meta" id="company-usage"></dl>
+        <p class="fine">Địa điểm, số việc đang tuyển và nguồn tính từ các tin của công ty.</p>
+        <div class="merge">
+          <p class="block-title">Gộp bản trùng</p>
+          <p class="fine" id="company-twins"></p>
+          <div class="merge-row">
+            <input name="target" list="company-names" placeholder="Gộp vào công ty…" aria-label="Công ty đích" autocomplete="off">
+            <button class="btn ghost" type="button" id="merge-company">Gộp</button>
+          </div>
+        </div>
+        <datalist id="company-names"></datalist>
       </div>
       <div class="drawer-actions split">
         <button class="btn text-danger" type="button" id="delete-company">Xóa</button>
@@ -98,6 +118,7 @@
       </div>
     </form>
   </dialog>
+  <script src="js/categories-data.js"></script>
   <script src="js/admin.js"></script>
 </body>
 </html>

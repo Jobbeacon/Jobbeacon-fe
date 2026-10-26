@@ -13,14 +13,14 @@
 <body data-page="users">
   <div class="shell">
     <aside class="sidebar">
-      <a class="sidebar-brand" href="index.html"><img src="assets/logo.svg" alt="JobBeacon"></a>
+      <a class="sidebar-brand" href="index.html" aria-label="JobBeacon"><img class="brand-logo" src="assets/logo.svg" alt="JobBeacon"><span class="brand-tag">Admin</span></a>
       <nav class="sidebar-nav">
         <a href="index.html"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="3" width="7" height="7" rx="1.5"></rect><rect x="3" y="14" width="7" height="7" rx="1.5"></rect><rect x="14" y="14" width="7" height="7" rx="1.5"></rect></svg>Tổng quan</a>
         <a href="jobs.html"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"></rect><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><path d="M3 12h18"></path></svg>Việc làm</a>
         <a href="companies.html"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="1.5"></rect><path d="M9 8h1M14 8h1M9 12h1M14 12h1M9 16h1M14 16h1"></path></svg>Công ty</a>
         <a href="users.html" aria-current="page"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2"></circle><path d="M3 20c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5"></path><path d="M16 8.5a3 3 0 1 1 3 3.3"></path><path d="M21 20c0-2.6-1.7-4.5-4-5.2"></path></svg>Người dùng</a>
-        <a href="sources.html"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="18" r="1.6" fill="currentColor" stroke="none"></circle><path d="M5 11a7 7 0 0 1 7 7"></path><path d="M5 5a13 13 0 0 1 13 13"></path></svg>Nguồn</a>
-        <a href="catalog.html"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 3 8l9 5 9-5-9-5Z"></path><path d="m3 13 9 5 9-5"></path></svg>Danh mục</a>
+        <a href="categories.html"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 3 8l9 5 9-5-9-5Z"></path><path d="m3 13 9 5 9-5"></path></svg>Danh mục ngành</a>
+        <a href="skills.html"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8Z"></path><circle cx="7.5" cy="7.5" r="1.5"></circle></svg>Kỹ năng</a>
       </nav>
       <div class="sidebar-foot">
         <span class="mono-mark">MA</span>
@@ -33,52 +33,40 @@
     <div class="main">
   <main class="stage">
     <header class="stage-head">
-      <h1>Người dùng</h1>
-      <p class="lead">Đổi vai trò hoặc khóa tài khoản. Hồ sơ CV và nguyện vọng việc làm chỉ để xem.</p>
+      <div>
+        <h1>Người dùng</h1>
+        <p class="lead">Đổi vai trò hoặc khóa tài khoản. Đăng nhập qua Firebase; hồ sơ CV và nguyện vọng việc làm do người dùng tự sửa.</p>
+      </div>
     </header>
+    <div class="stat-row" id="user-stats"></div>
     <section class="sheet">
-      <div class="toolbar">
-        <div class="filters">
-          <label class="field"><span>Tìm</span><input id="user-q" type="search" placeholder="Tên hoặc email"></label>
-          <label class="field"><span>Vai trò</span>
-            <select id="user-role">
-              <option value="">Tất cả</option>
-              <option value="ADMIN">Quản trị</option>
-              <option value="USER">Người dùng</option>
-            </select>
-          </label>
-          <label class="field"><span>Trạng thái</span>
-            <select id="user-status">
-              <option value="">Tất cả</option>
-              <option value="ACTIVE">Đang dùng</option>
-              <option value="SUSPENDED">Đã khóa</option>
-              <option value="DELETED">Đã xóa</option>
-            </select>
-          </label>
-          <label class="field"><span>CV</span>
-            <select id="user-cv">
-              <option value="">Tất cả</option>
-              <option value="yes">Có CV</option>
-              <option value="no">Chưa có CV</option>
-            </select>
-          </label>
-        </div>
-        <p class="count" id="user-count"></p>
+      <div class="toolbar list-toolbar">
+        <input class="search-input" id="user-q" type="search" placeholder="Tìm theo tên hoặc email" aria-label="Tìm người dùng" autocomplete="off">
+        <select id="user-role" aria-label="Vai trò">
+          <option value="">Mọi vai trò</option>
+          <option value="ADMIN">Quản trị</option>
+          <option value="USER">Người dùng</option>
+        </select>
       </div>
       <div class="table-wrap">
-        <table>
+        <table class="user-table">
           <thead>
             <tr>
               <th>Người dùng</th>
               <th>Vai trò</th>
               <th>Trạng thái</th>
               <th>CV</th>
+              <th>Đăng ký</th>
               <th>Đăng nhập gần nhất</th>
               <th></th>
             </tr>
           </thead>
           <tbody id="user-rows"></tbody>
         </table>
+      </div>
+      <div class="pager">
+        <span class="count" id="user-range"></span>
+        <nav class="pages" id="user-pages" aria-label="Phân trang"></nav>
       </div>
     </section>
   </main>
@@ -132,6 +120,7 @@
       </div>
     </form>
   </dialog>
+  <script src="js/categories-data.js"></script>
   <script src="js/admin.js"></script>
 </body>
 </html>

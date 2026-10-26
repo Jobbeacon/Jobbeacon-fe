@@ -13,14 +13,14 @@
 <body data-page="jobs">
   <div class="shell">
     <aside class="sidebar">
-      <a class="sidebar-brand" href="index.html"><img src="assets/logo.svg" alt="JobBeacon"></a>
+      <a class="sidebar-brand" href="index.html" aria-label="JobBeacon"><img class="brand-logo" src="assets/logo.svg" alt="JobBeacon"><span class="brand-tag">Admin</span></a>
       <nav class="sidebar-nav">
         <a href="index.html"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="3" width="7" height="7" rx="1.5"></rect><rect x="3" y="14" width="7" height="7" rx="1.5"></rect><rect x="14" y="14" width="7" height="7" rx="1.5"></rect></svg>Tổng quan</a>
         <a href="jobs.html" aria-current="page"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"></rect><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><path d="M3 12h18"></path></svg>Việc làm</a>
         <a href="companies.html"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="1.5"></rect><path d="M9 8h1M14 8h1M9 12h1M14 12h1M9 16h1M14 16h1"></path></svg>Công ty</a>
         <a href="users.html"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2"></circle><path d="M3 20c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5"></path><path d="M16 8.5a3 3 0 1 1 3 3.3"></path><path d="M21 20c0-2.6-1.7-4.5-4-5.2"></path></svg>Người dùng</a>
-        <a href="sources.html"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="18" r="1.6" fill="currentColor" stroke="none"></circle><path d="M5 11a7 7 0 0 1 7 7"></path><path d="M5 5a13 13 0 0 1 13 13"></path></svg>Nguồn</a>
-        <a href="catalog.html"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 3 8l9 5 9-5-9-5Z"></path><path d="m3 13 9 5 9-5"></path></svg>Danh mục</a>
+        <a href="categories.html"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 3 8l9 5 9-5-9-5Z"></path><path d="m3 13 9 5 9-5"></path></svg>Danh mục ngành</a>
+        <a href="skills.html"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8Z"></path><circle cx="7.5" cy="7.5" r="1.5"></circle></svg>Kỹ năng</a>
       </nav>
       <div class="sidebar-foot">
         <span class="mono-mark">MA</span>
@@ -35,45 +35,36 @@
       <header class="stage-head">
         <div>
           <h1>Việc làm</h1>
-          <p class="lead">Sửa nội dung tin. Nguồn và thời điểm crawl chỉ để xem.</p>
-        </div>
-        <div class="seg" id="job-seg" role="group" aria-label="Lọc nhanh">
-          <button type="button" data-term="" aria-pressed="true">Tất cả</button>
-          <button type="button" data-term="open">Còn hạn</button>
-          <button type="button" data-term="closed">Hết hạn</button>
-          <button type="button" data-term="multi">Trùng nguồn</button>
+          <p class="lead">Tin do crawler đưa về. Sửa khi parse sai, gán lại danh mục hoặc kỹ năng. Nguồn và thời điểm crawl chỉ để xem.</p>
         </div>
       </header>
+      <div class="stat-row" id="job-stats"></div>
       <section class="sheet">
-        <div class="toolbar">
-          <div class="filters">
-            <label class="field"><span>Tìm</span><input id="q" type="search" placeholder="Tên tin hoặc địa điểm"></label>
-            <label class="field"><span>Nguồn</span>
-              <select id="source">
-                <option value="">Mọi nguồn</option>
-                <option value="topcv.vn">topcv.vn</option>
-                <option value="itviec.com">itviec.com</option>
-              </select>
-            </label>
-            <label class="field"><span>Sắp xếp</span>
-              <select id="sort">
-                <option value="new">Crawl mới nhất</option>
-                <option value="old">Crawl cũ nhất</option>
-              </select>
-            </label>
-          </div>
-          <p class="count" id="job-count"></p>
+        <div class="toolbar list-toolbar">
+          <input class="search-input" id="q" type="search" placeholder="Tìm theo tiêu đề, công ty hoặc tỉnh thành" aria-label="Tìm tin" autocomplete="off">
+          <select id="source" aria-label="Nguồn">
+            <option value="">Mọi nguồn</option>
+            <option value="topcv.vn">topcv.vn</option>
+            <option value="itviec.com">itviec.com</option>
+          </select>
+          <select id="type" aria-label="Loại hình"></select>
+          <select id="sort" aria-label="Sắp xếp">
+            <option value="new">Crawl mới nhất</option>
+            <option value="old">Crawl cũ nhất</option>
+            <option value="expiring">Sắp hết hạn</option>
+            <option value="salary">Lương cao nhất</option>
+          </select>
         </div>
         <p class="scope" id="job-scope" hidden></p>
         <div class="table-wrap">
-          <table>
+          <table class="job-table">
             <thead>
               <tr>
                 <th>Việc làm</th>
                 <th>Công ty</th>
                 <th>Địa điểm</th>
                 <th>Lương</th>
-                <th>Trạng thái</th>
+                <th>Hạn nộp</th>
                 <th>Nguồn</th>
                 <th>Crawl gần nhất</th>
                 <th></th>
@@ -82,6 +73,10 @@
             <tbody id="job-rows"></tbody>
           </table>
         </div>
+        <div class="pager">
+          <span class="count" id="job-range"></span>
+          <nav class="pages" id="job-pages" aria-label="Phân trang"></nav>
+        </div>
       </section>
     </main>
     </div>
@@ -89,59 +84,80 @@
 
   <dialog class="drawer wide" id="editor">
     <form id="job-form" spellcheck="false">
-      <div class="drawer-bar"><h2>Sửa tin</h2></div>
+      <div class="drawer-bar">
+        <div>
+          <h2 id="job-heading">Sửa tin</h2>
+          <a id="public-job" href="../job-detail.html" target="_blank" rel="noreferrer">Xem trên trang tìm việc</a>
+        </div>
+      </div>
       <div class="drawer-body">
-        <p class="fine"><a id="public-job" href="../jobs.html" target="_blank" rel="noreferrer">Xem trên trang tìm việc</a></p>
+        <p class="block-title">Thông tin chung</p>
         <label class="field"><span>Tiêu đề</span><input name="title" required maxlength="255"></label>
+        <label class="field"><span>Công ty</span><input name="company" list="company-names" required maxlength="255" autocomplete="off"></label>
         <div class="pair">
-          <label class="field"><span>Công ty</span><select name="company"></select></label>
-          <label class="field"><span>Loại hình</span>
-            <select name="type">
-              <option>Toàn thời gian</option>
-              <option>Bán thời gian</option>
-              <option>Hợp đồng</option>
-              <option>Thực tập</option>
-            </select>
+          <label class="field"><span>Loại hình</span><select name="type"></select></label>
+          <label class="field"><span>Kinh nghiệm</span>
+            <span class="unit-field"><input name="exp" inputmode="numeric" aria-label="Kinh nghiệm, tháng"><em>tháng</em></span>
           </label>
         </div>
-        <label class="field"><span>Địa điểm</span><input name="location" maxlength="255"></label>
-        <label class="field"><span>Kinh nghiệm</span>
-          <span class="unit-field"><input name="exp" inputmode="numeric" aria-label="Kinh nghiệm, tháng"><em>tháng</em></span>
-        </label>
         <div class="field">
-          <span>Lương</span>
+          <span>Địa điểm</span>
+          <label class="tag-input" id="job-places">
+            <span class="tags"></span>
+            <input list="province-list" placeholder="Chọn tỉnh thành" aria-label="Thêm tỉnh thành" autocomplete="off">
+          </label>
+        </div>
+
+        <p class="block-title">Phân loại</p>
+        <label class="field"><span>Danh mục (cấp vị trí)</span><input name="category" list="category-leaves" placeholder="Ví dụ: Backend Developer" autocomplete="off"></label>
+        <p class="fine path-hint" id="job-category-path"></p>
+        <div class="field">
+          <span>Kỹ năng</span>
+          <label class="tag-input" id="job-skills">
+            <span class="tags"></span>
+            <input list="skill-list" placeholder="Chọn kỹ năng" aria-label="Thêm kỹ năng" autocomplete="off">
+          </label>
+          <p class="fine">Chỉ chọn kỹ năng đã có. Kỹ năng mới thêm ở trang Kỹ năng.</p>
+        </div>
+
+        <p class="block-title">Lương và thời hạn</p>
+        <div class="field">
+          <span>Lương (để trống là thỏa thuận)</span>
           <div class="salary">
-            <input name="min" inputmode="decimal" placeholder="Từ" aria-label="Lương sàn, triệu đồng">
+            <input name="min" inputmode="decimal" placeholder="Từ" aria-label="Lương sàn">
             <i>–</i>
-            <input name="max" inputmode="decimal" placeholder="Đến" aria-label="Lương trần, triệu đồng">
-            <em>triệu /</em>
-            <select name="period" aria-label="Kỳ lương">
-              <option>tháng</option>
-              <option>năm</option>
-              <option>giờ</option>
-              <option>dự án</option>
+            <input name="max" inputmode="decimal" placeholder="Đến" aria-label="Lương trần">
+            <select name="currency" aria-label="Tiền tệ">
+              <option value="VND">VND</option>
+              <option value="USD">USD</option>
             </select>
+            <em id="salary-unit">triệu /</em>
+            <select name="period" aria-label="Kỳ lương"></select>
           </div>
         </div>
         <div class="pair">
           <label class="field"><span>Ngày đăng</span><input name="posted" type="date"></label>
           <label class="field"><span>Hết hạn</span><input name="expired" type="date"></label>
         </div>
-        <label class="field"><span>Mô tả</span><textarea name="description" rows="4"></textarea></label>
+
+        <p class="block-title">Nội dung</p>
+        <label class="field"><span>Mô tả</span><textarea name="description" rows="5"></textarea></label>
         <label class="field"><span>Phúc lợi</span><textarea name="benefits" rows="3"></textarea></label>
-        <div>
-          <p class="block-title">Nguồn ghi nhận</p>
-          <ul class="mappings" id="job-mappings"></ul>
-          <p class="fine">Thời điểm crawl chỉ để xem.</p>
-        </div>
+
+        <p class="block-title">Nguồn ghi nhận</p>
+        <ul class="mappings" id="job-mappings"></ul>
       </div>
       <div class="drawer-actions split">
-        <button class="btn text-danger" type="button" id="delete-job">Xóa</button>
+        <button class="btn text-danger" type="button" id="delete-job">Xóa tin</button>
         <div class="actions-end">
           <button class="btn ghost" type="button" data-close>Hủy</button>
           <button class="btn" type="submit">Lưu</button>
         </div>
       </div>
+      <datalist id="company-names"></datalist>
+      <datalist id="category-leaves"></datalist>
+      <datalist id="skill-list"></datalist>
+      <datalist id="province-list"></datalist>
     </form>
   </dialog>
 
@@ -155,6 +171,7 @@
       </div>
     </form>
   </dialog>
+  <script src="js/categories-data.js"></script>
   <script src="js/admin.js"></script>
 </body>
 </html>
