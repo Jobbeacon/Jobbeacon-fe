@@ -28,3 +28,6 @@ dist-ssr
 !.env.example
 
 firebase-service-account.json
+
+# Workspace điều phối agent (plan, report)
+.work/
