@@ -18,7 +18,8 @@ const suggestions = [
 ]
 
 function AgentChat() {
-  const { messages, isSending, sendMessage, resetConversation, leaveConversation } = useCareerChat()
+  const { messages, isStreaming, sendMessage, stop, retry, resetConversation, leaveConversation } =
+    useCareerChat()
   const { isConfirmOpen, isLeaving, confirmLeave, cancelLeave } = useLeaveChatGuard({
     enabled: messages.length > 0,
     onConfirmLeave: leaveConversation,
@@ -51,10 +52,10 @@ function AgentChat() {
         onCancel={closeResetConfirm}
       />
       {messages.length > 0 && (
+        // Reset được cả khi đang stream: hook sẽ huỷ request trước khi xoá session.
         <button
           className={styles.newChatButton}
           type="button"
-          disabled={isSending}
           onClick={() => setIsResetConfirmOpen(true)}
         >
           <SquarePen aria-hidden="true" />
@@ -63,7 +64,7 @@ function AgentChat() {
       )}
 
       {messages.length > 0 ? (
-        <ChatThread messages={messages} isPending={isSending} />
+        <ChatThread messages={messages} onRetry={retry} isStreaming={isStreaming} />
       ) : (
         <div className={styles.welcome}>
           <span className={styles.welcomeIcon} aria-hidden="true"><Bot /></span>
@@ -75,7 +76,7 @@ function AgentChat() {
                 key={text}
                 className={styles.suggestion}
                 type="button"
-                disabled={isSending}
+                disabled={isStreaming}
                 onClick={() => sendMessage(text)}
               >
                 <Icon aria-hidden="true" />
@@ -86,7 +87,7 @@ function AgentChat() {
         </div>
       )}
 
-      <ChatComposer disabled={isSending} onSend={sendMessage} />
+      <ChatComposer isStreaming={isStreaming} onSend={sendMessage} onStop={stop} />
     </main>
   )
 }

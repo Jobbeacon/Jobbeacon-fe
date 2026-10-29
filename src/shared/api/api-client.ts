@@ -101,16 +101,19 @@ function toApiError(response: Response, body: unknown) {
   return new ApiError(message, response.status, errorBody)
 }
 
-async function request<T>(
-  method: string,
-  path: string,
-  options: ApiRequestOptions = {},
-): Promise<T> {
+type AuthorizedFetchOptions = ApiRequestOptions & {
+  method?: string
+}
+
+// Dựng header + gắn token rồi gọi fetch; retry 1 lần với token mới khi 401. Không đọc body.
+async function executeFetch(method: string, path: string, options: ApiRequestOptions) {
   const { body, headers: initialHeaders, authenticated = true, ...requestInit } = options
 
   const execute = async (forceRefresh = false) => {
     const headers = new Headers(initialHeaders)
-    headers.set('Accept', 'application/json')
+    if (!headers.has('Accept')) {
+      headers.set('Accept', 'application/json')
+    }
     if (!headers.has('Accept-Language')) {
       headers.set('Accept-Language', 'vi')
     }
@@ -131,10 +134,37 @@ async function request<T>(
     })
   }
 
-  let response = await execute()
+  const response = await execute()
   if (authenticated && response.status === 401 && apiConfig.getAccessToken) {
-    response = await execute(true)
+    // Bỏ body của response 401 để giải phóng kết nối trước khi retry.
+    response.body?.cancel().catch(() => undefined)
+    return execute(true)
   }
+
+  return response
+}
+
+// Trả Response thô (vd. đọc stream SSE); người gọi tự kiểm tra response.ok.
+export function authorizedFetch(path: string, options: AuthorizedFetchOptions = {}): Promise<Response> {
+  const { method = 'GET', ...requestOptions } = options
+  return executeFetch(method, path, requestOptions)
+}
+
+// Đọc body của Response lỗi và chuyển thành ApiError giống request().
+export async function createApiErrorFromResponse(response: Response): Promise<ApiError> {
+  try {
+    return toApiError(response, await parseResponse(response))
+  } catch (error) {
+    return error instanceof ApiError ? error : toApiError(response, undefined)
+  }
+}
+
+async function request<T>(
+  method: string,
+  path: string,
+  options: ApiRequestOptions = {},
+): Promise<T> {
+  const response = await executeFetch(method, path, options)
 
   const responseBody = await parseResponse(response)
   if (!response.ok) {

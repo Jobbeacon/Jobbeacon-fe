@@ -1,4 +1,5 @@
-import { Bot } from 'lucide-react'
+import { memo } from 'react'
+import { Bot, LoaderCircle, RotateCcw } from 'lucide-react'
 import Markdown, { type Components } from 'react-markdown'
 import { Link } from 'react-router-dom'
 import remarkGfm from 'remark-gfm'
@@ -14,11 +15,27 @@ const markdownComponents: Components = {
     ),
 }
 
+const remarkPlugins = [remarkGfm]
+
 type ChatMessageProps = {
   message: ChatMessageModel
+  onRetry?: (messageId: string) => void
+  // Đang có tin khác stream: chưa cho gửi lại
+  isRetryDisabled?: boolean
 }
 
-export function ChatMessage({ message }: ChatMessageProps) {
+function TypingDots() {
+  return (
+    <div className={styles.typing} role="status" aria-label="JobBeacon Agent đang trả lời">
+      <span />
+      <span />
+      <span />
+    </div>
+  )
+}
+
+// Memo để khi stream chỉ tin đang chạy render lại Markdown.
+export const ChatMessage = memo(function ChatMessage({ message, onRetry, isRetryDisabled = false }: ChatMessageProps) {
   if (message.role === 'user') {
     return (
       <div className={`${styles.messageRow} ${styles.userRow}`}>
@@ -27,31 +44,50 @@ export function ChatMessage({ message }: ChatMessageProps) {
     )
   }
 
+  const isStreaming = message.status === 'streaming'
+  const isError = message.status === 'error' || message.isError
+  // Khi lỗi vẫn giữ phần text đã nhận, thông báo lỗi hiện riêng bên dưới.
+  const markdownText = message.content
+
   return (
     <div className={styles.messageRow}>
       <span className={styles.agentAvatar} aria-hidden="true"><Bot /></span>
-      {message.isError ? (
-        <div className={`${styles.agentContent} ${styles.errorContent}`}>{message.content}</div>
-      ) : (
-        <div className={`${styles.agentContent} ${styles.markdown}`}>
-          <Markdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
-            {message.content}
-          </Markdown>
-        </div>
-      )}
-    </div>
-  )
-}
+      <div className={styles.agentContent}>
+        {markdownText && (
+          <div className={`${styles.markdown} ${isStreaming ? styles.streamingText : ''}`}>
+            <Markdown remarkPlugins={remarkPlugins} components={markdownComponents}>
+              {markdownText}
+            </Markdown>
+          </div>
+        )}
 
-export function ChatTypingIndicator() {
-  return (
-    <div className={styles.messageRow} role="status" aria-label="JobBeacon Agent đang trả lời">
-      <span className={styles.agentAvatar} aria-hidden="true"><Bot /></span>
-      <div className={styles.typing}>
-        <span />
-        <span />
-        <span />
+        {isStreaming && message.activity && (
+          <div className={styles.activity} role="status">
+            <LoaderCircle aria-hidden="true" />
+            <span>{message.activity}</span>
+          </div>
+        )}
+        {isStreaming && !markdownText && !message.activity && <TypingDots />}
+
+        {isError && (
+          <div className={styles.errorBlock} role="alert">
+            <p className={styles.errorContent}>{message.errorMessage || 'Xin lỗi, đã có lỗi xảy ra. Vui lòng thử lại sau.'}</p>
+            {message.retryOf && onRetry && (
+              <button
+                className={styles.retryButton}
+                type="button"
+                disabled={isRetryDisabled}
+                onClick={() => onRetry(message.id)}
+              >
+                <RotateCcw aria-hidden="true" />
+                <span>Gửi lại</span>
+              </button>
+            )}
+          </div>
+        )}
+
+        {message.status === 'stopped' && <span className={styles.stoppedLabel}>Đã dừng</span>}
       </div>
     </div>
   )
-}
+})
