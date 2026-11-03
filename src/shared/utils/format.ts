@@ -1,11 +1,11 @@
 const MILLION = 1_000_000
 
-function formatAmount(value: number, currency: string) {
-  if (currency === 'VND') {
+function formatAmount(value: number, currency: string, inMillions: boolean) {
+  if (currency === 'VND' && inMillions) {
     const millions = value / MILLION
     return Number.isInteger(millions) ? String(millions) : millions.toFixed(1).replace(/\.0$/, '')
   }
-  return value.toLocaleString('en-US')
+  return value.toLocaleString(currency === 'VND' ? 'vi-VN' : 'en-US')
 }
 
 export function formatSalaryRange(
@@ -14,9 +14,11 @@ export function formatSalaryRange(
   currency: string | null = 'VND',
 ) {
   const resolvedCurrency = (currency ?? 'VND').toUpperCase()
-  const unit = resolvedCurrency === 'VND' ? 'triệu' : resolvedCurrency
-  const min = minSalary ? formatAmount(minSalary, resolvedCurrency) : null
-  const max = maxSalary ? formatAmount(maxSalary, resolvedCurrency) : null
+  // Lương theo giờ/ngày thường dưới 1 triệu: chia theo triệu sẽ thành "0 triệu", nên hiển thị đủ số đồng
+  const inMillions = [minSalary, maxSalary].every((value) => !value || value >= MILLION)
+  const unit = resolvedCurrency !== 'VND' ? resolvedCurrency : inMillions ? 'triệu' : 'đ'
+  const min = minSalary ? formatAmount(minSalary, resolvedCurrency, inMillions) : null
+  const max = maxSalary ? formatAmount(maxSalary, resolvedCurrency, inMillions) : null
 
   if (min && max) return min === max ? `${min} ${unit}` : `${min} - ${max} ${unit}`
   if (min) return `Từ ${min} ${unit}`
