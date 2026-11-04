@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import {
   ArrowRight,
   BriefcaseBusiness,
@@ -19,19 +19,13 @@ import {
   formatSalaryRange,
 } from '../../../shared/utils/format'
 import { sanitizeHtml } from '../../../shared/utils/sanitize-html'
+import { useSavedJob } from '../../saved-jobs/hooks/useSavedJob'
 import { CompanyLogo } from '../components/CompanyLogo'
 import { JobCard } from '../components/JobCard'
 import { useJobDetail } from '../hooks/useJobDetail'
 import { getCategoryPaths } from '../utils/category'
 import type { JobDetail } from '../types/job.types'
 import styles from './JobDetailPage.module.css'
-
-const sourceClassNames: Record<string, string> = {
-  'topcv.vn': styles.sourceTopcv,
-  'itviec.com': styles.sourceItviec,
-  'vietnamworks.com': styles.sourceVnworks,
-  'careerviet.vn': styles.sourceCareerviet,
-}
 
 function JobDescription({ html }: { html: string }) {
   const safeHtml = useMemo(() => sanitizeHtml(html), [html])
@@ -44,7 +38,7 @@ function JobDescription({ html }: { html: string }) {
 }
 
 function JobDetailContent({ job }: { job: JobDetail }) {
-  const [isSaved, setIsSaved] = useState(false)
+  const { isSaved, toggleSaved } = useSavedJob(job.id)
   const salary = formatSalaryRange(job.minSalary, job.maxSalary, job.currency)
   const salaryPeriod = formatSalaryPeriod(job.salaryPeriod)
   const employmentType = formatEmploymentType(job.employmentType)
@@ -116,7 +110,7 @@ function JobDetailContent({ job }: { job: JobDetail }) {
 
         {primarySource ? (
           <p className={styles.sourceRow}>
-            <span className={`${styles.source} ${sourceClassNames[primarySource.domain] ?? ''}`}>
+            <span className={styles.source}>
               Nguồn: {primarySource.name}
             </span>
             {otherSources.length > 0 ? (
@@ -143,7 +137,7 @@ function JobDetailContent({ job }: { job: JobDetail }) {
             className={`${styles.btnOutline} ${isSaved ? styles.btnSaved : ''}`}
             type="button"
             aria-pressed={isSaved}
-            onClick={() => setIsSaved((current) => !current)}
+            onClick={toggleSaved}
           >
             <Heart aria-hidden="true" /> {isSaved ? 'Đã lưu việc làm' : 'Lưu việc làm'}
           </button>

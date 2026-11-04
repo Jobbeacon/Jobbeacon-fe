@@ -16,16 +16,8 @@ type PageApiDto<T> = {
   amount: number
 }
 
-const sourceNames: Record<string, string> = {
-  'topcv.vn': 'TopCV',
-  'itviec.com': 'ITviec',
-  'vietnamworks.com': 'VietnamWorks',
-  'careerviet.vn': 'CareerViet',
-}
-
 function toSourceName(domain: string) {
-  const normalized = domain.replace(/^www\./, '')
-  return sourceNames[normalized] ?? normalized
+  return domain.replace(/^www\./, '')
 }
 
 function toCompany(company: CompanySummaryApiDto): Company {

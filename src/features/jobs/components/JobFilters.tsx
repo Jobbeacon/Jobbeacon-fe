@@ -1,4 +1,5 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { getJobSources } from '../api/jobs.api'
 import styles from './JobFilters.module.css'
 
 type Option = {
@@ -61,17 +62,25 @@ const groups: FilterGroup[] = [
       { value: '30d', label: '30 ngày qua' },
     ],
   },
-  {
-    key: 'sources',
-    title: 'Nguồn tuyển dụng',
-    options: [
-      { value: 'topcv.vn', label: 'TopCV' },
-      { value: 'itviec.com', label: 'ITviec' },
-      { value: 'vietnamworks.com', label: 'VietnamWorks' },
-      { value: 'careerviet.vn', label: 'CareerViet' },
-    ],
-  },
 ]
+
+// Sources come from the backend so newly crawled sites show up without a frontend change
+function useSourceOptions(selected: string[]) {
+  const [sources, setSources] = useState<string[]>([])
+
+  useEffect(() => {
+    const controller = new AbortController()
+    getJobSources(controller.signal)
+      .then((items) => setSources(items.map((item) => item.name)))
+      .catch(() => {
+        if (!controller.signal.aborted) setSources([])
+      })
+    return () => controller.abort()
+  }, [])
+
+  // keep sources selected from the URL visible even if they are not in the list
+  return [...new Set([...sources, ...selected])].map((domain) => ({ value: domain, label: domain }))
+}
 
 function toggle(values: string[], value: string) {
   return values.includes(value) ? values.filter((item) => item !== value) : [...values, value]
@@ -107,6 +116,10 @@ export function JobFilters({ value, onChange, onReset }: JobFiltersProps) {
   const salaryKey = `${value.minSalary}|${value.maxSalary}`
   const [seenSalary, setSeenSalary] = useState(salaryKey)
   const salaryTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const sourceOptions = useSourceOptions(value.sources)
+  const visibleGroups: FilterGroup[] = sourceOptions.length > 0
+    ? [...groups, { key: 'sources', title: 'Nguồn tuyển dụng', options: sourceOptions }]
+    : groups
 
   if (salaryKey !== seenSalary) {
     setSeenSalary(salaryKey)
@@ -180,7 +193,7 @@ export function JobFilters({ value, onChange, onReset }: JobFiltersProps) {
         <p className={styles.facetStatus}>Đơn vị triệu đồng.</p>
       </fieldset>
 
-      {groups.map((group) => (
+      {visibleGroups.map((group) => (
         <FilterGroupView key={group.key} group={group} value={value} onChange={onChange} />
       ))}
       </div>

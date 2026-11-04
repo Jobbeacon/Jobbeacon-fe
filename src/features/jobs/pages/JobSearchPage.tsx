@@ -25,10 +25,6 @@ const filterLabels: Record<string, string> = {
   '24h': '24 giờ qua',
   '7d': '7 ngày qua',
   '30d': '30 ngày qua',
-  'topcv.vn': 'TopCV',
-  'itviec.com': 'ITviec',
-  'vietnamworks.com': 'VietnamWorks',
-  'careerviet.vn': 'CareerViet',
 }
 
 const listKeys = [
@@ -205,7 +201,7 @@ export function JobSearchPage() {
         </nav>
         <h1>Tìm kiếm việc làm</h1>
         <p>
-          Tổng hợp tin tuyển dụng từ TopCV, ITviec, VietnamWorks và nhiều nguồn khác. JobBeacon chuẩn hóa dữ liệu
+          Tổng hợp tin tuyển dụng từ nhiều trang tuyển dụng. JobBeacon chuẩn hóa dữ liệu
           và gộp tin trùng.
         </p>
         <JobSearchBar

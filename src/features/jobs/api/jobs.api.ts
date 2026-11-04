@@ -2,6 +2,7 @@ import { apiClient } from '../../../shared/api/api-client'
 import type { ApiResponse } from '../../../shared/types/api.types'
 import type {
   CategoryNode,
+  FacetItem,
   JobFacets,
   LocationItem,
   CategoryApiDto,
@@ -26,18 +27,11 @@ type PageApiDto<T> = {
   amount: number
 }
 
-const sourceNames: Record<string, string> = {
-  'topcv.vn': 'TopCV',
-  'itviec.com': 'ITviec',
-  'vietnamworks.com': 'VietnamWorks',
-  'careerviet.vn': 'CareerViet',
-}
-
 function toSource(source: JobSourceApiDto): JobSource {
   const domain = (source.domain ?? '').replace(/^www\./, '')
   return {
     id: source.id,
-    name: sourceNames[domain] ?? domain,
+    name: domain,
     domain,
     url: source.job_url,
   }
@@ -94,6 +88,14 @@ function toJobDetail(job: JobDetailApiDto): JobDetail {
 
 export async function getJobFacets(signal?: AbortSignal) {
   const response = await apiClient.get<ApiResponse<JobFacets>>(`${JOBS_ENDPOINT}/facets`, {
+    signal,
+    authenticated: false,
+  })
+  return response.data
+}
+
+export async function getJobSources(signal?: AbortSignal) {
+  const response = await apiClient.get<ApiResponse<FacetItem[]>>(`${JOBS_ENDPOINT}/sources`, {
     signal,
     authenticated: false,
   })

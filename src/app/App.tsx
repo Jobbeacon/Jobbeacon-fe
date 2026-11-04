@@ -9,6 +9,7 @@ import { RegisterPage } from '../features/auth/pages/RegisterPage'
 import { ForgotPasswordPage } from '../features/auth/pages/ForgotPasswordPage'
 import { CandidateProfilePage } from '../features/candidate-profile/pages/CandidateProfilePage'
 import { CareerChatPage } from '../features/career-chat/pages/CareerChatPage'
+import { SavedJobsPage } from '../features/saved-jobs/pages/SavedJobsPage'
 import { AuthGuard } from './router/guards/AuthGuard'
 import { MainLayout } from './layouts/MainLayout'
 
@@ -22,6 +23,30 @@ const router = createBrowserRouter(
         <Route path="/jobs/:jobId" element={<JobDetailPage />} />
         <Route path="/companies" element={<CompaniesPage />} />
         <Route path="/companies/:companyId" element={<CompanyDetailPage />} />
+        <Route
+          path="/profile"
+          element={
+            <AuthGuard>
+              <CandidateProfilePage />
+            </AuthGuard>
+          }
+        />
+        <Route
+          path="/ho-so"
+          element={
+            <AuthGuard>
+              <CandidateProfilePage />
+            </AuthGuard>
+          }
+        />
+        <Route
+          path="/saved-jobs"
+          element={
+            <AuthGuard>
+              <SavedJobsPage />
+            </AuthGuard>
+          }
+        />
         <Route path="*" element={<HomePage />} />
       </Route>
       <Route element={<MainLayout showFooter={false} />}>
@@ -32,22 +57,6 @@ const router = createBrowserRouter(
       <Route path="/dang-ky" element={<RegisterPage />} />
       <Route path="/forgot-password" element={<ForgotPasswordPage />} />
       <Route path="/quen-mat-khau" element={<ForgotPasswordPage />} />
-      <Route
-        path="/profile"
-        element={
-          <AuthGuard>
-            <CandidateProfilePage />
-          </AuthGuard>
-        }
-      />
-      <Route
-        path="/ho-so"
-        element={
-          <AuthGuard>
-            <CandidateProfilePage />
-          </AuthGuard>
-        }
-      />
     </>,
   ),
 )
