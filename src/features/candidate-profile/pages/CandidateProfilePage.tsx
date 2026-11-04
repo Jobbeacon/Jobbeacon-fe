@@ -109,6 +109,7 @@ export function CandidateProfilePage() {
                 onRetry={cvProfile.retry}
                 onUpload={cvProfile.upload}
                 onDelete={cvProfile.remove}
+                onAddSkill={cvProfile.addSkill}
                 onRemoveSkill={cvProfile.removeSkill}
               />
             </div>

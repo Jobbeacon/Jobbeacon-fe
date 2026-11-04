@@ -98,6 +98,11 @@
   background: #edf7ff;
 }
 
+.dropzone:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
 .dropzone svg {
   width: 32px;
   height: 32px;
