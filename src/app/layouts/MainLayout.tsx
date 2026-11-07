@@ -3,13 +3,17 @@ import Header from '../../shared/components/navigation/header/Header'
 import HomeFooter from '../../features/home/components/HomeFooter'
 import { ScrollToTop } from '../router/ScrollToTop'
 
-export function MainLayout() {
+type MainLayoutProps = {
+  showFooter?: boolean
+}
+
+export function MainLayout({ showFooter = true }: MainLayoutProps) {
   return (
     <>
       <ScrollToTop />
       <Header />
       <Outlet />
-      <HomeFooter />
+      {showFooter && <HomeFooter />}
     </>
   )
 }

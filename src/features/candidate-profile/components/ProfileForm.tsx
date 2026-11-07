@@ -13,9 +13,20 @@ import type {
   SalaryPeriod,
 } from '../types/candidate-profile.types'
 import { MAX_DESIRED_TITLES, MAX_PROVINCES, MAX_TITLE_LENGTH } from '../utils/job-preference-form'
+import { Combobox } from './Combobox'
 import styles from './ProfileForm.module.css'
 
-const EMPLOYMENT_TYPES = Object.keys(EMPLOYMENT_TYPE_LABELS) as EmploymentType[]
+// So khớp không dấu: "ha noi" ra "Hà Nội".
+function normalizeSearch(value: string) {
+  return value
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/đ/gi, 'd')
+    .toLowerCase()
+    .trim()
+}
+
+const UI_EMPLOYMENT_TYPES: EmploymentType[] = ['FULL_TIME', 'PART_TIME']
 const CURRENCIES: SalaryCurrency[] = ['VND', 'USD']
 const UI_SALARY_PERIODS: SalaryPeriod[] = ['MONTH', 'YEAR']
 
@@ -39,6 +50,7 @@ export function ProfileForm({
   notice,
 }: ProfileFormProps) {
   const [titleInput, setTitleInput] = useState('')
+  const [provinceInput, setProvinceInput] = useState('')
 
   const update = <K extends keyof JobPreferenceFormValues>(key: K, next: JobPreferenceFormValues[K]) => {
     onChange({ ...value, [key]: next })
@@ -64,12 +76,23 @@ export function ProfileForm({
   }
 
   const provinceName = (id: string) => provinces.find((province) => province.id === id)?.name ?? id
-  const availableProvinces = provinces.filter((province) => !value.provinceIds.includes(province.id))
+  const provinceQuery = normalizeSearch(provinceInput)
+  const availableProvinces = provinces.filter(
+    (province) =>
+      !value.provinceIds.includes(province.id) && normalizeSearch(province.name).includes(provinceQuery),
+  )
 
   const addProvince = (id: string) => {
     if (!id || value.provinceIds.includes(id) || value.provinceIds.length >= MAX_PROVINCES) return
+    setProvinceInput('')
     update('provinceIds', [...value.provinceIds, id])
   }
+
+  // Giữ hình thức đang lưu (vd. CONTRACTOR) nếu khác các lựa chọn của UI để user còn bỏ chọn được.
+  const employmentTypes = [
+    ...UI_EMPLOYMENT_TYPES,
+    ...value.employmentTypes.filter((type) => !UI_EMPLOYMENT_TYPES.includes(type)),
+  ]
 
   const toggleEmploymentType = (type: EmploymentType) => {
     update(
@@ -157,17 +180,17 @@ export function ProfileForm({
             </span>
           ))}
           {value.provinceIds.length < MAX_PROVINCES ? (
-            <select
+            <Combobox
               id="provinceSelect"
-              className={styles.tagSelect}
-              value=""
-              onChange={(event) => addProvince(event.target.value)}
-            >
-              <option value="">Thêm tỉnh/thành</option>
-              {availableProvinces.map((province) => (
-                <option key={province.id} value={province.id}>{province.name}</option>
-              ))}
-            </select>
+              compact
+              openWhenEmpty
+              value={provinceInput}
+              onValueChange={setProvinceInput}
+              options={availableProvinces}
+              status={provinces.length === 0 ? 'Đang tải danh sách tỉnh/thành...' : 'Không tìm thấy tỉnh/thành.'}
+              placeholder="Thêm tỉnh/thành"
+              onSelect={(province) => addProvince(province.id)}
+            />
           ) : null}
         </div>
       </div>
@@ -175,7 +198,7 @@ export function ProfileForm({
       <fieldset className={styles.field}>
         <legend>Hình thức làm việc</legend>
         <div className={styles.choices}>
-          {EMPLOYMENT_TYPES.map((type) => (
+          {employmentTypes.map((type) => (
             <label key={type} className={styles.choice}>
               <input
                 type="checkbox"

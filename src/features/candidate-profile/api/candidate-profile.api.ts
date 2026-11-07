@@ -7,9 +7,12 @@ import type {
   CvProfileApiDto,
   CvProfileSkill,
   CvProfileSkillApiDto,
+  CvProfileSkills,
+  CvProfileSkillsApiDto,
   JobPreference,
   JobPreferenceApiDto,
   JobPreferenceRequestDto,
+  SkillSearchItem,
   UserProfile,
   UserProfileApiDto,
 } from '../types/candidate-profile.types'
@@ -17,6 +20,8 @@ import type {
 const CURRENT_USER_ENDPOINT = '/api/v1/users/me'
 const JOB_PREFERENCE_ENDPOINT = '/api/v1/me/job-preference'
 const CV_PROFILE_ENDPOINT = '/api/v1/me/cv-profile'
+const SKILLS_ENDPOINT = '/api/v1/skills'
+const SKILL_SEARCH_LIMIT = 10
 // Trích xuất CV chạy đồng bộ, có thể mất ~30–40s.
 const CV_EXTRACT_TIMEOUT_MS = 90_000
 const CV_PROFILE_NOT_FOUND = 'cv_profile_not_found'
@@ -118,6 +123,7 @@ function toCvEducation(dto: CvEducationApiDto) {
 function toCvProfile(dto: CvProfileApiDto): CvProfile {
   return {
     id: dto.id,
+    hasCv: dto.has_cv ?? dto.parsed_at != null,
     currentTitle: dto.current_title ?? null,
     summary: dto.summary ?? null,
     totalMonthsExperience: dto.total_months_experience ?? null,
@@ -125,6 +131,13 @@ function toCvProfile(dto: CvProfileApiDto): CvProfile {
     educations: (dto.educations ?? []).map(toCvEducation),
     parsedAt: dto.parsed_at ?? null,
     updatedAt: dto.updated_at ?? null,
+    skills: (dto.skills ?? []).map(toCvSkill),
+  }
+}
+
+function toCvProfileSkills(dto: CvProfileSkillsApiDto): CvProfileSkills {
+  return {
+    profileId: dto.profile_id ?? null,
     skills: (dto.skills ?? []).map(toCvSkill),
   }
 }
@@ -196,4 +209,32 @@ export async function deleteCvProfileSkill(skillId: string, signal?: AbortSignal
     `${CV_PROFILE_ENDPOINT}/skills/${encodeURIComponent(skillId)}`,
     { signal },
   )
+}
+
+export async function getCvProfileSkills(signal?: AbortSignal) {
+  const response = await apiClient.get<ApiResponse<CvProfileSkillsApiDto>>(`${CV_PROFILE_ENDPOINT}/skills`, {
+    signal,
+  })
+  return toCvProfileSkills(response.data)
+}
+
+/** Thêm skill tay; chưa có profile thì backend tự tạo profile rỗng (has_cv = false). */
+export async function addCvProfileSkill(skillId: string, signal?: AbortSignal) {
+  const response = await apiClient.post<ApiResponse<CvProfileSkillsApiDto>>(
+    `${CV_PROFILE_ENDPOINT}/skills`,
+    { skill_id: skillId },
+    { signal },
+  )
+  return toCvProfileSkills(response.data)
+}
+
+export async function searchSkills(query: string, signal?: AbortSignal) {
+  const q = query.trim()
+  if (!q) return [] as SkillSearchItem[]
+
+  const params = new URLSearchParams({ q, limit: String(SKILL_SEARCH_LIMIT) })
+  const response = await apiClient.get<ApiResponse<SkillSearchItem[]>>(`${SKILLS_ENDPOINT}?${params}`, {
+    signal,
+  })
+  return response.data ?? []
 }

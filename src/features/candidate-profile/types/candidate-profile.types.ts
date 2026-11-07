@@ -139,6 +139,7 @@ export type CvProfileSkillApiDto = {
 
 export type CvProfileApiDto = {
   id: string
+  has_cv: boolean | null
   current_title: string | null
   summary: string | null
   total_months_experience: number | null
@@ -177,6 +178,8 @@ export type CvProfileSkill = {
 
 export type CvProfile = {
   id: string
+  // false: profile chỉ có skill nhập tay, chưa upload CV
+  hasCv: boolean
   currentTitle: string | null
   summary: string | null
   totalMonthsExperience: number | null
@@ -185,4 +188,19 @@ export type CvProfile = {
   parsedAt: string | null
   updatedAt: string | null
   skills: CvProfileSkill[]
+}
+
+export type CvProfileSkillsApiDto = {
+  profile_id: string | null
+  skills: CvProfileSkillApiDto[] | null
+}
+
+export type CvProfileSkills = {
+  profileId: string | null
+  skills: CvProfileSkill[]
+}
+
+export type SkillSearchItem = {
+  id: string
+  name: string
 }

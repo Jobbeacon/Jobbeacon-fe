@@ -1,6 +1,6 @@
 # API contract — Hồ sơ ứng viên (job preference + CV profile)
 
-Nguồn: backend `Jobbeacon-be` (branch `feature/extract-cv`). Cập nhật: 2026-10-15.
+Nguồn: backend `Jobbeacon-be` (branch `feature/extract-cv`). Cập nhật: 2026-10-20.
 
 ## Quy ước chung
 
@@ -183,7 +183,11 @@ Lỗi (`400`):
 
 ## 2. CV profile
 
-Profile trích xuất tự động từ file CV (PDF). Mỗi user có tối đa 1 profile; **upload CV mới sẽ ghi đè toàn bộ** (kể cả skill user đã xóa trước đó).
+Mỗi user có tối đa 1 profile. Profile được tạo theo một trong hai cách:
+- **Upload CV (PDF)**: hệ thống trích xuất thông tin và skill.
+- **Thêm skill tay** khi chưa có profile: tạo một profile rỗng chỉ chứa skill (`has_cv: false`).
+
+**Upload CV mới sẽ ghi đè toàn bộ profile**, kể cả skill nhập tay và skill user đã xóa trước đó.
 
 ### Kiểu dữ liệu
 
@@ -209,26 +213,32 @@ type CvEducation = {
 type CvProfileSkill = {
   skill_id: string            // dùng để xóa skill
   name: string
-  confidence: number | null   // 0..1, 3 chữ số thập phân
-  experience_months: number | null
-  last_used_at: string | null // "YYYY-MM-DD" (ngày 01 của tháng)
+  confidence: number | null   // 0..1, 3 chữ số thập phân; null với skill nhập tay
+  experience_months: number | null   // null với skill nhập tay
+  last_used_at: string | null // "YYYY-MM-DD" (ngày 01 của tháng); null với skill nhập tay
 }
 
 type CvProfile = {
   id: string
+  has_cv: boolean             // false: profile chỉ có skill nhập tay, chưa upload CV
   current_title: string | null
   summary: string | null
   total_months_experience: number | null
   experiences: CvExperience[]
   educations: CvEducation[]
-  parsed_at: string | null    // ISO-8601 UTC
+  parsed_at: string | null    // ISO-8601 UTC; null khi has_cv = false
   updated_at: string | null
   skills: CvProfileSkill[]
 }
 
 type CvProfileSkills = {
-  profile_id: string
+  profile_id: string | null   // null khi user chưa có profile
   skills: CvProfileSkill[]
+}
+
+type SkillSearchItem = {
+  id: string                  // dùng làm skill_id khi thêm skill
+  name: string
 }
 ```
 
@@ -256,14 +266,15 @@ Lỗi:
 ### `GET /api/v1/me/cv-profile`
 
 Lấy toàn bộ CV profile. `200` với `data: CvProfile`; chưa có profile → `404` `cv_profile_not_found`.
+Profile chỉ có skill nhập tay → `200` với `has_cv: false`, các trường CV là `null`, `experiences`/`educations` là `[]`.
 
 ### `DELETE /api/v1/me/cv-profile`
 
-Xóa CV profile (kèm toàn bộ skill). `200` với `data: null`; chưa có profile → `404` `cv_profile_not_found`. Không ảnh hưởng job preference.
+Xóa CV profile (kèm toàn bộ skill, cả skill nhập tay). `200` với `data: null`; chưa có profile → `404` `cv_profile_not_found`. Không ảnh hưởng job preference.
 
 ### `GET /api/v1/me/cv-profile/skills`
 
-Chỉ lấy skill của profile, dùng cho trang profile.
+Chỉ lấy skill của profile, dùng cho trang profile. **Không trả 404**: chưa có profile → `200` với `profile_id: null`, `skills: []`.
 
 Response `200`:
 
@@ -287,7 +298,25 @@ Response `200`:
 }
 ```
 
-Chưa có profile → `404` `cv_profile_not_found` (FE hiển thị trạng thái "chưa upload CV").
+
+### `POST /api/v1/me/cv-profile/skills`
+
+Thêm một skill tay vào profile. Chỉ chọn skill **đã có trong hệ thống** (lấy `id` từ `GET /api/v1/skills`), không tạo skill mới từ text. Chưa có profile → tự tạo profile rỗng (`has_cv: false`).
+
+Request:
+
+```json
+{ "skill_id": "0191f2e3-0000-7000-8000-000000000002" }
+```
+
+Response `200` (không phải 201): `data: CvProfileSkills`, danh sách skill **sau khi thêm**. Skill nhập tay có `confidence`, `experience_months`, `last_used_at` là `null`.
+
+| HTTP | `data.code` | Khi nào |
+|---|---|---|
+| 400 | `cv_profile_skill_id_required` | Thiếu `skill_id` |
+| 400 | — | `skill_id` không phải UUID / body sai JSON (hiện có thể trả `500`) |
+| 404 | `skill_not_found` | Skill không tồn tại |
+| 409 | `cv_profile_skill_exists` | Skill đã có trong profile |
 
 ### `DELETE /api/v1/me/cv-profile/skills/{skillId}`
 
@@ -303,8 +332,41 @@ Lưu ý: upload CV mới sẽ thay toàn bộ skill, skill đã xóa có thể x
 
 ---
 
+## 3. Tìm skill (autocomplete)
+
+### `GET /api/v1/skills?q=<text>&limit=<n>`
+
+Tìm skill để user chọn khi thêm skill tay. Cần đăng nhập.
+
+- `q`: chuỗi tìm, không phân biệt hoa thường; khớp cả tên chính và alias (vd. gõ "reactjs" ra "React"). `q` rỗng → `[]`.
+- `limit`: mặc định 10, tối đa 20 (giá trị ngoài 1..20 bị kẹp lại). Không phải số → `400`.
+- Thứ tự: khớp chính xác → bắt đầu bằng `q` → chứa `q`; cùng hạng thì tên ngắn trước.
+- Skill mới được thêm vào hệ thống có thể mất tới ~10 phút mới tìm thấy.
+
+Response `200`:
+
+```json
+{
+  "status": 200,
+  "message": "success",
+  "data": [
+    { "id": "0191f2e3-0000-7000-8000-000000000002", "name": "React" },
+    { "id": "0191f2e3-0000-7000-8000-000000000003", "name": "React Native" }
+  ],
+  "timestamp": "2026-10-20"
+}
+```
+
+FE nên debounce (~300ms) khi gõ.
+
+---
+
 ## Gợi ý cho trang profile
 
-- Tải song song: `GET /me/job-preference`, `GET /me/cv-profile/skills` (404 → chưa có CV), `GET /locations/provinces` (cho dropdown tỉnh).
+- Tải song song: `GET /me/job-preference`, `GET /me/cv-profile`, `GET /locations/provinces` (cho dropdown tỉnh).
+  - `GET /me/cv-profile` đã gồm `skills` và `has_cv`, không cần gọi thêm `GET /me/cv-profile/skills`.
+  - `404` `cv_profile_not_found` là trạng thái rỗng (chưa có CV, chưa có skill), không phải lỗi: hiển thị `skills: []`, `has_cv: false`.
+- `GET /me/cv-profile/skills` chỉ dùng khi cần tải lại riêng danh sách skill (vd. sau khi xóa skill nếu không tự cập nhật state).
+- Thêm skill: ô tìm kiếm gọi `GET /skills?q=`, chọn kết quả → `POST /me/cv-profile/skills` với `id` đã chọn; dùng luôn danh sách trả về để cập nhật UI. Trước khi upload CV nên cảnh báo user rằng skill nhập tay sẽ bị thay thế.
 - Form sở thích map thẳng sang `JobPreferenceRequest`; lưu bằng `PUT` với đủ trường.
 - Lương: nhập theo "triệu" trên UI thì nhân `1_000_000` trước khi gửi (VND).

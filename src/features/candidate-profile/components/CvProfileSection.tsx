@@ -1,10 +1,12 @@
 import { useRef, useState } from 'react'
 import type { ChangeEvent } from 'react'
-import { FileText, Trash2, Upload, X } from 'lucide-react'
+import { FileText, Trash2, TriangleAlert, Upload, X } from 'lucide-react'
 import { ErrorState } from '../../../shared/components/common/ErrorState'
 import { LoadingState } from '../../../shared/components/common/LoadingState'
+import { ConfirmModal } from '../../../shared/components/ui/Modal'
 import type { CvActionError } from '../hooks/useCvProfile'
-import type { CvProfile } from '../types/candidate-profile.types'
+import type { CvProfile, SkillSearchItem } from '../types/candidate-profile.types'
+import { SkillSearch } from './SkillSearch'
 import styles from './CvProfileSection.module.css'
 
 const MAX_CV_SIZE = 10 * 1024 * 1024
@@ -18,6 +20,7 @@ type CvProfileSectionProps = {
   onRetry: () => void
   onUpload: (file: File) => Promise<CvActionError | null>
   onDelete: () => Promise<CvActionError | null>
+  onAddSkill: (skill: SkillSearchItem) => Promise<CvActionError | null>
   onRemoveSkill: (skillId: string) => Promise<CvActionError | null>
 }
 
@@ -57,11 +60,13 @@ export function CvProfileSection({
   onRetry,
   onUpload,
   onDelete,
+  onAddSkill,
   onRemoveSkill,
 }: CvProfileSectionProps) {
   const inputRef = useRef<HTMLInputElement>(null)
   const [actionError, setActionError] = useState<CvActionError | null>(null)
   const [lastFile, setLastFile] = useState<File | null>(null)
+  const [confirming, setConfirming] = useState<'upload' | 'delete' | null>(null)
 
   const upload = async (file: File) => {
     setActionError(null)
@@ -83,45 +88,102 @@ export function CvProfileSection({
     void upload(file)
   }
 
+  // Upload CV ghi đè toàn bộ profile, kể cả skill nhập tay.
+  const needsUploadWarning = Boolean(profile?.hasCv || (profile && profile.skills.length > 0))
+
+  const openFilePicker = () => inputRef.current?.click()
+
   const pickFile = () => {
-    if (profile && !window.confirm('Tải CV mới sẽ ghi đè toàn bộ hồ sơ CV hiện tại (kể cả kỹ năng đã xóa). Tiếp tục?')) {
-      return
-    }
-    inputRef.current?.click()
+    if (needsUploadWarning) setConfirming('upload')
+    else openFilePicker()
   }
 
-  const handleDelete = async () => {
-    if (!window.confirm('Xóa CV và toàn bộ kỹ năng đã trích xuất? Sở thích tìm việc vẫn được giữ nguyên.')) return
+  const confirmUpload = () => {
+    setConfirming(null)
+    // Vẫn trong sự kiện click của user nên trình duyệt cho mở hộp chọn file.
+    openFilePicker()
+  }
+
+  const confirmDelete = async () => {
     setActionError(null)
-    setActionError(await onDelete())
+    setLastFile(null)
+    const result = await onDelete()
+    setConfirming(null)
+    setActionError(result)
+  }
+
+  const handleAddSkill = async (skill: SkillSearchItem) => {
+    setActionError(null)
+    setLastFile(null)
+    setActionError(await onAddSkill(skill))
   }
 
   const handleRemoveSkill = async (skillId: string) => {
     setActionError(null)
+    setLastFile(null)
     setActionError(await onRemoveSkill(skillId))
   }
 
   const busy = isUploading || isDeleting
+  const hasCv = profile?.hasCv ?? false
+  const skills = profile?.skills ?? []
   const experience = formatExperience(profile?.totalMonthsExperience ?? null)
 
   return (
     <section className={styles.card} aria-labelledby="cv-profile-title">
       <div className={styles.header}>
         <div>
-          <h2 id="cv-profile-title">CV của bạn</h2>
-          <p>Tải CV (PDF) để hệ thống tự trích xuất kỹ năng và kinh nghiệm.</p>
+          <h2 id="cv-profile-title">CV & kỹ năng</h2>
+          <p>Tải CV (PDF) để hệ thống tự trích xuất kỹ năng và kinh nghiệm, hoặc tự thêm kỹ năng.</p>
         </div>
-        {profile && !isUploading ? (
+        {hasCv && !isUploading ? (
           <div className={styles.headerActions}>
             <button type="button" className={styles.secondary} onClick={pickFile} disabled={busy}>
               <Upload aria-hidden="true" /> Tải CV khác
             </button>
-            <button type="button" className={styles.danger} onClick={() => void handleDelete()} disabled={busy}>
+            <button type="button" className={styles.danger} onClick={() => setConfirming('delete')} disabled={busy}>
               <Trash2 aria-hidden="true" /> {isDeleting ? 'Đang xóa...' : 'Xóa CV'}
             </button>
           </div>
         ) : null}
       </div>
+
+      <ConfirmModal
+        open={confirming === 'upload'}
+        title={profile?.hasCv ? 'Thay CV hiện tại?' : 'Tải CV lên?'}
+        description={
+          profile?.hasCv ? (
+            <>
+              <p>Tải CV mới sẽ ghi đè toàn bộ hồ sơ CV hiện tại.</p>
+              <p>Toàn bộ kỹ năng, kể cả kỹ năng bạn tự thêm, sẽ được thay bằng kỹ năng trích từ CV mới.</p>
+            </>
+          ) : (
+            <p>Các kỹ năng bạn tự thêm sẽ được thay bằng kỹ năng trích từ CV.</p>
+          )
+        }
+        confirmLabel="Chọn file CV"
+        icon={<TriangleAlert />}
+        onConfirm={confirmUpload}
+        onCancel={() => setConfirming(null)}
+      />
+
+      <ConfirmModal
+        open={confirming === 'delete'}
+        title="Xóa CV?"
+        description={
+          <>
+            <p>CV và toàn bộ kỹ năng, kể cả kỹ năng tự thêm, sẽ bị xóa.</p>
+            <p>Sở thích tìm việc vẫn được giữ nguyên.</p>
+          </>
+        }
+        confirmLabel="Xóa CV"
+        tone="danger"
+        icon={<Trash2 />}
+        isBusy={isDeleting}
+        busyLabel="Đang xóa…"
+        onConfirm={() => void confirmDelete()}
+        onCancel={() => setConfirming(null)}
+      />
 
       <input
         ref={inputRef}
@@ -149,29 +211,29 @@ export function CvProfileSection({
 
       {isUploading ? (
         <LoadingState label="Đang phân tích CV, có thể mất tới 40 giây..." />
-      ) : !isLoading && !error && !profile ? (
-        <button type="button" className={styles.dropzone} onClick={pickFile}>
-          <FileText aria-hidden="true" />
-          <strong>Chọn file CV</strong>
-          <span>PDF, tối đa 10MB, không đặt mật khẩu</span>
-        </button>
-      ) : null}
-
-      {profile && !isUploading ? (
+      ) : !isLoading && !error ? (
         <div className={styles.body}>
-          {profile.currentTitle || experience ? (
+          {!hasCv ? (
+            <button type="button" className={styles.dropzone} onClick={pickFile} disabled={busy}>
+              <FileText aria-hidden="true" />
+              <strong>{profile ? 'Chưa có CV · Chọn file CV' : 'Chọn file CV'}</strong>
+              <span>PDF, tối đa 10MB, không đặt mật khẩu</span>
+            </button>
+          ) : null}
+
+          {hasCv && profile && (profile.currentTitle || experience) ? (
             <p className={styles.meta}>
               {profile.currentTitle ? <strong>{profile.currentTitle}</strong> : null}
               {profile.currentTitle && experience ? ' · ' : null}
               {experience ? `${experience} kinh nghiệm` : null}
             </p>
           ) : null}
-          {profile.summary ? <p className={styles.summary}>{profile.summary}</p> : null}
+          {hasCv && profile?.summary ? <p className={styles.summary}>{profile.summary}</p> : null}
 
           <h3>Kỹ năng</h3>
-          {profile.skills.length > 0 ? (
+          {skills.length > 0 ? (
             <ul className={styles.skills}>
-              {profile.skills.map((skill) => (
+              {skills.map((skill) => (
                 <li key={skill.skillId} className={styles.skill}>
                   {skill.name}
                   <button
@@ -187,8 +249,13 @@ export function CvProfileSection({
           ) : (
             <p className={styles.empty}>Chưa có kỹ năng nào.</p>
           )}
+          <SkillSearch
+            existingSkillIds={new Set(skills.map((skill) => skill.skillId))}
+            onSelect={(skill) => void handleAddSkill(skill)}
+            disabled={busy}
+          />
 
-          {profile.experiences.length > 0 ? (
+          {hasCv && profile && profile.experiences.length > 0 ? (
             <>
               <h3>Kinh nghiệm</h3>
               <ul className={styles.timeline}>
@@ -206,7 +273,7 @@ export function CvProfileSection({
             </>
           ) : null}
 
-          {profile.educations.length > 0 ? (
+          {hasCv && profile && profile.educations.length > 0 ? (
             <>
               <h3>Học vấn</h3>
               <ul className={styles.timeline}>
