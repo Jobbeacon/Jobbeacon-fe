@@ -1,5 +1,6 @@
 type RuntimeEnvironment = {
   VITE_API_BASE_URL?: string
+  VITE_RECOMMENDATION_API_BASE_URL?: string
   VITE_FIREBASE_API_KEY?: string
   VITE_FIREBASE_AUTH_DOMAIN?: string
   VITE_FIREBASE_PROJECT_ID?: string
@@ -26,6 +27,15 @@ const readFirebaseEnv = (name: string, value: string | undefined) => {
 
 export function getApiBaseUrl() {
   return (runtimeEnv.VITE_API_BASE_URL ?? import.meta.env.VITE_API_BASE_URL ?? '').replace(/\/$/, '')
+}
+
+// Service gợi ý việc làm (Jobbeacon-recommendation): ghi tương tác và trả gợi ý.
+export function getRecommendationApiBaseUrl() {
+  return (
+    runtimeEnv.VITE_RECOMMENDATION_API_BASE_URL ??
+    import.meta.env.VITE_RECOMMENDATION_API_BASE_URL ??
+    ''
+  ).replace(/\/$/, '')
 }
 
 export function getFirebaseConfig() {

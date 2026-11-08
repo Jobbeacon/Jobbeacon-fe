@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import {
   ArrowRight,
   BriefcaseBusiness,
@@ -23,6 +23,7 @@ import { useSavedJob } from '../../saved-jobs/hooks/useSavedJob'
 import { CompanyLogo } from '../components/CompanyLogo'
 import { JobCard } from '../components/JobCard'
 import { useJobDetail } from '../hooks/useJobDetail'
+import { useTrackJobInteraction } from '../hooks/useTrackJobInteraction'
 import { getCategoryPaths } from '../utils/category'
 import type { JobDetail } from '../types/job.types'
 import styles from './JobDetailPage.module.css'
@@ -39,6 +40,7 @@ function JobDescription({ html }: { html: string }) {
 
 function JobDetailContent({ job }: { job: JobDetail }) {
   const { isSaved, toggleSaved } = useSavedJob(job.id)
+  const trackInteraction = useTrackJobInteraction()
   const salary = formatSalaryRange(job.minSalary, job.maxSalary, job.currency)
   const salaryPeriod = formatSalaryPeriod(job.salaryPeriod)
   const employmentType = formatEmploymentType(job.employmentType)
@@ -46,6 +48,11 @@ function JobDetailContent({ job }: { job: JobDetail }) {
   const companyName = job.company?.name ?? job.companyName
   const categoryPaths = getCategoryPaths(job.categories)
   const companyMeta = [job.categories[0]?.name, job.location[0]].filter(Boolean).join(' · ')
+
+  // Re-runs once auth resolves, so a signed-in user's view still counts; the backend ignores quick repeats.
+  useEffect(() => {
+    trackInteraction(job.id, 'VIEWED')
+  }, [job.id, trackInteraction])
 
   return (
     <div className={styles.layout}>
@@ -129,7 +136,13 @@ function JobDetailContent({ job }: { job: JobDetail }) {
           <small className={styles.priceLabel}>Mức lương</small>
           <div className={styles.price}>{salary}</div>
           {primarySource?.url ? (
-            <a className={styles.btnPrimary} href={primarySource.url} target="_blank" rel="noopener noreferrer">
+            <a
+              className={styles.btnPrimary}
+              href={primarySource.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => trackInteraction(job.id, 'APPLY_CLICKED')}
+            >
               Ứng tuyển trên {primarySource.name} <ArrowRight aria-hidden="true" />
             </a>
           ) : null}
