@@ -14,14 +14,18 @@ npm run dev        # Vite dev server (mode development, reads .env / .env.local)
 npm run build      # tsc -b + vite build --mode prod → dist/
 npm run lint       # eslint
 npm run preview    # serve dist/ locally
-docker build -t jobbeacon-fe .   # multi-stage: node build → nginx:alpine, exposes 80
+npm run dev:admin      # admin site dev server on :5174 (vite.admin.config.ts)
+npm run build:admin    # tsc -b + admin build → dist-admin/
+npm run preview:admin
+docker build -t jobbeacon-fe .                                      # user site
+docker build --build-arg APP_TARGET=admin -t jobbeacon-admin .     # admin site
 ```
 
-There is no test runner configured (`src/test/` only has a setup file and mocks). "Done" means `npm run lint` and `npm run build` pass. `src/features/jobs/components/LocationPicker.tsx` has 2 pre-existing react-refresh lint errors.
+There is no test runner configured (`src/test/` only has a setup file and mocks). "Done" means `npm run lint` and `npm run build` pass (plus `npm run build:admin` when admin code or shared code is touched). `src/features/jobs/components/LocationPicker.tsx` has 2 pre-existing react-refresh lint errors.
 
 ## Configuration
 
-- Env vars (see `.env.example`): `VITE_API_BASE_URL` (empty = same origin as the FE) and the `VITE_FIREBASE_*` web-app config. Local overrides go in `.env.local`. `.env*` files are gitignored, except `.env.example`.
+- Env vars (see `.env.example`): `VITE_API_BASE_URL` (empty = same origin as the FE), the `VITE_FIREBASE_*` web-app config, and `VITE_USER_SITE_URL` (admin only: base URL of the user site for "view on site" links; empty hides them). Local overrides go in `.env.local`. `.env*` files are gitignored, except `.env.example`.
 - Runtime config: `index.html` loads `/env.js`, which sets `window.__ENV__`. `src/app/config/env.ts` reads `window.__ENV__` first, then `import.meta.env`. In Docker, `docker-entrypoint.sh` renders `env.template.js` with `envsubst` into `/usr/share/nginx/html/env.js`, so one image works for every environment.
 - `nginx.conf` (copied to `/etc/nginx/conf.d/default.conf`):
   - Uses Docker's DNS resolver and `set $backend_upstream backend:8080`, so the backend service must be named `backend`.
@@ -35,11 +39,17 @@ There is no test runner configured (`src/test/` only has a setup file and mocks)
 ## Architecture
 
 - `src/app/`: app shell.
-  - `App.tsx` and `router/AppRouter.tsx` hold the `createBrowserRouter` routes, `route-paths.ts`, and the guards `AuthGuard` / `AdminGuard`.
-  - `layouts/` has the Main, User, Admin and Auth layouts.
+  - `App.tsx` holds the `createBrowserRouter` routes and `router/guards/AuthGuard`.
+  - `layouts/` has the Main, User and Auth layouts.
   - `providers/AppProviders.tsx` calls `configureApiClient({ baseUrl, getAccessToken: getCurrentIdToken })`.
   - `config/` has env, firebase, navigation and roles.
-- `src/features/<feature>/` uses `api/`, `components/`, `hooks/`, `pages/` and `types/`. Features include auth, jobs, companies, candidate-profile, cv, career-chat (JobBeacon Agent at `/agent`), saved-jobs, recommendations, notifications, admin-dashboard, crawl-runs and crawl-sources. Features don't import from each other; shared code lives in `src/shared/`.
+- `src/features/<feature>/` uses `api/`, `components/`, `hooks/`, `pages/` and `types/`. Features include auth, jobs, companies, candidate-profile, cv, career-chat (JobBeacon Agent at `/agent`), saved-jobs, recommendations, notifications, and the admin features `admin-overview`, `admin-jobs`, `admin-companies`, `admin-users`, `admin-categories`, `admin-skills`. Features don't import from each other; shared code lives in `src/shared/`.
+- Admin site (separate site, same source — see `docs/admin-hien-trang.md`):
+  - Entry `admin/index.html` → `src/app-admin/main.tsx`; built with `vite.admin.config.ts` (root `admin/`, shares `public/` and env). Routes `/login`, `/`, `/jobs`, `/companies`, `/users`, `/categories`, `/skills`.
+  - `src/app-admin/`: `AdminApp.tsx` (router), `providers/AdminProviders.tsx`, `guards/AdminGuard.tsx` (requires `GET /api/v1/users/me` → `role: ADMIN`, `status: ACTIVE`), `layouts/AdminLayout.tsx`, `pages/AdminLoginPage.tsx`, global stylesheet `styles/admin.css` (ported from `ui-mockups/admin/`; admin components use its class names, not CSS Modules).
+  - Shared admin UI in `src/shared/components/admin/` (Dialog, useConfirm, useToast, Pager, StatRow, TagInput, ...); `src/shared/api/case.ts` (`camelizeKeys`/`snakeizeKeys`/`unwrap`/`toQuery`); `src/shared/utils/admin-format.ts`.
+  - Backend contract: `/api/v1/admin/**` documented in `../Jobbeacon-be/docs/admin-api.md`. First admin is bootstrapped on the backend with `APP_ADMIN_EMAILS`.
+  - Feature code must not import `src/app-admin/**`; the user bundle must not import admin features.
 - `src/shared/api/api-client.ts`: the only way to call the backend.
   - `apiClient.get/post/...` attaches the Firebase ID token, sets `Accept-Language: vi`, retries once with a forced token refresh on **401**, and throws `ApiError` (message from `data.detail`).
   - `authorizedFetch` returns the raw `Response` for streaming. Never use `EventSource`: it can't send `Authorization`.
