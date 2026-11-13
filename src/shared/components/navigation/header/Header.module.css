@@ -5,7 +5,6 @@
   right: 0;
   left: 0;
   width: 100%;
-  overflow: hidden;
   background: linear-gradient(105deg, #fff 0%, #f9fcff 36%, #e8f4ff 68%, #cae3ff 100%);
   box-shadow: 0 8px 24px rgba(31, 92, 151, .2);
 }
@@ -22,6 +21,13 @@
   margin: 0 auto;
   display: flex;
   align-items: center;
+}
+
+.backgroundClip {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
 }
 
 .backgroundShape {
@@ -153,6 +159,102 @@
   transform: translateY(-1px);
 }
 
+.userChip {
+  position: relative;
+}
+
+.userChipTrigger {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.userChipTrigger strong {
+  max-width: 180px;
+  overflow: hidden;
+  color: #0b2b59;
+  font-size: .92rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.avatar {
+  width: 38px;
+  height: 38px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: #fff;
+  background: linear-gradient(145deg, #1688ff, #0b4fad);
+  font-size: .85rem;
+  font-weight: 750;
+  object-fit: cover;
+}
+
+.userMenu {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  min-width: 190px;
+  display: grid;
+  padding: 8px;
+  border: 1px solid #e5ebf2;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 16px 40px rgba(11, 36, 64, .14);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-4px);
+  transition: opacity .15s ease, transform .15s ease, visibility 0s linear .15s;
+}
+
+.userChip::after {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  left: 0;
+  height: 12px;
+  content: '';
+}
+
+.userChip:hover .userMenu,
+.userChip:focus-within .userMenu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  transition-delay: 0s;
+}
+
+.userMenu a,
+.userMenu button {
+  padding: 10px 12px;
+  border: 0;
+  border-radius: 8px;
+  color: #52627c;
+  background: transparent;
+  font: inherit;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+}
+
+.userMenu a:hover,
+.userMenu button:hover {
+  color: #087cf0;
+  background: #edf7ff;
+}
+
+.userMenu button:disabled {
+  cursor: not-allowed;
+  opacity: .65;
+}
+
 @media (max-width: 1100px) {
   .container { width: calc(100% - 48px); height: 75px; }
   .logoLink { width: 170px; }
@@ -165,7 +267,6 @@
 }
 
 @media (max-width: 760px) {
-  .header { overflow: visible; }
   .container { width: calc(100% - 24px); height: 68px; }
   .headerSpacer { height: 68px; }
   .menuButton {
@@ -188,6 +289,7 @@
   .searchButton, .divider { display: none; }
   .loginButton { display: inline-flex; font-size: var(--text-sm); }
   .registerButton { padding: 10px 13px; font-size: var(--text-sm); }
+  .userChipTrigger strong { display: none; }
   .backgroundShapeOne { width: 85vw; right: 10%; bottom: -95%; }
   .backgroundShapeTwo { width: 78vw; right: -22%; top: 50%; }
   .backgroundShape,

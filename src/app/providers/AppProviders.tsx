@@ -10,6 +10,7 @@ import {
   initialAuthState,
 } from '../../features/auth/store/auth.store'
 import type { AuthState } from '../../features/auth/types/auth.types'
+import { SavedJobsProvider } from '../../features/saved-jobs/store/SavedJobsProvider'
 import { configureApiClient } from '../../shared/api/api-client'
 
 configureApiClient({
@@ -31,5 +32,9 @@ export function AppProviders({ children }: AppProvidersProps) {
     )
   }, [])
 
-  return <AuthStateContext.Provider value={authState}>{children}</AuthStateContext.Provider>
+  return (
+    <AuthStateContext.Provider value={authState}>
+      <SavedJobsProvider>{children}</SavedJobsProvider>
+    </AuthStateContext.Provider>
+  )
 }
