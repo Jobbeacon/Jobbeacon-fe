@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Overview
 
-JobBeacon frontend: React 19 + TypeScript SPA built with Vite, routing with react-router 7 (data router), auth with Firebase Authentication, styling with CSS Modules and `lucide-react` icons. It talks to the JobBeacon backend (`../Jobbeacon-be`, Spring Boot) over REST and SSE. Production runs as an nginx container that serves the build and reverse-proxies `/api/` to the backend.
+JobBeacon frontend: React 19 + TypeScript SPA built with Vite, routing with react-router 7 (data router), auth with Firebase Authentication, styling with CSS Modules and `lucide-react` icons. It talks to the JobBeacon services only through the gateway (`../Jobbeacon-gateway`) over REST and SSE. Every path starts with the service name, which is that service's context path: `/jobbeacon-be/api/v1/...` (backend) and `/jobbeacon-recommendation/api/v1/...` (recommendation). Production runs as an nginx container that serves the build and reverse-proxies those prefixes to the gateway.
 
 ## Commands
 
@@ -21,14 +21,13 @@ There is no test runner configured (`src/test/` only has a setup file and mocks)
 
 ## Configuration
 
-- Env vars (see `.env.example`): `VITE_API_BASE_URL` (empty = same origin as the FE) and the `VITE_FIREBASE_*` web-app config. Local overrides go in `.env.local`. `.env*` files are gitignored, except `.env.example`.
+- Env vars (see `.env.example`): `VITE_API_BASE_URL` (the gateway; empty = same origin as the FE) and the `VITE_FIREBASE_*` web-app config. Local overrides go in `.env.local`. `.env*` files are gitignored, except `.env.example`.
 - Runtime config: `index.html` loads `/env.js`, which sets `window.__ENV__`. `src/app/config/env.ts` reads `window.__ENV__` first, then `import.meta.env`. In Docker, `docker-entrypoint.sh` renders `env.template.js` with `envsubst` into `/usr/share/nginx/html/env.js`, so one image works for every environment.
 - `nginx.conf` (copied to `/etc/nginx/conf.d/default.conf`):
-  - Uses Docker's DNS resolver and `set $backend_upstream backend:8080`, so the backend service must be named `backend`.
+  - Uses Docker's DNS resolver and `set $api_upstream gateway:8088`, so the gateway service must be named `gateway`.
   - `index.html` and `env.js` are not cached; `/assets/` is cached immutable.
-  - `^~ /api/api/` rewrites to `/api/` for a doubled prefix.
-  - `/api/` is proxied to the backend.
-  - Exact-match blocks for `/api/v1/chat/stream` (and the `/api/api/` variant) turn off buffering and gzip for SSE.
+  - `^~ /jobbeacon-be/` and `^~ /jobbeacon-recommendation/` are proxied unchanged to `gateway:8088` (`$api_upstream`).
+  - The exact-match block for `/jobbeacon-be/api/v1/chat/stream` turns off buffering and gzip for SSE.
   - Falls back to the SPA `index.html`.
   - When adding a proxied path that needs special handling, remember that `location =` wins over `^~`, which wins over regex and prefix locations.
 
@@ -40,11 +39,12 @@ There is no test runner configured (`src/test/` only has a setup file and mocks)
   - `providers/AppProviders.tsx` calls `configureApiClient({ baseUrl, getAccessToken: getCurrentIdToken })`.
   - `config/` has env, firebase, navigation and roles.
 - `src/features/<feature>/` uses `api/`, `components/`, `hooks/`, `pages/` and `types/`. Features include auth, jobs, companies, candidate-profile, cv, career-chat (JobBeacon Agent at `/agent`), saved-jobs, recommendations, notifications, admin-dashboard, crawl-runs and crawl-sources. Features don't import from each other; shared code lives in `src/shared/`.
-- `src/shared/api/api-client.ts`: the only way to call the backend.
+- Call services through `src/shared/api/backend.service.ts` (`backendService`, base `/jobbeacon-be/api/v1`) and `src/shared/api/recommendation.service.ts` (`recommendationService`, base `/jobbeacon-recommendation/api/v1`). Both come from `createServiceClient` in `service-client.ts`. Feature `api/*.api.ts` files pass relative paths such as `backendService.get('/jobs')`, and never hard-code the service prefix. A new service behind the gateway gets its own `<name>.service.ts`.
+- `src/shared/api/api-client.ts`: the low-level HTTP layer the service clients wrap.
   - `apiClient.get/post/...` attaches the Firebase ID token, sets `Accept-Language: vi`, retries once with a forced token refresh on **401**, and throws `ApiError` (message from `data.detail`).
-  - `authorizedFetch` returns the raw `Response` for streaming. Never use `EventSource`: it can't send `Authorization`.
+  - `authorizedFetch` (exposed as `backendService.fetch`) returns the raw `Response` for streaming. Never use `EventSource`: it can't send `Authorization`.
 - Backend contract: every response is wrapped in `ResponseGeneral<T>` (`status`, `message`, `data`, `timestamp`) and JSON is **snake_case**. Each `features/<feature>/api/*.api.ts` declares the snake_case DTOs and maps them to camelCase models. Paging is 1-based. API notes per feature are in `docs/api/`, and feature state docs are in `docs/*-hien-trang.md`.
-- Chat streaming: `career-chat/api/sse.ts` parses the SSE events `tool_call`, `delta`, `done` and `error` from `POST /api/v1/chat/stream`. `useCareerChat` handles abort, stop and retry. See `docs/career-chat-hien-trang.md`.
+- Chat streaming: `career-chat/api/sse.ts` parses the SSE events `tool_call`, `delta`, `done` and `error` from `POST /jobbeacon-be/api/v1/chat/stream`. `useCareerChat` handles abort, stop and retry. See `docs/career-chat-hien-trang.md`.
 
 # Chế độ điều phối (orchestrator)
 

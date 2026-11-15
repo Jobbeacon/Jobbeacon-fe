@@ -1,4 +1,4 @@
-import { apiClient } from '../../../shared/api/api-client'
+import { backendService } from '../../../shared/api/backend.service'
 import type { ApiResponse } from '../../../shared/types/api.types'
 import type {
   CategoryNode,
@@ -17,9 +17,9 @@ import type {
   JobSummaryApiDto,
 } from '../types/job.types'
 
-const JOBS_ENDPOINT = '/api/v1/jobs'
-const LOCATIONS_ENDPOINT = '/api/v1/locations'
-const CATEGORIES_ENDPOINT = '/api/v1/categories'
+const JOBS_ENDPOINT = '/jobs'
+const LOCATIONS_ENDPOINT = '/locations'
+const CATEGORIES_ENDPOINT = '/categories'
 const SIMILAR_JOBS_LIMIT = 4
 
 type PageApiDto<T> = {
@@ -87,7 +87,7 @@ function toJobDetail(job: JobDetailApiDto): JobDetail {
 }
 
 export async function getJobFacets(signal?: AbortSignal) {
-  const response = await apiClient.get<ApiResponse<JobFacets>>(`${JOBS_ENDPOINT}/facets`, {
+  const response = await backendService.get<ApiResponse<JobFacets>>(`${JOBS_ENDPOINT}/facets`, {
     signal,
     authenticated: false,
   })
@@ -95,7 +95,7 @@ export async function getJobFacets(signal?: AbortSignal) {
 }
 
 export async function getJobSources(signal?: AbortSignal) {
-  const response = await apiClient.get<ApiResponse<FacetItem[]>>(`${JOBS_ENDPOINT}/sources`, {
+  const response = await backendService.get<ApiResponse<FacetItem[]>>(`${JOBS_ENDPOINT}/sources`, {
     signal,
     authenticated: false,
   })
@@ -103,7 +103,7 @@ export async function getJobSources(signal?: AbortSignal) {
 }
 
 export async function getCategories(signal?: AbortSignal) {
-  const response = await apiClient.get<ApiResponse<CategoryNode[]>>(CATEGORIES_ENDPOINT, {
+  const response = await backendService.get<ApiResponse<CategoryNode[]>>(CATEGORIES_ENDPOINT, {
     signal,
     authenticated: false,
   })
@@ -111,7 +111,7 @@ export async function getCategories(signal?: AbortSignal) {
 }
 
 export async function getProvinces(signal?: AbortSignal) {
-  const response = await apiClient.get<ApiResponse<LocationItem[]>>(`${LOCATIONS_ENDPOINT}/provinces`, {
+  const response = await backendService.get<ApiResponse<LocationItem[]>>(`${LOCATIONS_ENDPOINT}/provinces`, {
     signal,
     authenticated: false,
   })
@@ -119,7 +119,7 @@ export async function getProvinces(signal?: AbortSignal) {
 }
 
 export async function getWards(provinceId: string, signal?: AbortSignal) {
-  const response = await apiClient.get<ApiResponse<LocationItem[]>>(
+  const response = await backendService.get<ApiResponse<LocationItem[]>>(
     `${LOCATIONS_ENDPOINT}/provinces/${encodeURIComponent(provinceId)}/wards`,
     { signal, authenticated: false },
   )
@@ -127,7 +127,7 @@ export async function getWards(provinceId: string, signal?: AbortSignal) {
 }
 
 export async function getJobDetail(jobId: string, signal?: AbortSignal) {
-  const response = await apiClient.get<ApiResponse<JobDetailApiDto>>(
+  const response = await backendService.get<ApiResponse<JobDetailApiDto>>(
     `${JOBS_ENDPOINT}/${encodeURIComponent(jobId)}`,
     { signal, authenticated: false },
   )
@@ -164,7 +164,7 @@ export async function searchJobs(query: JobSearchParams, signal?: AbortSignal): 
   appendList(params, 'sources', query.sources)
   if (query.sortBy && query.sortBy !== 'posted_date') params.set('sort_by', query.sortBy)
 
-  const response = await apiClient.get<ApiResponse<PageApiDto<JobSummaryApiDto>>>(
+  const response = await backendService.get<ApiResponse<PageApiDto<JobSummaryApiDto>>>(
     `${JOBS_ENDPOINT}?${params}`,
     { signal, authenticated: false },
   )

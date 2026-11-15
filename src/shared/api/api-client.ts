@@ -5,7 +5,7 @@ type ApiClientConfig = {
   getAccessToken?: AccessTokenProvider
 }
 
-type ApiRequestOptions = Omit<RequestInit, 'body' | 'headers' | 'method'> & {
+export type ApiRequestOptions = Omit<RequestInit, 'body' | 'headers' | 'method'> & {
   body?: unknown
   headers?: HeadersInit
   authenticated?: boolean
@@ -101,7 +101,7 @@ function toApiError(response: Response, body: unknown) {
   return new ApiError(message, response.status, errorBody)
 }
 
-type AuthorizedFetchOptions = ApiRequestOptions & {
+export type AuthorizedFetchOptions = ApiRequestOptions & {
   method?: string
 }
 
