@@ -1,0 +1,84 @@
+.loading-state,
+.error-state {
+  display: flex;
+  min-height: 220px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #e1e8e4;
+  border-radius: 20px;
+  background: #fff;
+}
+
+.loading-state {
+  gap: 12px;
+  color: var(--color-muted);
+  font-size: 0.94rem;
+}
+
+.loading-state__spinner {
+  width: 22px;
+  height: 22px;
+  border: 2px solid #cdebd9;
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: profile-spin 700ms linear infinite;
+}
+
+.error-state {
+  gap: 16px;
+  padding: 32px;
+  justify-content: flex-start;
+}
+
+.error-state__icon {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 50%;
+  color: #b42318;
+  background: #fff0ef;
+  font-weight: 800;
+}
+
+.error-state h2 {
+  margin: 0;
+  color: var(--color-heading);
+  font-size: 1.05rem;
+}
+
+.error-state p {
+  margin: 6px 0 14px;
+  color: var(--color-muted);
+  font-size: 0.9rem;
+}
+
+.error-state button {
+  min-height: 38px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 999px;
+  color: #fff;
+  background: var(--color-primary);
+  font-size: 0.84rem;
+  font-weight: 650;
+}
+
+.route-loading {
+  display: grid;
+  min-height: 100vh;
+  place-items: center;
+  background: #f6f8f7;
+}
+
+.route-loading .loading-state {
+  min-height: auto;
+  padding: 22px 28px;
+}
+
+@keyframes profile-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

@@ -1,4 +1,45 @@
-# React + TypeScript + Vite
+# JobBeacon Frontend
+
+## Cấu hình Firebase Authentication
+
+Tạo file `.env.local` ở thư mục gốc và điền cấu hình Web App lấy từ Firebase Console:
+
+```dotenv
+VITE_API_BASE_URL=http://localhost:8088
+VITE_FIREBASE_API_KEY=your_api_key
+VITE_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
+VITE_FIREBASE_PROJECT_ID=your_project_id
+VITE_FIREBASE_STORAGE_BUCKET=your_project.firebasestorage.app
+VITE_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+VITE_FIREBASE_APP_ID=your_app_id
+```
+
+`VITE_API_BASE_URL` là địa chỉ gateway (`../Jobbeacon-gateway`); có thể để trống nếu frontend và gateway cùng origin (nginx của image proxy `/jobbeacon-be/` và `/jobbeacon-recommendation/` tới gateway). Endpoint có prefix là tên service, ví dụ `/jobbeacon-be/api/v1/jobs`. Mọi request
+backend đi qua `src/shared/api/api-client.ts`; các endpoint cần xác thực sẽ tự gắn
+Firebase ID token vào header `Authorization: Bearer <token>`.
+
+Trong Firebase Console, mở **Authentication → Sign-in method** và bật:
+
+- Email/Password
+- Google
+
+Khi triển khai lên tên miền thật, thêm tên miền đó vào **Authentication → Settings → Authorized domains**.
+
+Chạy dự án:
+
+```bash
+npm install
+npm run dev
+```
+
+Các màn xác thực hiện có:
+
+- `/login`: đăng nhập email/mật khẩu hoặc Google.
+- `/register`: tạo tài khoản email/mật khẩu và lưu họ tên vào Firebase profile.
+- `/forgot-password`: gửi email đặt lại mật khẩu.
+- `/profile`: lấy thông tin tài khoản từ `GET /jobbeacon-be/api/v1/users/me`.
+
+## React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 

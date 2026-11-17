@@ -1,0 +1,127 @@
+.backdrop {
+  position: fixed;
+  z-index: 50;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: rgba(20, 39, 65, .42);
+  animation: fade .15s ease;
+}
+
+.dialog {
+  width: min(440px, 100%);
+  padding: 26px 24px 20px;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 24px 60px rgba(20, 39, 65, .24);
+  text-align: center;
+  animation: pop .18s ease;
+}
+
+.icon {
+  display: inline-grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  margin-bottom: 14px;
+  border-radius: 50%;
+  color: #087cf0;
+  background: #edf7ff;
+}
+
+.iconDanger {
+  color: #e5484d;
+  background: #fdecec;
+}
+
+.icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.dialog h2 {
+  margin: 0 0 8px;
+  color: #0b2b59;
+  font-size: var(--text-lg);
+}
+
+.description {
+  margin-bottom: 22px;
+  color: #687d98;
+  font-size: var(--text-sm);
+  line-height: var(--line-height-relaxed);
+}
+
+.description p {
+  margin: 0;
+}
+
+.description p + p {
+  margin-top: 8px;
+}
+
+.actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.cancel,
+.confirm {
+  min-height: 42px;
+  padding: 0 16px;
+  border-radius: 10px;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background .2s ease, border-color .2s ease;
+}
+
+.cancel {
+  border: 1px solid #dbe6f3;
+  color: #34465f;
+  background: #fff;
+}
+
+.cancel:hover:not(:disabled) {
+  background: #f4f9ff;
+}
+
+.confirm {
+  border: 0;
+  color: #fff;
+  background: linear-gradient(135deg, #1688ff, #0865f3);
+}
+
+.confirm:hover:not(:disabled) {
+  background: linear-gradient(135deg, #0878ed, #0558dc);
+}
+
+.confirmDanger {
+  background: #e5484d;
+}
+
+.confirmDanger:hover:not(:disabled) {
+  background: #d13b40;
+}
+
+.cancel:disabled,
+.confirm:disabled {
+  cursor: not-allowed;
+  opacity: .7;
+}
+
+.cancel:focus-visible,
+.confirm:focus-visible {
+  outline: 3px solid rgba(8, 124, 240, .3);
+  outline-offset: 2px;
+}
+
+@keyframes fade {
+  from { opacity: 0; }
+}
+
+@keyframes pop {
+  from { opacity: 0; transform: translateY(8px) scale(.97); }
+}

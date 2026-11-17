@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trang chủ · JobBeacon</title>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="page">
+
+<header class="site-header">
+  <div class="header-inner">
+    <button class="menu-btn" type="button" data-menu aria-label="Mở menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+    <a class="logo" href="index.html"><img src="assets/logo.svg" alt="JobBeacon"></a>
+    <nav class="nav">
+      <a class="nav-link" href="jobs.html"><svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M3 13h18"/></svg> Việc làm</a>
+      <a class="nav-link" href="companies.html"><svg viewBox="0 0 24 24"><path d="M4 20V6a2 2 0 0 1 2-2h6v16"/><path d="M12 10h6a2 2 0 0 1 2 2v8"/><path d="M8 8h.01M8 12h.01M8 16h.01M16 14h.01M16 18h.01"/></svg> Công ty</a>
+    </nav>
+    <div class="header-actions">
+        <a class="btn-login" href="login.html">Đăng nhập</a>
+        <a class="btn-register" href="register.html">Đăng ký</a>
+        </div>
+  </div>
+</header>
+<nav class="mobile-nav" data-mobile-nav>
+  <a href="jobs.html">Việc làm</a>
+  <a href="companies.html">Công ty</a>
+  <a href="saved-jobs.html">Việc đã lưu</a>
+  <a href="job-alerts.html">Job Alert</a>
+  <a href="profile.html">Hồ sơ</a>
+  <a href="login.html">Đăng nhập</a>
+</nav>
+<div class="header-spacer"></div>
+
+
+<section class="hero">
+  <div class="hero-copy">
+    <h1>Tìm công việc<br><span>phù hợp với bạn</span></h1>
+    <p>Hàng nghìn cơ hội việc làm từ nhiều nguồn tuyển dụng</p>
+    <form class="search-box" action="jobs.html">
+      <label><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3-3"/></svg> <input name="q" placeholder="Vị trí, kỹ năng, công việc..."></label>
+      <label><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.2"/></svg> <input name="loc" placeholder="Địa điểm"></label>
+      <button type="submit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3-3"/></svg> Tìm việc</button>
+    </form>
+    <div class="popular">Phổ biến:
+      <button type="button">Java</button>
+      <button type="button">ReactJS</button>
+      <button type="button">Data Analyst</button>
+      <button type="button">Tester</button>
+      <button type="button">Marketing</button>
+      <button type="button">Python</button>
+      <button type="button">Business Analyst</button>
+    </div>
+  </div>
+  <div class="stats">
+    <div class="stat"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></span><div><strong>10.000+</strong><small>Việc làm</small></div></div>
+    <div class="stat"><span><svg viewBox="0 0 24 24"><path d="M4 20V6a2 2 0 0 1 2-2h6v16"/><path d="M12 10h6a2 2 0 0 1 2 2v8"/><path d="M8 8h.01M8 12h.01M8 16h.01M16 14h.01M16 18h.01"/></svg></span><div><strong>2.000+</strong><small>Công ty</small></div></div>
+    <div class="stat"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="9.5" cy="7" r="3"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></span><div><strong>50+</strong><small>Nguồn tuyển dụng</small></div></div>
+    <div class="stat"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l2.6 5.3L20 9.2l-4 3.9.9 5.6L12 16.5 7.1 18.7 8 13.1 4 9.2l5.4-.9z"/></svg></span><div><strong>100%</strong><small>Miễn phí cho ứng viên</small></div></div>
+  </div>
+</section>
+
+<section class="section latest">
+  <div class="section-head">
+    <h2>Việc làm mới nhất</h2>
+    <a href="jobs.html">Xem tất cả việc làm →</a>
+  </div>
+  <div class="job-grid">
+    
+<article class="job-card">
+  <div class="job-card-top">
+    <div class="company-mark">FPT</div>
+    <span class="badge-new">Mới</span>
+  </div>
+  <h3><a href="job-detail.html">Java Developer</a></h3>
+  <p class="company"><a href="company-detail.html">FPT Software</a></p>
+  <ul class="meta">
+    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.2"/></svg> Hà Nội</li>
+    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7H14a3.5 3.5 0 0 1 0 7H6"/></svg> 25 - 35 triệu</li>
+  </ul>
+  <div class="tags"><span class='pill'>Java</span><span class='pill'>Spring</span><span class='pill'>SQL</span></div>
+  <div class="job-card-foot">
+    <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg> 2 giờ trước</span>
+    <button class="icon-btn" data-save type="button" aria-label="Lưu việc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.8 8.6a5 5 0 0 0-8.8-3.4L12 5.4l-.99-.2A5 5 0 0 0 3.2 8.6c0 6 8.8 11 8.8 11s8.8-5 8.8-11z"/></svg></button>
+  </div>
+</article>
+
+<article class="job-card">
+  <div class="job-card-top">
+    <div class="company-mark">ABC</div>
+    <span class="badge-new">Mới</span>
+  </div>
+  <h3><a href="job-detail.html">Backend Engineer</a></h3>
+  <p class="company"><a href="company-detail.html">ABC Technology</a></p>
+  <ul class="meta">
+    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.2"/></svg> Hồ Chí Minh</li>
+    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7H14a3.5 3.5 0 0 1 0 7H6"/></svg> 30 - 45 triệu</li>
+  </ul>
+  <div class="tags"><span class='pill'>Java</span><span class='pill'>Kafka</span><span class='pill'>Redis</span></div>
+  <div class="job-card-foot">
+    <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg> 2 giờ trước</span>
+    <button class="icon-btn" data-save type="button" aria-label="Lưu việc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.8 8.6a5 5 0 0 0-8.8-3.4L12 5.4l-.99-.2A5 5 0 0 0 3.2 8.6c0 6 8.8 11 8.8 11s8.8-5 8.8-11z"/></svg></button>
+  </div>
+</article>
+
+<article class="job-card">
+  <div class="job-card-top">
+    <div class="company-mark">T</div>
+    <span class="badge-new">Mới</span>
+  </div>
+  <h3><a href="job-detail.html">Frontend Developer</a></h3>
+  <p class="company"><a href="company-detail.html">TechViet</a></p>
+  <ul class="meta">
+    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.2"/></svg> Hà Nội</li>
+    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7H14a3.5 3.5 0 0 1 0 7H6"/></svg> 20 - 35 triệu</li>
+  </ul>
+  <div class="tags"><span class='pill'>ReactJS</span><span class='pill'>TypeScript</span><span class='pill'>CSS</span></div>
+  <div class="job-card-foot">
+    <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg> 3 giờ trước</span>
+    <button class="icon-btn" data-save type="button" aria-label="Lưu việc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.8 8.6a5 5 0 0 0-8.8-3.4L12 5.4l-.99-.2A5 5 0 0 0 3.2 8.6c0 6 8.8 11 8.8 11s8.8-5 8.8-11z"/></svg></button>
+  </div>
+</article>
+
+<article class="job-card">
+  <div class="job-card-top">
+    <div class="company-mark">V</div>
+    <span class="badge-new">Mới</span>
+  </div>
+  <h3><a href="job-detail.html">Data Analyst</a></h3>
+  <p class="company"><a href="company-detail.html">Viettel Digital</a></p>
+  <ul class="meta">
+    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.2"/></svg> Hồ Chí Minh</li>
+    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7H14a3.5 3.5 0 0 1 0 7H6"/></svg> 20 - 30 triệu</li>
+  </ul>
+  <div class="tags"><span class='pill'>SQL</span><span class='pill'>Python</span><span class='pill'>Data Visualization</span></div>
+  <div class="job-card-foot">
+    <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg> 4 giờ trước</span>
+    <button class="icon-btn" data-save type="button" aria-label="Lưu việc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.8 8.6a5 5 0 0 0-8.8-3.4L12 5.4l-.99-.2A5 5 0 0 0 3.2 8.6c0 6 8.8 11 8.8 11s8.8-5 8.8-11z"/></svg></button>
+  </div>
+</article>
+
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-head">
+    <h2>Khám phá theo ngành nghề</h2>
+    <a href="jobs.html">Xem tất cả ngành nghề →</a>
+  </div>
+  <div class="cat-grid">
+    <a class="cat-item" href="jobs.html"><span class="cat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></span><span><strong>Công nghệ</strong><small>2.430 việc</small></span><b>›</b></a>
+    <a class="cat-item" href="jobs.html"><span class="cat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7H14a3.5 3.5 0 0 1 0 7H6"/></svg></span><span><strong>Tài chính</strong><small>1.250 việc</small></span><b>›</b></a>
+    <a class="cat-item" href="jobs.html"><span class="cat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l2.6 5.3L20 9.2l-4 3.9.9 5.6L12 16.5 7.1 18.7 8 13.1 4 9.2l5.4-.9z"/></svg></span><span><strong>Marketing</strong><small>840 việc</small></span><b>›</b></a>
+    <a class="cat-item" href="jobs.html"><span class="cat-icon"><svg viewBox="0 0 24 24"><path d="M4 20V6a2 2 0 0 1 2-2h6v16"/><path d="M12 10h6a2 2 0 0 1 2 2v8"/><path d="M8 8h.01M8 12h.01M8 16h.01M16 14h.01M16 18h.01"/></svg></span><span><strong>Bán hàng</strong><small>1.320 việc</small></span><b>›</b></a>
+    <a class="cat-item" href="jobs.html"><span class="cat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="9.5" cy="7" r="3"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></span><span><strong>Sản xuất</strong><small>680 việc</small></span><b>›</b></a>
+    <a class="cat-item" href="jobs.html"><span class="cat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.2"/></svg></span><span><strong>Xây dựng</strong><small>480 việc</small></span><b>›</b></a>
+    <a class="cat-item" href="jobs.html"><span class="cat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><span><strong>Logistics</strong><small>410 việc</small></span><b>›</b></a>
+    <a class="cat-item" href="jobs.html"><span class="cat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l2.6 5.3L20 9.2l-4 3.9.9 5.6L12 16.5 7.1 18.7 8 13.1 4 9.2l5.4-.9z"/></svg></span><span><strong>Khác</strong><small>2.100 việc</small></span><b>›</b></a>
+  </div>
+</section>
+
+<section class="cta">
+  <div>
+    <h2>Bắt đầu hành trình nghề nghiệp cùng JobBeacon</h2>
+    <p>Khám phá hàng nghìn cơ hội việc làm, kết nối với các công ty uy tín và tìm thấy công việc phù hợp nhất cho bạn.</p>
+    <div class="cta-actions">
+      <a class="btn-primary" href="jobs.html">Tìm việc ngay →</a>
+      <a class="btn-outline" href="profile.html">Tạo hồ sơ của bạn</a>
+    </div>
+  </div>
+  <div class="cta-art">
+    <div class="cta-window"></div>
+    <div class="cta-search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3-3"/></svg></div>
+  </div>
+</section>
+
+
+<footer class="site-footer">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <img src="assets/logo.svg" alt="JobBeacon">
+      <p>Kết nối cơ hội, kiến tạo tương lai</p>
+    </div>
+    <div>
+      <strong>Dành cho ứng viên</strong>
+      <a href="jobs.html">Tìm việc làm</a>
+      <a href="profile.html">Tạo hồ sơ</a>
+      <a href="job-alerts.html">Cẩm nang nghề nghiệp</a>
+    </div>
+    <div>
+      <strong>Dành cho nhà tuyển dụng</strong>
+      <a href="#">Đăng tin tuyển dụng</a>
+      <a href="#">Giải pháp tuyển dụng</a>
+      <a href="#">Liên hệ</a>
+    </div>
+    <div>
+      <strong>Về JobBeacon</strong>
+      <a href="#">Giới thiệu</a>
+      <a href="#">Blog</a>
+      <a href="#">Điều khoản</a>
+    </div>
+    <div>
+      <strong>Kết nối với chúng tôi</strong>
+      <div class="footer-socials"><span>f</span><span>in</span><span>▶</span><span>X</span></div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 JobBeacon. All rights reserved.</span>
+    <span>Việc tốt hơn, gần hơn mỗi ngày ♥</span>
+  </div>
+</footer>
+
+
+<div class="mock-index">
+  <details>
+    <summary>Mockup · 10 màn</summary>
+    <a href="index.html" class="is-here">Trang chủ</a>
+<a href="jobs.html" class="">Tìm việc</a>
+<a href="job-detail.html" class="">Chi tiết việc làm</a>
+<a href="companies.html" class="">Danh sách công ty</a>
+<a href="company-detail.html" class="">Chi tiết công ty</a>
+<a href="saved-jobs.html" class="">Việc đã lưu</a>
+<a href="job-alerts.html" class="">Job Alert</a>
+<a href="profile.html" class="">Hồ sơ</a>
+<a href="login.html" class="">Đăng nhập</a>
+<a href="register.html" class="">Đăng ký</a>
+  </details>
+</div>
+
+<script src="js/app.js"></script>
+</body>
+</html>

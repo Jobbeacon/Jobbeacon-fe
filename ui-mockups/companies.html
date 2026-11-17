@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Công ty · JobBeacon</title>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="page page--tint">
+
+<header class="site-header">
+  <div class="header-inner">
+    <button class="menu-btn" type="button" data-menu aria-label="Mở menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+    <a class="logo" href="index.html"><img src="assets/logo.svg" alt="JobBeacon"></a>
+    <nav class="nav">
+      <a class="nav-link" href="jobs.html"><svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M3 13h18"/></svg> Việc làm</a>
+      <a class="nav-link is-active" href="companies.html"><svg viewBox="0 0 24 24"><path d="M4 20V6a2 2 0 0 1 2-2h6v16"/><path d="M12 10h6a2 2 0 0 1 2 2v8"/><path d="M8 8h.01M8 12h.01M8 16h.01M16 14h.01M16 18h.01"/></svg> Công ty</a>
+    </nav>
+    <div class="header-actions">
+        <a class="btn-login" href="login.html">Đăng nhập</a>
+        <a class="btn-register" href="register.html">Đăng ký</a>
+        </div>
+  </div>
+</header>
+<nav class="mobile-nav" data-mobile-nav>
+  <a href="jobs.html">Việc làm</a>
+  <a href="companies.html">Công ty</a>
+  <a href="saved-jobs.html">Việc đã lưu</a>
+  <a href="job-alerts.html">Job Alert</a>
+  <a href="profile.html">Hồ sơ</a>
+  <a href="login.html">Đăng nhập</a>
+</nav>
+<div class="header-spacer"></div>
+
+
+<section class="page-hero">
+  <div class="breadcrumb"><a href="index.html">Trang chủ</a> · Công ty</div>
+  <h1>Khám phá công ty</h1>
+  <p>JobBeacon chuẩn hóa công ty từ nhiều nguồn. Cùng một doanh nghiệp trên TopCV và ITviec sẽ chỉ hiện một lần.</p>
+  <form class="search-bar" action="companies.html">
+    <label>{ICONS["search"]} <input placeholder="Tên công ty, ngành nghề"></label>
+    <label>{ICONS["pin"]} <input placeholder="Địa điểm"></label>
+    <button type="submit">Tìm công ty</button>
+  </form>
+</section>
+<section class="section">
+  <div class="company-grid">
+    <a class="company-card" href="company-detail.html">
+      <header><div class="company-mark lg">FPT</div><div><h3>FPT Software</h3><div class="industry">Công nghệ · Hà Nội</div></div></header>
+      <p>Tập đoàn công nghệ Việt Nam, cung cấp dịch vụ phần mềm, AI và chuyển đổi số cho khách hàng toàn cầu.</p>
+      <footer><span>86 việc đang tuyển</span><span>TopCV · ITviec</span></footer>
+    </a>
+    <a class="company-card" href="company-detail.html">
+      <header><div class="company-mark lg">V</div><div><h3>Viettel Digital</h3><div class="industry">Công nghệ · Hồ Chí Minh</div></div></header>
+      <p>Đơn vị số của Viettel, xây dựng sản phẩm data, fintech và nền tảng số cho hệ sinh thái Viettel.</p>
+      <footer><span>24 việc đang tuyển</span><span>TopCV · VietnamWorks</span></footer>
+    </a>
+    <a class="company-card" href="company-detail.html">
+      <header><div class="company-mark lg">S</div><div><h3>Shopee</h3><div class="industry">Thương mại điện tử · Hà Nội</div></div></header>
+      <p>Nền tảng TMĐT hàng đầu Đông Nam Á, tuyển kỹ sư backend, data và product tại Việt Nam.</p>
+      <footer><span>41 việc đang tuyển</span><span>ITviec · CareerViet</span></footer>
+    </a>
+    <a class="company-card" href="company-detail.html">
+      <header><div class="company-mark lg">M</div><div><h3>MoMo</h3><div class="industry">Fintech · Hồ Chí Minh</div></div></header>
+      <p>Ví điện tử và siêu ứng dụng tài chính, tập trung trải nghiệm người dùng và hạ tầng thanh toán.</p>
+      <footer><span>19 việc đang tuyển</span><span>ITviec · TopCV</span></footer>
+    </a>
+    <a class="company-card" href="company-detail.html">
+      <header><div class="company-mark lg">VN</div><div><h3>VNG</h3><div class="industry">Internet · Hồ Chí Minh</div></div></header>
+      <p>Công ty internet Việt Nam với game, Zalo và các nền tảng số phục vụ hàng chục triệu người dùng.</p>
+      <footer><span>33 việc đang tuyển</span><span>TopCV · ITviec</span></footer>
+    </a>
+    <a class="company-card" href="company-detail.html">
+      <header><div class="company-mark lg">T</div><div><h3>TechViet</h3><div class="industry">Outsourcing · Hà Nội</div></div></header>
+      <p>Công ty phần mềm vừa và nhỏ, chuyên frontend/backend cho khách hàng Nhật Bản và châu Âu.</p>
+      <footer><span>12 việc đang tuyển</span><span>VietnamWorks</span></footer>
+    </a>
+  </div>
+</section>
+
+
+<footer class="site-footer">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <img src="assets/logo.svg" alt="JobBeacon">
+      <p>Kết nối cơ hội, kiến tạo tương lai</p>
+    </div>
+    <div>
+      <strong>Dành cho ứng viên</strong>
+      <a href="jobs.html">Tìm việc làm</a>
+      <a href="profile.html">Tạo hồ sơ</a>
+      <a href="job-alerts.html">Cẩm nang nghề nghiệp</a>
+    </div>
+    <div>
+      <strong>Dành cho nhà tuyển dụng</strong>
+      <a href="#">Đăng tin tuyển dụng</a>
+      <a href="#">Giải pháp tuyển dụng</a>
+      <a href="#">Liên hệ</a>
+    </div>
+    <div>
+      <strong>Về JobBeacon</strong>
+      <a href="#">Giới thiệu</a>
+      <a href="#">Blog</a>
+      <a href="#">Điều khoản</a>
+    </div>
+    <div>
+      <strong>Kết nối với chúng tôi</strong>
+      <div class="footer-socials"><span>f</span><span>in</span><span>▶</span><span>X</span></div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 JobBeacon. All rights reserved.</span>
+    <span>Việc tốt hơn, gần hơn mỗi ngày ♥</span>
+  </div>
+</footer>
+
+
+<div class="mock-index">
+  <details>
+    <summary>Mockup · 10 màn</summary>
+    <a href="index.html" class="">Trang chủ</a>
+<a href="jobs.html" class="">Tìm việc</a>
+<a href="job-detail.html" class="">Chi tiết việc làm</a>
+<a href="companies.html" class="is-here">Danh sách công ty</a>
+<a href="company-detail.html" class="">Chi tiết công ty</a>
+<a href="saved-jobs.html" class="">Việc đã lưu</a>
+<a href="job-alerts.html" class="">Job Alert</a>
+<a href="profile.html" class="">Hồ sơ</a>
+<a href="login.html" class="">Đăng nhập</a>
+<a href="register.html" class="">Đăng ký</a>
+  </details>
+</div>
+
+<script src="js/app.js"></script>
+</body>
+</html>
