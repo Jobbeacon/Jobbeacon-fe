@@ -7,7 +7,7 @@ import { JobFilters } from '../components/JobFilters'
 import type { JobFiltersState } from '../components/JobFilters'
 import { JobList, JobListSkeleton } from '../components/JobList'
 import { JobSearchBar } from '../components/JobSearchBar'
-import { locationChipGroups } from '../components/LocationPicker'
+import { locationChipGroups } from '../utils/locationPlaces'
 import { useJobs } from '../hooks/useJobs'
 import styles from './JobSearchPage.module.css'
 

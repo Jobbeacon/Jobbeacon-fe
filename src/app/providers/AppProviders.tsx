@@ -4,6 +4,7 @@ import { getApiBaseUrl } from '../config/env'
 import {
   getCurrentIdToken,
   subscribeToAuthState,
+  syncCurrentUser,
 } from '../../features/auth/api/auth.api'
 import {
   AuthStateContext,
@@ -26,9 +27,29 @@ export function AppProviders({ children }: AppProvidersProps) {
   const [authState, setAuthState] = useState<AuthState>(initialAuthState)
 
   useEffect(() => {
+    // Mỗi lần trạng thái đăng nhập đổi, chỉ kết quả của lần mới nhất được áp dụng.
+    let latest = 0
+
     return subscribeToAuthState(
-      (user) => setAuthState({ user, isInitializing: false }),
-      () => setAuthState({ user: null, isInitializing: false }),
+      (user) => {
+        const current = ++latest
+        if (!user) {
+          setAuthState({ user: null, isInitializing: false })
+          return
+        }
+        // Đồng bộ user với backend (cả khi khôi phục phiên lúc tải trang) trước khi các màn hình
+        // gọi API cần đăng nhập. Lỗi đồng bộ không chặn đăng nhập: API sau đó sẽ báo lỗi riêng.
+        setAuthState({ user: null, isInitializing: true })
+        void syncCurrentUser()
+          .catch(() => undefined)
+          .finally(() => {
+            if (current === latest) setAuthState({ user, isInitializing: false })
+          })
+      },
+      () => {
+        ++latest
+        setAuthState({ user: null, isInitializing: false })
+      },
     )
   }, [])
 

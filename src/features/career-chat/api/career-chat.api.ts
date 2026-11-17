@@ -1,15 +1,11 @@
-import {
-  ApiError,
-  apiClient,
-  authorizedFetch,
-  createApiErrorFromResponse,
-} from '../../../shared/api/api-client'
+import { ApiError, createApiErrorFromResponse } from '../../../shared/api/api-client'
+import { backendService } from '../../../shared/api/backend.service'
 import type { ApiResponse } from '../../../shared/types/api.types'
 import type { AgentReply, AgentToolCall, AgentToolCallEvent } from '../types/career-chat.types'
 import { readSseEvents } from './sse'
 
-const CHAT_ENDPOINT = '/api/v1/chat'
-const CHAT_STREAM_ENDPOINT = '/api/v1/chat/stream'
+const CHAT_ENDPOINT = '/chat'
+const CHAT_STREAM_ENDPOINT = '/chat/stream'
 const STREAM_INTERRUPTED_ERROR = 'Kết nối bị gián đoạn. Vui lòng thử lại.'
 const STREAM_FALLBACK_ERROR = 'Hệ thống đang gặp sự cố, vui lòng thử lại sau.'
 
@@ -41,7 +37,7 @@ function toAgentReply(response: ChatResponseApiDto): AgentReply {
 
 // Lịch sử hội thoại được backend lưu theo user (Redis), nên chỉ cần gửi tin nhắn mới nhất.
 export async function sendAgentMessage(message: string): Promise<AgentReply> {
-  const response = await apiClient.post<ApiResponse<ChatResponseApiDto>>(CHAT_ENDPOINT, { message })
+  const response = await backendService.post<ApiResponse<ChatResponseApiDto>>(CHAT_ENDPOINT, { message })
   return toAgentReply(response.data)
 }
 
@@ -88,7 +84,7 @@ export async function streamAgentMessage(
 ): Promise<{ toolCalls: AgentToolCall[] }> {
   let response: Response
   try {
-    response = await authorizedFetch(CHAT_STREAM_ENDPOINT, {
+    response = await backendService.fetch(CHAT_STREAM_ENDPOINT, {
       method: 'POST',
       body: { message },
       headers: { Accept: 'text/event-stream' },
@@ -144,5 +140,5 @@ export async function streamAgentMessage(
 }
 
 export async function clearAgentSession(): Promise<void> {
-  await apiClient.delete<ApiResponse<void>>(CHAT_ENDPOINT)
+  await backendService.delete<ApiResponse<void>>(CHAT_ENDPOINT)
 }
