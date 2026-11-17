@@ -17,7 +17,7 @@ npm run preview    # serve dist/ locally
 docker build -t jobbeacon-fe .   # multi-stage: node build → nginx:alpine, exposes 80
 ```
 
-There is no test runner configured (`src/test/` only has a setup file and mocks). "Done" means `npm run lint` and `npm run build` pass. `src/features/jobs/components/LocationPicker.tsx` has 2 pre-existing react-refresh lint errors.
+There is no test runner configured (`src/test/` only has a setup file and mocks). "Done" means `npm run lint` and `npm run build` pass; CI runs both. Component files export only components (`react-refresh/only-export-components`): put shared helpers in the feature's `utils/`.
 
 ## Configuration
 
