@@ -37,7 +37,7 @@ const groups: FilterGroup[] = [
     key: 'experience',
     title: 'Kinh nghiệm',
     options: [
-      { value: 'none', label: 'Chưa có KN' },
+      { value: 'none', label: 'Không nêu yêu cầu' },
       { value: 'y1_3', label: '1 - 3 năm' },
       { value: 'y3_5', label: '3 - 5 năm' },
       { value: 'y5', label: 'Trên 5 năm' },
@@ -47,10 +47,10 @@ const groups: FilterGroup[] = [
     key: 'employmentTypes',
     title: 'Loại hình',
     options: [
-      { value: 'FULL_TIME', label: 'Full-time' },
-      { value: 'PART_TIME', label: 'Part-time' },
-      { value: 'CONTRACT', label: 'Hợp đồng' },
-      { value: 'INTERNSHIP', label: 'Internship' },
+      { value: 'FULL_TIME', label: 'Toàn thời gian' },
+      { value: 'PART_TIME', label: 'Bán thời gian' },
+      { value: 'CONTRACTOR', label: 'Hợp đồng' },
+      { value: 'INTERN', label: 'Thực tập' },
     ],
   },
   {

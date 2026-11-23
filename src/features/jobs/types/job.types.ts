@@ -88,13 +88,14 @@ export type JobSummary = {
   minSalary: number | null
   maxSalary: number | null
   currency: string | null
-  skills: JobSkill[]
   postedDate: string | null
 }
 
 export type JobDetail = JobSummary & {
   company: JobCompany | null
+  skills: JobSkill[]
   descriptionHtml: string
+  benefitsHtml: string
   experienceMonths: number | null
   employmentType: string | null
   expiredDate: string | null

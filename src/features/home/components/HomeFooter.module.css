@@ -8,7 +8,7 @@
 
 .columns {
   display: grid;
-  grid-template-columns: 1.35fr repeat(4, 1fr);
+  grid-template-columns: 2fr repeat(2, 1fr);
   gap: 38px;
 }
 
@@ -23,21 +23,12 @@
   font-size: 11px;
 }
 
-.columns a,
-.columns p {
+.columns a {
   display: block;
   margin: 8px 0;
 }
 
-.socials {
-  color: #087cf0;
-  font-size: 17px;
-  font-weight: 800;
-}
-
 .bottom {
-  display: flex;
-  justify-content: space-between;
   margin-top: 30px;
   padding-top: 17px;
   border-top: 1px solid #edf0f4;
@@ -52,10 +43,6 @@
   .columns > div:first-child {
     grid-column: 1/-1;
   }
-
-  .bottom {
-    gap: 15px;
-  }
 }
 
 .footer,
@@ -69,7 +56,6 @@
 
 .footer,
 .columns a,
-.columns p,
 .bottom {
   font-weight: var(--font-weight-medium);
 }

@@ -8,6 +8,12 @@ DOMPurify.addHook('afterSanitizeAttributes', (node) => {
   }
 })
 
+/** Phần chữ của HTML, bỏ thẻ và mọi khoảng trắng: chỉ dùng để so sánh nội dung. */
+export function toComparableText(html: string) {
+  const text = new DOMParser().parseFromString(html, 'text/html').body.textContent ?? ''
+  return text.replace(/\s+/g, '')
+}
+
 // HTML mô tả job lấy từ trang tuyển dụng bên ngoài: chỉ giữ thẻ định dạng, bỏ script/style/iframe/form.
 export function sanitizeHtml(html: string) {
   return DOMPurify.sanitize(html, {

@@ -47,6 +47,8 @@ const employmentTypeLabels: Record<string, string> = {
   INTERN: 'Thực tập',
   VOLUNTEER: 'Tình nguyện',
   PER_DIEM: 'Theo ngày',
+  // Loại tin riêng của VietnamWorks, không có nghĩa là làm việc online.
+  ONLINE_JOBS: 'Khác',
   OTHER: 'Khác',
 }
 
@@ -61,7 +63,8 @@ export function formatEmploymentType(employmentType: string | null) {
 }
 
 export function formatExperience(experienceMonths: number | null) {
-  if (!experienceMonths) return 'Không yêu cầu KN'
+  // Crawler gửi 0 khi tin không nêu yêu cầu kinh nghiệm, không có nghĩa là "không yêu cầu".
+  if (!experienceMonths) return null
   if (experienceMonths < 12) return `${experienceMonths} tháng KN`
   const years = experienceMonths / 12
   return `${Number.isInteger(years) ? years : years.toFixed(1)} năm KN`
@@ -72,7 +75,8 @@ export function getInitials(name: string, maxLength = 3) {
     .replace(/\b(công ty|cổ phần|tnhh|jsc|co\.?,? ?ltd\.?)\b/gi, '')
     .trim()
     .split(/\s+/)
-    .filter(Boolean)
+    // Bỏ dấu đứng riêng như "-" và đường dẫn trong tên công ty
+    .filter((word) => /^[\p{L}\p{N}]/u.test(word) && !/^https?:/i.test(word))
   if (words.length === 0) return '?'
   if (words.length === 1) return words[0].slice(0, maxLength).toUpperCase()
   return words

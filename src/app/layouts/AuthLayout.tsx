@@ -11,7 +11,7 @@ export function AuthLayout({ children, variant = 'login' }: AuthLayoutProps) {
       <section className="auth-card">{children}</section>
 
       <footer className="auth-footer">
-        © 2026 JobBeacon. All rights reserved.
+        © {new Date().getFullYear()} JobBeacon
       </footer>
     </main>
   )
