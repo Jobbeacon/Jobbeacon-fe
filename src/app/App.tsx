@@ -10,6 +10,7 @@ import { ForgotPasswordPage } from '../features/auth/pages/ForgotPasswordPage'
 import { CandidateProfilePage } from '../features/candidate-profile/pages/CandidateProfilePage'
 import { CareerChatPage } from '../features/career-chat/pages/CareerChatPage'
 import { SavedJobsPage } from '../features/saved-jobs/pages/SavedJobsPage'
+import { RecommendationsPage } from '../features/recommendations/pages/RecommendationsPage'
 import { AuthGuard } from './router/guards/AuthGuard'
 import { MainLayout } from './layouts/MainLayout'
 
@@ -44,6 +45,14 @@ const router = createBrowserRouter(
           element={
             <AuthGuard>
               <SavedJobsPage />
+            </AuthGuard>
+          }
+        />
+        <Route
+          path="/recommendations"
+          element={
+            <AuthGuard>
+              <RecommendationsPage />
             </AuthGuard>
           }
         />
