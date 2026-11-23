@@ -68,7 +68,7 @@ export function CandidateProfilePage() {
           <Link to="/">Trang chủ</Link> · Hồ sơ
         </nav>
         <h1>Hồ sơ của bạn</h1>
-        <p>Skill, kinh nghiệm và vị trí mong muốn sẽ dùng cho gợi ý việc làm sau này.</p>
+        <p>Kỹ năng trong CV và sở thích tìm việc được dùng để gợi ý việc làm cho bạn.</p>
       </section>
 
       <section className={styles.section}>
