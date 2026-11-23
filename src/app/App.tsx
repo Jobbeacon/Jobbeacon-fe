@@ -11,6 +11,7 @@ import { CandidateProfilePage } from '../features/candidate-profile/pages/Candid
 import { CareerChatPage } from '../features/career-chat/pages/CareerChatPage'
 import { SavedJobsPage } from '../features/saved-jobs/pages/SavedJobsPage'
 import { RecommendationsPage } from '../features/recommendations/pages/RecommendationsPage'
+import { NotFoundPage } from '../shared/components/common/NotFoundPage'
 import { AuthGuard } from './router/guards/AuthGuard'
 import { MainLayout } from './layouts/MainLayout'
 
@@ -56,7 +57,7 @@ const router = createBrowserRouter(
             </AuthGuard>
           }
         />
-        <Route path="*" element={<HomePage />} />
+        <Route path="*" element={<NotFoundPage />} />
       </Route>
       <Route element={<MainLayout showFooter={false} />}>
         <Route path="/agent" element={<CareerChatPage />} />

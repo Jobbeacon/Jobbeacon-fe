@@ -1,34 +1,14 @@
 .hero {
-  min-height: 440px;
-  position: relative;
-  padding: 74px max(24px, calc((100% - 1180px) / 2)) 105px;
+  min-height: 400px;
+  display: flex;
+  align-items: center;
+  padding: 64px max(24px, calc((100% - 1180px) / 2));
   background-size: cover;
   background-position: center;
 }
 
-.content h1 {
-  font-size: var(--text-display);
-}
-.popular {
-  font-size: var(--text-sm);
-}
-.popular button {
-  font-size: var(--text-xs);
-}
-.stat strong {
-  font-size: var(--text-lg);
-}
-.stat small {
-  font-size: var(--text-xs);
-}
-.content > p,
-.popular,
-.popular button,
-.stat small {
-  font-weight: var(--font-weight-medium);
-}
-
 .content {
+  width: 100%;
   max-width: 760px;
   position: relative;
   z-index: 1;
@@ -49,47 +29,65 @@
 .content > p {
   margin: 12px 0 26px;
   color: #687d98;
+  font-weight: var(--font-weight-medium);
 }
 
+/* Dùng > để không đè style của bảng chọn địa điểm nằm bên trong. */
 .searchBox {
-  height: 58px;
   display: grid;
   grid-template-columns: 1.4fr 1fr auto;
   border-radius: 8px;
-  overflow: hidden;
   background: #fff;
   box-shadow: 0 10px 30px rgba(24, 89, 154, 0.13);
 }
 
-.searchBox label {
+.searchBox > label {
+  min-height: 58px;
   display: flex;
   align-items: center;
   gap: 9px;
   padding: 0 16px;
   border-right: 1px solid #e7edf5;
+  border-radius: 8px 0 0 8px;
 }
 
-.searchBox svg {
+.searchBox > label svg,
+.searchBox > button svg {
   width: 18px;
+  flex: none;
+}
+
+.searchBox > label svg {
   color: #1889ee;
 }
 
-.searchBox input {
+.searchBox > label input {
   width: 100%;
   border: 0;
   outline: 0;
   color: #263c58;
+  background: transparent;
 }
 
-.searchBox button {
+.searchBox > label:focus-within {
+  box-shadow: inset 0 0 0 2px rgba(8, 124, 240, 0.25);
+}
+
+.searchBox > button {
   display: flex;
   align-items: center;
   gap: 8px;
   padding: 0 26px;
   border: 0;
+  border-radius: 0 8px 8px 0;
   color: #fff;
   background: #087cf0;
   font-weight: 700;
+  cursor: pointer;
+}
+
+.searchBox > button:hover {
+  background: #0558dc;
 }
 
 .popular {
@@ -100,105 +98,44 @@
   margin-top: 18px;
   color: #536a86;
   font-size: var(--text-sm);
+  font-weight: var(--font-weight-medium);
 }
 
-.popular button {
+.popular a {
   padding: 4px 8px;
-  border: 0;
   border-radius: 5px;
   color: #2c659c;
   background: rgba(255, 255, 255, 0.62);
   font-size: var(--text-xs);
+  text-decoration: none;
 }
 
-.stats {
-  position: absolute;
-  z-index: 2;
-  right: max(18px, calc((100% - 1180px) / 2));
-  bottom: -45px;
-  left: max(18px, calc((100% - 1180px) / 2));
-  min-height: 90px;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  align-items: center;
-  border-radius: 9px;
+.popular a:hover {
+  color: #087cf0;
   background: #fff;
-  box-shadow: 0 10px 30px rgba(25, 76, 126, 0.12);
-}
-
-.stat {
-  min-height: 52px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 14px;
-  border-right: 1px solid #edf1f6;
-}
-
-.stat:last-child {
-  border: 0;
-}
-
-.stat > span {
-  width: 38px;
-  height: 38px;
-  display: grid;
-  place-items: center;
-  border-radius: 50%;
-  color: #087cf0;
-  background: #edf7ff;
-}
-
-.stat svg {
-  width: 19px;
-}
-
-.stat strong,
-.stat small {
-  display: block;
-}
-
-.stat strong {
-  color: #087cf0;
-  font-size: var(--text-lg);
-}
-
-.stat small {
-  margin-top: 3px;
-  color: #77879b;
-  font-size: var(--text-xs);
 }
 
 @media (max-width: 760px) {
   .hero {
-    min-height: 500px;
-    padding: 55px 18px 150px;
+    min-height: 0;
+    padding: 48px 18px;
     background-position: 68% center;
   }
 
   .searchBox {
-    height: auto;
     grid-template-columns: 1fr;
   }
 
-  .searchBox label {
+  .searchBox > label {
     min-height: 52px;
     border-right: 0;
     border-bottom: 1px solid #e7edf5;
+    border-radius: 8px 8px 0 0;
   }
 
-  .searchBox button {
+  .searchBox > button {
     min-height: 52px;
     justify-content: center;
-  }
-
-  .stats {
-    bottom: -95px;
-    grid-template-columns: repeat(2, 1fr);
-    padding: 10px 0;
-  }
-
-  .stat:nth-child(2) {
-    border-right: 0;
+    border-radius: 0 0 8px 8px;
   }
 }

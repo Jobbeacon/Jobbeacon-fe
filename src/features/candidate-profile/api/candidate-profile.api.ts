@@ -27,49 +27,18 @@ const SKILL_SEARCH_LIMIT = 10
 const CV_EXTRACT_TIMEOUT_MS = 90_000
 const CV_PROFILE_NOT_FOUND = 'cv_profile_not_found'
 
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null
-}
-
-function getProfilePayload(response: unknown) {
-  if (!isRecord(response)) {
-    throw new ApiError('Dữ liệu người dùng từ máy chủ không hợp lệ.', 500)
-  }
-
-  if ('data' in response && isRecord(response.data)) {
-    return response.data as UserProfileApiDto
-  }
-
-  return response as UserProfileApiDto
-}
-
-function normalizeUserProfile(profile: UserProfileApiDto): UserProfile {
-  const resolvedRoles = Array.isArray(profile.roles)
-    ? profile.roles
-    : profile.role
-      ? [profile.role]
-      : []
-
+function toUserProfile(dto: UserProfileApiDto): UserProfile {
   return {
-    id: profile.id === undefined ? '' : String(profile.id),
-    firebaseUid: profile.firebaseUid ?? profile.uid ?? null,
-    email: profile.email ?? '',
-    fullName: profile.fullName ?? profile.displayName ?? profile.name ?? '',
-    avatarUrl: profile.avatarUrl ?? profile.photoUrl ?? null,
-    roles: resolvedRoles,
-    emailVerified: profile.emailVerified ?? null,
-    status: profile.status ?? null,
-    createdAt: profile.createdAt ?? null,
-    updatedAt: profile.updatedAt ?? null,
+    id: dto.id,
+    email: dto.email ?? '',
+    fullName: dto.display_name ?? '',
+    avatarUrl: dto.avatar_url ?? null,
   }
 }
 
 export async function getCurrentUserProfile(signal?: AbortSignal) {
-  const response = await backendService.get<
-    UserProfileApiDto | ApiResponse<UserProfileApiDto>
-  >(CURRENT_USER_ENDPOINT, { signal })
-
-  return normalizeUserProfile(getProfilePayload(response))
+  const response = await backendService.get<ApiResponse<UserProfileApiDto>>(CURRENT_USER_ENDPOINT, { signal })
+  return toUserProfile(response.data)
 }
 
 function toJobPreference(dto: JobPreferenceApiDto): JobPreference {

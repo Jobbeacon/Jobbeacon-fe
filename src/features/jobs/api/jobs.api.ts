@@ -16,6 +16,7 @@ import type {
   JobSummary,
   JobSummaryApiDto,
 } from '../types/job.types'
+import { getCategoryPaths } from '../utils/category'
 
 const JOBS_ENDPOINT = '/jobs'
 const LOCATIONS_ENDPOINT = '/locations'
@@ -56,7 +57,6 @@ export function toJobSummary(job: JobSummaryApiDto): JobSummary {
     minSalary: job.min_salary,
     maxSalary: job.max_salary,
     currency: job.currency,
-    skills: [],
     postedDate: job.posted_date,
   }
 }
@@ -77,6 +77,7 @@ function toJobDetail(job: JobDetailApiDto): JobDetail {
       ? { id: job.company.id, name: job.company.name, logoUrl: job.company.logo_url }
       : null,
     descriptionHtml: job.description ?? '',
+    benefitsHtml: job.benefits ?? '',
     experienceMonths: job.experience_months,
     employmentType: job.employment_type,
     expiredDate: job.expired_date,
@@ -171,30 +172,53 @@ export async function searchJobs(query: JobSearchParams, signal?: AbortSignal): 
   return { jobs: response.data.content.map(toJobSummary), total: response.data.amount }
 }
 
+const emptySearch: Omit<JobSearchParams, 'page' | 'size'> = {
+  keyword: '',
+  location: '',
+  locations: [],
+  categories: [],
+  skills: [],
+  minSalary: '',
+  maxSalary: '',
+  experience: [],
+  employmentTypes: [],
+  postedWithin: [],
+  sources: [],
+  sortBy: 'posted_date',
+}
+
 export async function getLatestJobs(limit: number, signal?: AbortSignal) {
-  const { jobs } = await searchJobs(
-    {
-      keyword: '',
-      location: '',
-      locations: [],
-      categories: [],
-      skills: [],
-      minSalary: '',
-      maxSalary: '',
-      experience: [],
-      employmentTypes: [],
-      postedWithin: [],
-      sources: [],
-      sortBy: 'posted_date',
-      page: 1,
-      size: limit,
-    },
-    signal,
-  )
+  const { jobs } = await searchJobs({ ...emptySearch, page: 1, size: limit }, signal)
   return jobs
 }
 
-export async function getSimilarJobs(jobId: string, signal?: AbortSignal) {
-  const jobs = await getLatestJobs(SIMILAR_JOBS_LIMIT + 1, signal)
-  return jobs.filter((job) => job.id !== jobId).slice(0, SIMILAR_JOBS_LIMIT)
+export async function getJobsByCategory(category: string, limit: number, signal?: AbortSignal) {
+  return searchJobs({ ...emptySearch, categories: [category], page: 1, size: limit }, signal)
+}
+
+// Bộ lọc của API phân tách bằng dấu phẩy nên bỏ các tên có chứa dấu phẩy.
+function withoutComma(names: string[]) {
+  return names.filter((name) => !name.includes(','))
+}
+
+/** Job cùng ngành nghề sâu nhất trước, thiếu thì bù bằng job có chung kỹ năng. */
+export async function getSimilarJobs(job: JobDetail, signal?: AbortSignal) {
+  const categories = withoutComma(getCategoryPaths(job.categories).map((path) => path[path.length - 1].name))
+  const skills = withoutComma(job.skills.map((skill) => skill.name))
+  const filters = [
+    ...(categories.length > 0 ? [{ categories }] : []),
+    ...(skills.length > 0 ? [{ skills }] : []),
+  ]
+
+  const similar = new Map<string, JobSummary>()
+  for (const filter of filters) {
+    // Kết quả có thể chứa chính job đang xem và các job đã lấy ở lượt trước.
+    const size = SIMILAR_JOBS_LIMIT + similar.size + 1
+    const { jobs } = await searchJobs({ ...emptySearch, ...filter, page: 1, size }, signal)
+    for (const item of jobs) {
+      if (item.id !== job.id && similar.size < SIMILAR_JOBS_LIMIT) similar.set(item.id, item)
+    }
+    if (similar.size >= SIMILAR_JOBS_LIMIT) break
+  }
+  return [...similar.values()]
 }

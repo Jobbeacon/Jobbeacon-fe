@@ -4,6 +4,7 @@ import { getCompanyDetail, getCompanyJobs } from '../api/companies.api';
 import type { Company } from '../types/company.types';
 import type { JobSummary } from '../../jobs/types/job.types';
 import { Pagination } from '../../../shared/components/ui/Pagination';
+import { CompanyLogo } from '../../jobs/components/CompanyLogo';
 import { JobList } from '../../jobs/components/JobList';
 import styles from './CompanyDetailPage.module.css';
 
@@ -38,8 +39,6 @@ export function CompanyDetailPage() {
     return <div className={`${styles.page} p-6 text-center`} style={{ color: '#687d98', padding: '24px' }}>Không tìm thấy công ty.</div>;
   }
 
-  const shortName = company.name.substring(0, 3).toUpperCase();
-
   return (
     <div className={styles.page}>
       <section className={styles.hero}>
@@ -50,13 +49,7 @@ export function CompanyDetailPage() {
       
       <section className={styles.section}>
         <div className={styles.companyHero}>
-          <div className={styles.companyMark} data-has-image={company.logoUrl ? true : undefined}>
-            {company.logoUrl ? (
-              <img src={company.logoUrl} alt={company.name} style={{ width: '100%', height: '100%', objectFit: 'contain', borderRadius: 'inherit' }} />
-            ) : (
-              shortName
-            )}
-          </div>
+          <CompanyLogo className={styles.companyMark} name={company.name} logoUrl={company.logoUrl} />
           <div>
             <h1 style={{ color: '#0b2b59' }}>{company.name}</h1>
             {company.locations.length > 0 && (
@@ -71,9 +64,6 @@ export function CompanyDetailPage() {
               )}
             </div>
           </div>
-          <button className={styles.btnPrimary}>
-            Theo dõi việc mới
-          </button>
         </div>
 
         <div className={styles.sectionHead}>

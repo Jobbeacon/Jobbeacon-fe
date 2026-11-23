@@ -29,11 +29,10 @@ export function CandidateProfilePage() {
   const resolvedProfile = profile
     ? {
         ...profile,
-        firebaseUid: profile.firebaseUid || user?.uid || null,
         email: profile.email || user?.email || '',
         fullName: profile.fullName || user?.displayName || '',
         avatarUrl: profile.avatarUrl || user?.photoUrl || null,
-        emailVerified: profile.emailVerified ?? user?.emailVerified ?? null,
+        emailVerified: user?.emailVerified ?? null,
       }
     : null
 

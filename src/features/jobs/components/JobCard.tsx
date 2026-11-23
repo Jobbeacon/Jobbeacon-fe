@@ -36,13 +36,6 @@ export function JobCard({ job }: { job: JobSummary }) {
           {formatSalaryRange(job.minSalary, job.maxSalary, job.currency)}
         </li>
       </ul>
-      {job.skills.length > 0 ? (
-        <div className={styles.tags}>
-          {job.skills.map((skill) => (
-            <span key={skill.id}>{skill.name}</span>
-          ))}
-        </div>
-      ) : null}
       <footer className={styles.foot}>
         <span>
           {job.postedDate ? (
