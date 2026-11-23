@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
+import logo from '../../../assets/logo/jobbeacon-logo.svg'
 import { useAuth } from '../hooks/useAuth'
 import { validateRegisterForm } from '../schemas/auth.schema'
 import { AuthFeedback } from './AuthFeedback'
@@ -36,8 +37,9 @@ export function RegisterForm() {
 
   return (
     <div className="auth-content auth-content--register">
-      {/* Logo JobBeacon sẽ được đặt vào vùng này sau. */}
-      <div className="auth-logo-slot auth-logo-slot--register" aria-hidden="true" />
+      <a className="auth-logo" href="/" aria-label="JobBeacon - Trang chủ">
+        <img src={logo} alt="JobBeacon" />
+      </a>
 
       <header className="auth-heading">
         <h1>Đăng ký</h1>

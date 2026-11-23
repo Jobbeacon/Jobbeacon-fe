@@ -14,14 +14,14 @@ import styles from './JobSearchPage.module.css'
 const PAGE_SIZE = 10
 
 const filterLabels: Record<string, string> = {
-  none: 'Chưa có KN',
+  none: 'Không nêu yêu cầu KN',
   y1_3: '1 - 3 năm',
   y3_5: '3 - 5 năm',
   y5: 'Trên 5 năm',
-  FULL_TIME: 'Full-time',
-  PART_TIME: 'Part-time',
-  CONTRACT: 'Hợp đồng',
-  INTERNSHIP: 'Internship',
+  FULL_TIME: 'Toàn thời gian',
+  PART_TIME: 'Bán thời gian',
+  CONTRACTOR: 'Hợp đồng',
+  INTERN: 'Thực tập',
   '24h': '24 giờ qua',
   '7d': '7 ngày qua',
   '30d': '30 ngày qua',
@@ -200,10 +200,7 @@ export function JobSearchPage() {
           <Link to="/">Trang chủ</Link> · Việc làm
         </nav>
         <h1>Tìm kiếm việc làm</h1>
-        <p>
-          Tổng hợp tin tuyển dụng từ nhiều trang tuyển dụng. JobBeacon chuẩn hóa dữ liệu
-          và gộp tin trùng.
-        </p>
+        <p>Tổng hợp tin tuyển dụng từ nhiều trang tuyển dụng.</p>
         <JobSearchBar
           keyword={keyword}
           location={location}

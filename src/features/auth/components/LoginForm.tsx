@@ -60,7 +60,7 @@ export function LoginForm() {
 
       <header className="auth-heading">
         <h1>Chào mừng bạn trở lại</h1>
-        <p>Đăng nhập để lưu việc, tạo Job Alert và nhận gợi ý phù hợp.</p>
+        <p>Đăng nhập để lưu việc làm và nhận gợi ý phù hợp.</p>
       </header>
 
       <button

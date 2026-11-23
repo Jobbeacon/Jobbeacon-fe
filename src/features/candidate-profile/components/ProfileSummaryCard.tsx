@@ -2,7 +2,7 @@ import type { UserProfile } from '../types/candidate-profile.types'
 import styles from './ProfileSummaryCard.module.css'
 
 type ProfileSummaryCardProps = {
-  profile: UserProfile
+  profile: UserProfile & { emailVerified: boolean | null }
   currentTitle?: string | null
   summary: string
   openToWork?: boolean
