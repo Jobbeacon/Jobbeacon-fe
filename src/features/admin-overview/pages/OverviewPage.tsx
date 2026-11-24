@@ -34,9 +34,9 @@ export function OverviewPage() {
   const header = (
     <header className="stage-head">
       <div>
-        <h1>Vận hành crawl</h1>
+        <h1>Tổng quan</h1>
         <p className="lead">
-          Mỗi dòng là một lần ghi nhận tin trên một nguồn. Cùng một tin ở hai nguồn được tính hai lần.
+          Vận hành crawl: mỗi dòng là một lần ghi nhận tin trên một nguồn. Cùng một tin ở hai nguồn được tính hai lần.
         </p>
       </div>
     </header>

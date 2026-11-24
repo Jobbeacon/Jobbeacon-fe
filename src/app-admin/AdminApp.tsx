@@ -4,6 +4,7 @@ import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom'
 import { CategoriesPage } from '../features/admin-categories/pages/CategoriesPage'
 import { CompaniesPage } from '../features/admin-companies/pages/CompaniesPage'
 import { JobsPage } from '../features/admin-jobs/pages/JobsPage'
+import { MonitoringPage } from '../features/admin-monitoring/pages/MonitoringPage'
 import { OverviewPage } from '../features/admin-overview/pages/OverviewPage'
 import { SkillsPage } from '../features/admin-skills/pages/SkillsPage'
 import { UsersPage } from '../features/admin-users/pages/UsersPage'
@@ -43,6 +44,7 @@ const router = createBrowserRouter([
       { path: 'users', element: <Titled title="Người dùng"><UsersPage /></Titled> },
       { path: 'categories', element: <Titled title="Danh mục ngành"><CategoriesPage /></Titled> },
       { path: 'skills', element: <Titled title="Kỹ năng"><SkillsPage /></Titled> },
+      { path: 'monitoring', element: <Titled title="Giám sát hệ thống"><MonitoringPage /></Titled> },
       { path: '*', element: <Navigate to="/" replace /> },
     ],
   },

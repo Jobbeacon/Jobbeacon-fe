@@ -7,6 +7,7 @@ type RuntimeEnvironment = {
   VITE_FIREBASE_MESSAGING_SENDER_ID?: string
   VITE_FIREBASE_APP_ID?: string
   VITE_USER_SITE_URL?: string
+  VITE_GRAFANA_URL?: string
 }
 
 declare global {

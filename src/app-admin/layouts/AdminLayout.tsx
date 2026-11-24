@@ -1,7 +1,7 @@
-import { BriefcaseBusiness, Building2, Layers, LayoutGrid, LogOut, Tag, Users } from 'lucide-react'
+import { Activity, BriefcaseBusiness, Building2, Layers, LayoutGrid, LogOut, Moon, Sun, Tag, Users } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import { Link, NavLink, Outlet } from 'react-router-dom'
-import { MonoMark, useToast } from '../../shared/components/admin'
+import { MonoMark, useTheme, useToast } from '../../shared/components/admin'
 import logoUrl from '../assets/logo.svg'
 import { useAdminSession } from '../session/admin-session'
 
@@ -12,12 +12,14 @@ const NAV_ITEMS: { to: string; label: string; icon: LucideIcon }[] = [
   { to: '/users', label: 'Người dùng', icon: Users },
   { to: '/categories', label: 'Danh mục ngành', icon: Layers },
   { to: '/skills', label: 'Kỹ năng', icon: Tag },
+  { to: '/monitoring', label: 'Giám sát hệ thống', icon: Activity },
 ]
 
 export function AdminLayout() {
   const { me, signOut } = useAdminSession()
   const toast = useToast()
   const name = me.displayName?.trim() || me.email
+  const { theme, setTheme } = useTheme()
 
   return (
     <div className="shell">
@@ -53,6 +55,15 @@ export function AdminLayout() {
               Thoát
             </a>
           </div>
+          <button
+            type="button"
+            className="theme-toggle"
+            title={theme === 'dark' ? 'Chuyển sang giao diện sáng' : 'Chuyển sang giao diện tối'}
+            aria-label={theme === 'dark' ? 'Chuyển sang giao diện sáng' : 'Chuyển sang giao diện tối'}
+            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+          >
+            {theme === 'dark' ? <Sun aria-hidden="true" strokeWidth={1.8} /> : <Moon aria-hidden="true" strokeWidth={1.8} />}
+          </button>
         </div>
       </aside>
       <div className="main">
