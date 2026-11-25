@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Công ty · Quản trị JobBeacon</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23163E70'/%3E%3Ccircle cx='16' cy='16' r='6' fill='none' stroke='%231687FF' stroke-width='2.5'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body data-page="companies">
+  <div class="shell">
+    <aside class="sidebar">
+      <a class="sidebar-brand" href="index.html" aria-label="JobBeacon"><img class="brand-logo" src="assets/logo.svg" alt="JobBeacon"><span class="brand-tag">Admin</span></a>
+      <nav class="sidebar-nav">
+        <a href="index.html"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="3" width="7" height="7" rx="1.5"></rect><rect x="3" y="14" width="7" height="7" rx="1.5"></rect><rect x="14" y="14" width="7" height="7" rx="1.5"></rect></svg>Tổng quan</a>
+        <a href="jobs.html"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"></rect><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><path d="M3 12h18"></path></svg>Việc làm</a>
+        <a href="companies.html" aria-current="page"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="1.5"></rect><path d="M9 8h1M14 8h1M9 12h1M14 12h1M9 16h1M14 16h1"></path></svg>Công ty</a>
+        <a href="users.html"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2"></circle><path d="M3 20c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5"></path><path d="M16 8.5a3 3 0 1 1 3 3.3"></path><path d="M21 20c0-2.6-1.7-4.5-4-5.2"></path></svg>Người dùng</a>
+        <a href="categories.html"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 3 8l9 5 9-5-9-5Z"></path><path d="m3 13 9 5 9-5"></path></svg>Danh mục ngành</a>
+        <a href="skills.html"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8Z"></path><circle cx="7.5" cy="7.5" r="1.5"></circle></svg>Kỹ năng</a>
+      </nav>
+      <div class="sidebar-foot">
+        <span class="mono-mark">MA</span>
+        <div class="who">
+          <span class="who-name">Minh Anh</span>
+          <a class="signout" href="login.html"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><path d="m16 17 5-5-5-5"></path><path d="M21 12H9"></path></svg>Thoát</a>
+        </div>
+      </div>
+    </aside>
+    <div class="main">
+  <main class="stage">
+      <header class="stage-head">
+        <div>
+          <h1>Công ty</h1>
+          <p class="lead">Crawler tạo công ty theo đúng tên ghi trên nguồn, nên một công ty có thể thành nhiều bản. Gộp bản trùng và sửa tên, logo ở đây.</p>
+        </div>
+      </header>
+      <div class="stat-row" id="company-stats"></div>
+      <section class="sheet">
+        <div class="toolbar list-toolbar">
+          <input class="search-input" id="company-q" type="search" placeholder="Tìm tên công ty" aria-label="Tìm công ty" autocomplete="off">
+          <select id="company-sort" aria-label="Sắp xếp">
+            <option value="jobs">Nhiều tin nhất</option>
+            <option value="recent">Mới thêm</option>
+            <option value="name">Tên A–Z</option>
+          </select>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Công ty</th>
+                <th class="num">Tin</th>
+                <th>Nguồn</th>
+                <th>Tạo lúc</th>
+                <th>Crawl gần nhất</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="company-rows"></tbody>
+          </table>
+        </div>
+        <div class="pager">
+          <span class="count" id="company-range"></span>
+          <nav class="pages" id="company-pages" aria-label="Phân trang"></nav>
+        </div>
+      </section>
+    </main>
+    </div>
+  </div>
+
+  <dialog class="modal form-modal" id="editor">
+    <form id="company-form" spellcheck="false">
+      <div class="drawer-bar">
+        <div class="identity">
+          <span class="logo-mark lg" id="logo-preview"></span>
+          <div>
+            <h2 id="company-preview-name">Công ty</h2>
+            <a id="company-public" class="pill-link" href="../company-detail.html" target="_blank" rel="noreferrer">Xem trang công ty</a>
+          </div>
+        </div>
+      </div>
+      <div class="drawer-body">
+        <label class="field"><span>Tên công ty</span><input name="name" required maxlength="255"></label>
+        <label class="field"><span>URL logo</span><input name="logo" type="url" placeholder="https://"></label>
+        <dl class="meta" id="company-usage"></dl>
+        <p class="fine">Địa điểm, số việc đang tuyển và nguồn tính từ các tin của công ty.</p>
+        <div class="merge">
+          <p class="block-title">Gộp bản trùng</p>
+          <p class="fine" id="company-twins"></p>
+          <div class="merge-row">
+            <input name="target" list="company-names" placeholder="Gộp vào công ty…" aria-label="Công ty đích" autocomplete="off">
+            <button class="btn ghost" type="button" id="merge-company">Gộp</button>
+          </div>
+        </div>
+        <datalist id="company-names"></datalist>
+      </div>
+      <div class="drawer-actions split">
+        <button class="btn text-danger" type="button" id="delete-company">Xóa</button>
+        <div class="actions-end">
+          <button class="btn ghost" type="button" data-close>Hủy</button>
+          <button class="btn" type="submit">Lưu</button>
+        </div>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog class="modal" id="confirm">
+    <form method="dialog">
+      <div class="modal-bar"><h2>Gỡ công ty này?</h2></div>
+      <p></p>
+      <div class="modal-actions">
+        <button class="btn ghost" value="cancel">Giữ lại</button>
+        <button class="btn danger" value="ok">Xóa</button>
+      </div>
+    </form>
+  </dialog>
+  <script src="js/categories-data.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>

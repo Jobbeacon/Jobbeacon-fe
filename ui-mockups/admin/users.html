@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Người dùng · Quản trị JobBeacon</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23163E70'/%3E%3Ccircle cx='16' cy='16' r='6' fill='none' stroke='%231687FF' stroke-width='2.5'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body data-page="users">
+  <div class="shell">
+    <aside class="sidebar">
+      <a class="sidebar-brand" href="index.html" aria-label="JobBeacon"><img class="brand-logo" src="assets/logo.svg" alt="JobBeacon"><span class="brand-tag">Admin</span></a>
+      <nav class="sidebar-nav">
+        <a href="index.html"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="3" width="7" height="7" rx="1.5"></rect><rect x="3" y="14" width="7" height="7" rx="1.5"></rect><rect x="14" y="14" width="7" height="7" rx="1.5"></rect></svg>Tổng quan</a>
+        <a href="jobs.html"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"></rect><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><path d="M3 12h18"></path></svg>Việc làm</a>
+        <a href="companies.html"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="1.5"></rect><path d="M9 8h1M14 8h1M9 12h1M14 12h1M9 16h1M14 16h1"></path></svg>Công ty</a>
+        <a href="users.html" aria-current="page"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2"></circle><path d="M3 20c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5"></path><path d="M16 8.5a3 3 0 1 1 3 3.3"></path><path d="M21 20c0-2.6-1.7-4.5-4-5.2"></path></svg>Người dùng</a>
+        <a href="categories.html"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 3 8l9 5 9-5-9-5Z"></path><path d="m3 13 9 5 9-5"></path></svg>Danh mục ngành</a>
+        <a href="skills.html"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8Z"></path><circle cx="7.5" cy="7.5" r="1.5"></circle></svg>Kỹ năng</a>
+      </nav>
+      <div class="sidebar-foot">
+        <span class="mono-mark">MA</span>
+        <div class="who">
+          <span class="who-name">Minh Anh</span>
+          <a class="signout" href="login.html"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><path d="m16 17 5-5-5-5"></path><path d="M21 12H9"></path></svg>Thoát</a>
+        </div>
+      </div>
+    </aside>
+    <div class="main">
+  <main class="stage">
+    <header class="stage-head">
+      <div>
+        <h1>Người dùng</h1>
+        <p class="lead">Đổi vai trò hoặc khóa tài khoản. Đăng nhập qua Firebase; hồ sơ CV và nguyện vọng việc làm do người dùng tự sửa.</p>
+      </div>
+    </header>
+    <div class="stat-row" id="user-stats"></div>
+    <section class="sheet">
+      <div class="toolbar list-toolbar">
+        <input class="search-input" id="user-q" type="search" placeholder="Tìm theo tên hoặc email" aria-label="Tìm người dùng" autocomplete="off">
+        <select id="user-role" aria-label="Vai trò">
+          <option value="">Mọi vai trò</option>
+          <option value="ADMIN">Quản trị</option>
+          <option value="USER">Người dùng</option>
+        </select>
+      </div>
+      <div class="table-wrap">
+        <table class="user-table">
+          <thead>
+            <tr>
+              <th>Người dùng</th>
+              <th>Vai trò</th>
+              <th>Trạng thái</th>
+              <th>CV</th>
+              <th>Đăng ký</th>
+              <th>Đăng nhập gần nhất</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="user-rows"></tbody>
+        </table>
+      </div>
+      <div class="pager">
+        <span class="count" id="user-range"></span>
+        <nav class="pages" id="user-pages" aria-label="Phân trang"></nav>
+      </div>
+    </section>
+  </main>
+    </div>
+  </div>
+
+  <dialog class="drawer" id="editor">
+    <form id="user-form" spellcheck="false">
+      <div class="drawer-bar"><h2>Tài khoản</h2></div>
+      <div class="drawer-body">
+        <label class="field"><span>Tên hiển thị</span><input name="name" required maxlength="150"></label>
+        <div class="pair">
+          <label class="field"><span>Vai trò</span>
+            <select name="role">
+              <option value="ADMIN">Quản trị</option>
+              <option value="USER">Người dùng</option>
+            </select>
+          </label>
+          <label class="field"><span>Trạng thái</span>
+            <select name="status">
+              <option value="ACTIVE">Đang dùng</option>
+              <option value="SUSPENDED">Đã khóa</option>
+              <option value="DELETED">Đã xóa</option>
+            </select>
+          </label>
+        </div>
+        <dl class="meta" id="user-account"></dl>
+        <div>
+          <p class="block-title">Hồ sơ CV</p>
+          <div id="user-cv-view"></div>
+        </div>
+        <div>
+          <p class="block-title">Nguyện vọng việc làm</p>
+          <div id="user-preference"></div>
+          <p class="fine">Người dùng tự sửa phần này. Mật khẩu nằm ở Firebase.</p>
+        </div>
+      </div>
+      <div class="drawer-actions">
+        <button class="btn ghost" type="button" data-close>Hủy</button>
+        <button class="btn" type="submit">Lưu</button>
+      </div>
+    </form>
+  </dialog>
+  <dialog class="modal" id="confirm">
+    <form method="dialog">
+      <div class="modal-bar"><h2>Khóa tài khoản?</h2></div>
+      <p></p>
+      <div class="modal-actions">
+        <button class="btn ghost" value="cancel">Hủy</button>
+        <button class="btn danger" value="ok">Khóa</button>
+      </div>
+    </form>
+  </dialog>
+  <script src="js/categories-data.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>

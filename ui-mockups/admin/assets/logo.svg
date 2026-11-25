@@ -1,0 +1,65 @@
+<svg width="1200" height="320" viewBox="0 0 1200 320" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="navy" x1="60" y1="70" x2="390" y2="250" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#163E70"/>
+      <stop offset="1" stop-color="#082149"/>
+    </linearGradient>
+    <linearGradient id="blue" x1="410" y1="70" x2="1120" y2="250" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#1687FF"/>
+      <stop offset="1" stop-color="#0867E8"/>
+    </linearGradient>
+  </defs>
+
+  <!-- JOB -->
+  <text x="66" y="225"
+        font-family="Inter, Arial, Helvetica, sans-serif"
+        font-size="170"
+        font-weight="800"
+        letter-spacing="-8"
+        fill="url(#navy)">Job</text>
+
+  <!-- Magnifying glass inside O -->
+  <circle cx="220" cy="173" r="39" fill="white"/>
+  <circle cx="220" cy="161" r="12" fill="#1687FF"/>
+  <path d="M198 195C202 180 211 175 220 175C229 175 238 180 242 195H198Z" fill="#1687FF"/>
+  <circle cx="220" cy="173" r="45" stroke="url(#navy)" stroke-width="12"/>
+  <path d="M252 205L284 237" stroke="url(#navy)" stroke-width="14" stroke-linecap="round"/>
+
+  <!-- BE -->
+  <text x="410" y="225"
+        font-family="Inter, Arial, Helvetica, sans-serif"
+        font-size="170"
+        font-weight="800"
+        letter-spacing="-7"
+        fill="url(#blue)">Be</text>
+
+  <!-- Lighthouse used as the A, centered and aligned with neighboring letters -->
+  <g transform="translate(655 78)">
+    <!-- symmetric light rays -->
+    <path d="M36 37L0 25V43L36 48V37Z" fill="#FFB32C"/>
+    <path d="M88 37L124 25V43L88 48V37Z" fill="#FFB32C"/>
+    <path d="M36 55L4 58V71L36 63V55Z" fill="#FFB32C"/>
+    <path d="M88 55L120 58V71L88 63V55Z" fill="#FFB32C"/>
+
+    <!-- roof -->
+    <path d="M62 0L87 23H37L62 0Z" fill="url(#blue)"/>
+
+    <!-- lamp room -->
+    <rect x="36" y="28" width="52" height="14" rx="5" fill="url(#blue)"/>
+
+    <!-- tower body -->
+    <path d="M46 48H78L96 147H28L46 48Z" fill="url(#blue)"/>
+
+    <!-- stripes -->
+    <path d="M41 74H83L87 91H37L41 74Z" fill="white"/>
+    <path d="M34 112H90L94 129H30L34 112Z" fill="white"/>
+  </g>
+
+  <!-- CON -->
+  <text x="776" y="225"
+        font-family="Inter, Arial, Helvetica, sans-serif"
+        font-size="170"
+        font-weight="800"
+        letter-spacing="-7"
+        fill="url(#blue)">con</text>
+</svg>
