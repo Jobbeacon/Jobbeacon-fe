@@ -1,4 +1,5 @@
-import { ApiError, apiClient } from '../../../shared/api/api-client'
+import { ApiError } from '../../../shared/api/api-client'
+import { backendService } from '../../../shared/api/backend.service'
 import type { ApiResponse } from '../../../shared/types/api.types'
 import type {
   CvEducationApiDto,
@@ -17,58 +18,27 @@ import type {
   UserProfileApiDto,
 } from '../types/candidate-profile.types'
 
-const CURRENT_USER_ENDPOINT = '/api/v1/users/me'
-const JOB_PREFERENCE_ENDPOINT = '/api/v1/me/job-preference'
-const CV_PROFILE_ENDPOINT = '/api/v1/me/cv-profile'
-const SKILLS_ENDPOINT = '/api/v1/skills'
+const CURRENT_USER_ENDPOINT = '/users/me'
+const JOB_PREFERENCE_ENDPOINT = '/me/job-preference'
+const CV_PROFILE_ENDPOINT = '/me/cv-profile'
+const SKILLS_ENDPOINT = '/skills'
 const SKILL_SEARCH_LIMIT = 10
 // Trích xuất CV chạy đồng bộ, có thể mất ~30–40s.
 const CV_EXTRACT_TIMEOUT_MS = 90_000
 const CV_PROFILE_NOT_FOUND = 'cv_profile_not_found'
 
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null
-}
-
-function getProfilePayload(response: unknown) {
-  if (!isRecord(response)) {
-    throw new ApiError('Dữ liệu người dùng từ máy chủ không hợp lệ.', 500)
-  }
-
-  if ('data' in response && isRecord(response.data)) {
-    return response.data as UserProfileApiDto
-  }
-
-  return response as UserProfileApiDto
-}
-
-function normalizeUserProfile(profile: UserProfileApiDto): UserProfile {
-  const resolvedRoles = Array.isArray(profile.roles)
-    ? profile.roles
-    : profile.role
-      ? [profile.role]
-      : []
-
+function toUserProfile(dto: UserProfileApiDto): UserProfile {
   return {
-    id: profile.id === undefined ? '' : String(profile.id),
-    firebaseUid: profile.firebaseUid ?? profile.uid ?? null,
-    email: profile.email ?? '',
-    fullName: profile.fullName ?? profile.displayName ?? profile.name ?? '',
-    avatarUrl: profile.avatarUrl ?? profile.photoUrl ?? null,
-    roles: resolvedRoles,
-    emailVerified: profile.emailVerified ?? null,
-    status: profile.status ?? null,
-    createdAt: profile.createdAt ?? null,
-    updatedAt: profile.updatedAt ?? null,
+    id: dto.id,
+    email: dto.email ?? '',
+    fullName: dto.display_name ?? '',
+    avatarUrl: dto.avatar_url ?? null,
   }
 }
 
 export async function getCurrentUserProfile(signal?: AbortSignal) {
-  const response = await apiClient.get<
-    UserProfileApiDto | ApiResponse<UserProfileApiDto>
-  >(CURRENT_USER_ENDPOINT, { signal })
-
-  return normalizeUserProfile(getProfilePayload(response))
+  const response = await backendService.get<ApiResponse<UserProfileApiDto>>(CURRENT_USER_ENDPOINT, { signal })
+  return toUserProfile(response.data)
 }
 
 function toJobPreference(dto: JobPreferenceApiDto): JobPreference {
@@ -147,14 +117,14 @@ function isCvProfileNotFound(error: unknown) {
 }
 
 export async function getJobPreference(signal?: AbortSignal) {
-  const response = await apiClient.get<ApiResponse<JobPreferenceApiDto>>(JOB_PREFERENCE_ENDPOINT, {
+  const response = await backendService.get<ApiResponse<JobPreferenceApiDto>>(JOB_PREFERENCE_ENDPOINT, {
     signal,
   })
   return toJobPreference(response.data)
 }
 
 export async function updateJobPreference(request: JobPreferenceRequestDto, signal?: AbortSignal) {
-  const response = await apiClient.put<ApiResponse<JobPreferenceApiDto>>(
+  const response = await backendService.put<ApiResponse<JobPreferenceApiDto>>(
     JOB_PREFERENCE_ENDPOINT,
     request,
     { signal },
@@ -165,7 +135,7 @@ export async function updateJobPreference(request: JobPreferenceRequestDto, sign
 /** Trả về null khi user chưa có CV profile. */
 export async function getCvProfile(signal?: AbortSignal) {
   try {
-    const response = await apiClient.get<ApiResponse<CvProfileApiDto>>(CV_PROFILE_ENDPOINT, { signal })
+    const response = await backendService.get<ApiResponse<CvProfileApiDto>>(CV_PROFILE_ENDPOINT, { signal })
     return toCvProfile(response.data)
   } catch (error) {
     if (isCvProfileNotFound(error)) return null
@@ -179,7 +149,7 @@ export async function extractCvProfile(file: File, signal?: AbortSignal) {
 
   const timeoutSignal = AbortSignal.timeout(CV_EXTRACT_TIMEOUT_MS)
   try {
-    const response = await apiClient.post<ApiResponse<CvProfileApiDto>>(
+    const response = await backendService.post<ApiResponse<CvProfileApiDto>>(
       `${CV_PROFILE_ENDPOINT}/extract`,
       formData,
       { signal: signal ? AbortSignal.any([signal, timeoutSignal]) : timeoutSignal },
@@ -198,21 +168,21 @@ export async function extractCvProfile(file: File, signal?: AbortSignal) {
 /** Xóa CV profile; coi như thành công nếu profile đã không tồn tại. */
 export async function deleteCvProfile(signal?: AbortSignal) {
   try {
-    await apiClient.delete<ApiResponse<null>>(CV_PROFILE_ENDPOINT, { signal })
+    await backendService.delete<ApiResponse<null>>(CV_PROFILE_ENDPOINT, { signal })
   } catch (error) {
     if (!isCvProfileNotFound(error)) throw error
   }
 }
 
 export async function deleteCvProfileSkill(skillId: string, signal?: AbortSignal) {
-  await apiClient.delete<ApiResponse<null>>(
+  await backendService.delete<ApiResponse<null>>(
     `${CV_PROFILE_ENDPOINT}/skills/${encodeURIComponent(skillId)}`,
     { signal },
   )
 }
 
 export async function getCvProfileSkills(signal?: AbortSignal) {
-  const response = await apiClient.get<ApiResponse<CvProfileSkillsApiDto>>(`${CV_PROFILE_ENDPOINT}/skills`, {
+  const response = await backendService.get<ApiResponse<CvProfileSkillsApiDto>>(`${CV_PROFILE_ENDPOINT}/skills`, {
     signal,
   })
   return toCvProfileSkills(response.data)
@@ -220,7 +190,7 @@ export async function getCvProfileSkills(signal?: AbortSignal) {
 
 /** Thêm skill tay; chưa có profile thì backend tự tạo profile rỗng (has_cv = false). */
 export async function addCvProfileSkill(skillId: string, signal?: AbortSignal) {
-  const response = await apiClient.post<ApiResponse<CvProfileSkillsApiDto>>(
+  const response = await backendService.post<ApiResponse<CvProfileSkillsApiDto>>(
     `${CV_PROFILE_ENDPOINT}/skills`,
     { skill_id: skillId },
     { signal },
@@ -233,7 +203,7 @@ export async function searchSkills(query: string, signal?: AbortSignal) {
   if (!q) return [] as SkillSearchItem[]
 
   const params = new URLSearchParams({ q, limit: String(SKILL_SEARCH_LIMIT) })
-  const response = await apiClient.get<ApiResponse<SkillSearchItem[]>>(`${SKILLS_ENDPOINT}?${params}`, {
+  const response = await backendService.get<ApiResponse<SkillSearchItem[]>>(`${SKILLS_ENDPOINT}?${params}`, {
     signal,
   })
   return response.data ?? []

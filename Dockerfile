@@ -19,7 +19,9 @@ RUN if [ "$APP_TARGET" = "admin" ]; then \
     fi
 
 
-FROM nginx:alpine
+# Pinned: 1.31.9 fixes the November 2026 advisories, including CVE-2026-123634 (resolver + variable in proxy_pass,
+# the pattern nginx.conf uses). Bump it when nginx.org publishes a new security advisory.
+FROM nginx:1.31.9-alpine
 
 RUN apk add --no-cache gettext
 

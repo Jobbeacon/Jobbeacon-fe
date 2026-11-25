@@ -1,4 +1,4 @@
-import { apiClient } from '../../../shared/api/api-client'
+import { backendService } from '../../../shared/api/backend.service'
 import type { ApiResponse } from '../../../shared/types/api.types'
 import type {
   CategoryNode,
@@ -16,10 +16,11 @@ import type {
   JobSummary,
   JobSummaryApiDto,
 } from '../types/job.types'
+import { getCategoryPaths } from '../utils/category'
 
-const JOBS_ENDPOINT = '/api/v1/jobs'
-const LOCATIONS_ENDPOINT = '/api/v1/locations'
-const CATEGORIES_ENDPOINT = '/api/v1/categories'
+const JOBS_ENDPOINT = '/jobs'
+const LOCATIONS_ENDPOINT = '/locations'
+const CATEGORIES_ENDPOINT = '/categories'
 const SIMILAR_JOBS_LIMIT = 4
 
 type PageApiDto<T> = {
@@ -56,7 +57,6 @@ export function toJobSummary(job: JobSummaryApiDto): JobSummary {
     minSalary: job.min_salary,
     maxSalary: job.max_salary,
     currency: job.currency,
-    skills: [],
     postedDate: job.posted_date,
   }
 }
@@ -77,6 +77,7 @@ function toJobDetail(job: JobDetailApiDto): JobDetail {
       ? { id: job.company.id, name: job.company.name, logoUrl: job.company.logo_url }
       : null,
     descriptionHtml: job.description ?? '',
+    benefitsHtml: job.benefits ?? '',
     experienceMonths: job.experience_months,
     employmentType: job.employment_type,
     expiredDate: job.expired_date,
@@ -87,7 +88,7 @@ function toJobDetail(job: JobDetailApiDto): JobDetail {
 }
 
 export async function getJobFacets(signal?: AbortSignal) {
-  const response = await apiClient.get<ApiResponse<JobFacets>>(`${JOBS_ENDPOINT}/facets`, {
+  const response = await backendService.get<ApiResponse<JobFacets>>(`${JOBS_ENDPOINT}/facets`, {
     signal,
     authenticated: false,
   })
@@ -95,7 +96,7 @@ export async function getJobFacets(signal?: AbortSignal) {
 }
 
 export async function getJobSources(signal?: AbortSignal) {
-  const response = await apiClient.get<ApiResponse<FacetItem[]>>(`${JOBS_ENDPOINT}/sources`, {
+  const response = await backendService.get<ApiResponse<FacetItem[]>>(`${JOBS_ENDPOINT}/sources`, {
     signal,
     authenticated: false,
   })
@@ -103,7 +104,7 @@ export async function getJobSources(signal?: AbortSignal) {
 }
 
 export async function getCategories(signal?: AbortSignal) {
-  const response = await apiClient.get<ApiResponse<CategoryNode[]>>(CATEGORIES_ENDPOINT, {
+  const response = await backendService.get<ApiResponse<CategoryNode[]>>(CATEGORIES_ENDPOINT, {
     signal,
     authenticated: false,
   })
@@ -111,7 +112,7 @@ export async function getCategories(signal?: AbortSignal) {
 }
 
 export async function getProvinces(signal?: AbortSignal) {
-  const response = await apiClient.get<ApiResponse<LocationItem[]>>(`${LOCATIONS_ENDPOINT}/provinces`, {
+  const response = await backendService.get<ApiResponse<LocationItem[]>>(`${LOCATIONS_ENDPOINT}/provinces`, {
     signal,
     authenticated: false,
   })
@@ -119,7 +120,7 @@ export async function getProvinces(signal?: AbortSignal) {
 }
 
 export async function getWards(provinceId: string, signal?: AbortSignal) {
-  const response = await apiClient.get<ApiResponse<LocationItem[]>>(
+  const response = await backendService.get<ApiResponse<LocationItem[]>>(
     `${LOCATIONS_ENDPOINT}/provinces/${encodeURIComponent(provinceId)}/wards`,
     { signal, authenticated: false },
   )
@@ -127,7 +128,7 @@ export async function getWards(provinceId: string, signal?: AbortSignal) {
 }
 
 export async function getJobDetail(jobId: string, signal?: AbortSignal) {
-  const response = await apiClient.get<ApiResponse<JobDetailApiDto>>(
+  const response = await backendService.get<ApiResponse<JobDetailApiDto>>(
     `${JOBS_ENDPOINT}/${encodeURIComponent(jobId)}`,
     { signal, authenticated: false },
   )
@@ -164,37 +165,60 @@ export async function searchJobs(query: JobSearchParams, signal?: AbortSignal): 
   appendList(params, 'sources', query.sources)
   if (query.sortBy && query.sortBy !== 'posted_date') params.set('sort_by', query.sortBy)
 
-  const response = await apiClient.get<ApiResponse<PageApiDto<JobSummaryApiDto>>>(
+  const response = await backendService.get<ApiResponse<PageApiDto<JobSummaryApiDto>>>(
     `${JOBS_ENDPOINT}?${params}`,
     { signal, authenticated: false },
   )
   return { jobs: response.data.content.map(toJobSummary), total: response.data.amount }
 }
 
+const emptySearch: Omit<JobSearchParams, 'page' | 'size'> = {
+  keyword: '',
+  location: '',
+  locations: [],
+  categories: [],
+  skills: [],
+  minSalary: '',
+  maxSalary: '',
+  experience: [],
+  employmentTypes: [],
+  postedWithin: [],
+  sources: [],
+  sortBy: 'posted_date',
+}
+
 export async function getLatestJobs(limit: number, signal?: AbortSignal) {
-  const { jobs } = await searchJobs(
-    {
-      keyword: '',
-      location: '',
-      locations: [],
-      categories: [],
-      skills: [],
-      minSalary: '',
-      maxSalary: '',
-      experience: [],
-      employmentTypes: [],
-      postedWithin: [],
-      sources: [],
-      sortBy: 'posted_date',
-      page: 1,
-      size: limit,
-    },
-    signal,
-  )
+  const { jobs } = await searchJobs({ ...emptySearch, page: 1, size: limit }, signal)
   return jobs
 }
 
-export async function getSimilarJobs(jobId: string, signal?: AbortSignal) {
-  const jobs = await getLatestJobs(SIMILAR_JOBS_LIMIT + 1, signal)
-  return jobs.filter((job) => job.id !== jobId).slice(0, SIMILAR_JOBS_LIMIT)
+export async function getJobsByCategory(category: string, limit: number, signal?: AbortSignal) {
+  return searchJobs({ ...emptySearch, categories: [category], page: 1, size: limit }, signal)
+}
+
+// Bộ lọc của API phân tách bằng dấu phẩy nên bỏ các tên có chứa dấu phẩy.
+function withoutComma(names: string[]) {
+  return names.filter((name) => !name.includes(','))
+}
+
+/** Job cùng ngành nghề sâu nhất trước, thiếu thì bù bằng job có chung kỹ năng. */
+export async function getSimilarJobs(job: JobDetail, signal?: AbortSignal) {
+  const categories = withoutComma(getCategoryPaths(job.categories).map((path) => path[path.length - 1].name))
+  const skills = withoutComma(job.skills.map((skill) => skill.name))
+  const filters = [
+    ...(categories.length > 0 ? [{ categories }] : []),
+    ...(skills.length > 0 ? [{ skills }] : []),
+  ]
+
+  const similar = new Map<string, JobSummary>()
+  for (const filter of filters) {
+    // Kết quả có thể chứa chính job đang xem và các job đã lấy ở lượt trước.
+    const size = SIMILAR_JOBS_LIMIT + similar.size + 1
+    const { jobs } = await searchJobs({ ...emptySearch, ...filter, page: 1, size }, signal)
+    for (const item of jobs) {
+      if (item.id !== job.id && similar.size < SIMILAR_JOBS_LIMIT) similar.set(item.id, item)
+    }
+    if (similar.size >= SIMILAR_JOBS_LIMIT) break
+  }
+  return [...similar.values()]
 }

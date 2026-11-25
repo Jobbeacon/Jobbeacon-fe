@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import {
   ArrowRight,
   BriefcaseBusiness,
@@ -18,11 +18,12 @@ import {
   formatSalaryPeriod,
   formatSalaryRange,
 } from '../../../shared/utils/format'
-import { sanitizeHtml } from '../../../shared/utils/sanitize-html'
+import { sanitizeHtml, toComparableText } from '../../../shared/utils/sanitize-html'
 import { useSavedJob } from '../../saved-jobs/hooks/useSavedJob'
 import { CompanyLogo } from '../components/CompanyLogo'
 import { JobCard } from '../components/JobCard'
 import { useJobDetail } from '../hooks/useJobDetail'
+import { useTrackJobInteraction } from '../hooks/useTrackJobInteraction'
 import { getCategoryPaths } from '../utils/category'
 import type { JobDetail } from '../types/job.types'
 import styles from './JobDetailPage.module.css'
@@ -37,15 +38,41 @@ function JobDescription({ html }: { html: string }) {
   return <div className={styles.prose} dangerouslySetInnerHTML={{ __html: safeHtml }} />
 }
 
+function JobBenefits({ html, descriptionHtml }: { html: string; descriptionHtml: string }) {
+  const safeHtml = useMemo(() => sanitizeHtml(html), [html])
+  // Một số nguồn đã gộp phúc lợi vào mô tả: không hiện lại lần nữa.
+  const isVisible = useMemo(() => {
+    const benefits = toComparableText(html)
+    return benefits !== '' && !toComparableText(descriptionHtml).includes(benefits)
+  }, [html, descriptionHtml])
+
+  if (!isVisible) return null
+
+  return (
+    <section>
+      <h2 className={styles.contentHeading}>Phúc lợi</h2>
+      <div className={styles.prose} dangerouslySetInnerHTML={{ __html: safeHtml }} />
+    </section>
+  )
+}
+
 function JobDetailContent({ job }: { job: JobDetail }) {
   const { isSaved, toggleSaved } = useSavedJob(job.id)
+  const trackInteraction = useTrackJobInteraction()
   const salary = formatSalaryRange(job.minSalary, job.maxSalary, job.currency)
   const salaryPeriod = formatSalaryPeriod(job.salaryPeriod)
-  const employmentType = formatEmploymentType(job.employmentType)
-  const [primarySource, ...otherSources] = job.sources
+  const workInfo = [formatEmploymentType(job.employmentType), formatExperience(job.experienceMonths)]
+    .filter(Boolean)
+    .join(' · ')
+  const primarySource = job.sources.at(0)
   const companyName = job.company?.name ?? job.companyName
   const categoryPaths = getCategoryPaths(job.categories)
   const companyMeta = [job.categories[0]?.name, job.location[0]].filter(Boolean).join(' · ')
+
+  // Re-runs once auth resolves, so a signed-in user's view still counts; the backend ignores quick repeats.
+  useEffect(() => {
+    trackInteraction(job.id, 'VIEWED')
+  }, [job.id, trackInteraction])
 
   return (
     <div className={styles.layout}>
@@ -90,10 +117,12 @@ function JobDetailContent({ job }: { job: JobDetail }) {
               {job.location.join(' · ')}
             </li>
           ) : null}
-          <li>
-            <BriefcaseBusiness aria-hidden="true" />
-            {[employmentType, formatExperience(job.experienceMonths)].filter(Boolean).join(' · ')}
-          </li>
+          {workInfo ? (
+            <li>
+              <BriefcaseBusiness aria-hidden="true" />
+              {workInfo}
+            </li>
+          ) : null}
           {job.postedDate ? (
             <li>
               <Clock3 aria-hidden="true" />
@@ -111,17 +140,13 @@ function JobDetailContent({ job }: { job: JobDetail }) {
         {primarySource ? (
           <p className={styles.sourceRow}>
             <span className={styles.source}>
-              Nguồn: {primarySource.name}
+              Nguồn: {job.sources.map((source) => source.name).join(', ')}
             </span>
-            {otherSources.length > 0 ? (
-              <span className={styles.dupNote}>
-                Cũng thấy trên {otherSources.map((source) => source.name).join(', ')} · đã gộp trùng
-              </span>
-            ) : null}
           </p>
         ) : null}
 
         <JobDescription html={job.descriptionHtml} />
+        <JobBenefits html={job.benefitsHtml} descriptionHtml={job.descriptionHtml} />
       </article>
 
       <aside className={styles.side}>
@@ -129,7 +154,13 @@ function JobDetailContent({ job }: { job: JobDetail }) {
           <small className={styles.priceLabel}>Mức lương</small>
           <div className={styles.price}>{salary}</div>
           {primarySource?.url ? (
-            <a className={styles.btnPrimary} href={primarySource.url} target="_blank" rel="noopener noreferrer">
+            <a
+              className={styles.btnPrimary}
+              href={primarySource.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => trackInteraction(job.id, 'APPLY_CLICKED')}
+            >
               Ứng tuyển trên {primarySource.name} <ArrowRight aria-hidden="true" />
             </a>
           ) : null}
@@ -142,7 +173,7 @@ function JobDetailContent({ job }: { job: JobDetail }) {
             <Heart aria-hidden="true" /> {isSaved ? 'Đã lưu việc làm' : 'Lưu việc làm'}
           </button>
           <p className={styles.applyNote}>
-            JobBeacon là nền tảng tổng hợp. Nút ứng tuyển sẽ mở tin gốc để bạn nộp hồ sơ tại nguồn tuyển dụng.
+            Nút ứng tuyển sẽ mở tin gốc để bạn nộp hồ sơ tại nguồn tuyển dụng.
           </p>
         </div>
 
@@ -196,7 +227,6 @@ export function JobDetailPage() {
             <section className={styles.similar}>
               <div className={styles.sectionHead}>
                 <h2>Việc làm tương tự</h2>
-                <Link to="/jobs">Xem thêm →</Link>
               </div>
               <div className={styles.jobGrid}>
                 {similarJobs.map((similarJob) => (

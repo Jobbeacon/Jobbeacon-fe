@@ -5,7 +5,7 @@
 Tạo file `.env.local` ở thư mục gốc và điền cấu hình Web App lấy từ Firebase Console:
 
 ```dotenv
-VITE_API_BASE_URL=http://localhost:8080
+VITE_API_BASE_URL=http://localhost:8088
 VITE_FIREBASE_API_KEY=your_api_key
 VITE_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
 VITE_FIREBASE_PROJECT_ID=your_project_id
@@ -14,7 +14,7 @@ VITE_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
 VITE_FIREBASE_APP_ID=your_app_id
 ```
 
-`VITE_API_BASE_URL` có thể để trống nếu frontend và backend cùng origin. Mọi request
+`VITE_API_BASE_URL` là địa chỉ gateway (`../Jobbeacon-gateway`); có thể để trống nếu frontend và gateway cùng origin (nginx của image proxy `/jobbeacon-be/` và `/jobbeacon-recommendation/` tới gateway). Endpoint có prefix là tên service, ví dụ `/jobbeacon-be/api/v1/jobs`. Mọi request
 backend đi qua `src/shared/api/api-client.ts`; các endpoint cần xác thực sẽ tự gắn
 Firebase ID token vào header `Authorization: Bearer <token>`.
 
@@ -37,7 +37,7 @@ Các màn xác thực hiện có:
 - `/login`: đăng nhập email/mật khẩu hoặc Google.
 - `/register`: tạo tài khoản email/mật khẩu và lưu họ tên vào Firebase profile.
 - `/forgot-password`: gửi email đặt lại mật khẩu.
-- `/profile`: lấy thông tin tài khoản từ `GET /api/v1/users/me`.
+- `/profile`: lấy thông tin tài khoản từ `GET /jobbeacon-be/api/v1/users/me`.
 
 ## Trang quản trị (Admin)
 

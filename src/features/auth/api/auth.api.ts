@@ -11,11 +11,25 @@ import {
 } from 'firebase/auth'
 import type { User } from 'firebase/auth'
 import { getFirebaseAuth } from '../../../app/config/firebase'
+import { backendService } from '../../../shared/api/backend.service'
 import type {
   AuthenticatedUser,
   LoginCredentials,
   RegisterCredentials,
 } from '../types/auth.types'
+
+const CURRENT_USER_ENDPOINT = '/users/me'
+
+// Backend chỉ tạo/đồng bộ user (email, tên, avatar) ở GET /jobbeacon-be/api/v1/users/me; các API khác chỉ đọc
+// X-User-Id và trả 401 nếu user chưa tồn tại. Vì vậy phải gọi hàm này ngay sau khi đăng nhập.
+// Các lần gọi được xếp hàng nối tiếp để backend không tạo trùng user khi hai lần gọi chạy song song.
+let syncQueue: Promise<unknown> = Promise.resolve()
+
+export function syncCurrentUser(): Promise<void> {
+  const run = syncQueue.catch(() => undefined).then(() => backendService.get(CURRENT_USER_ENDPOINT))
+  syncQueue = run
+  return run.then(() => undefined)
+}
 
 const googleProvider = new GoogleAuthProvider()
 googleProvider.setCustomParameters({ prompt: 'select_account' })
@@ -32,11 +46,13 @@ export function mapFirebaseUser(user: User): AuthenticatedUser {
 
 export async function loginWithEmail({ email, password }: LoginCredentials) {
   const credential = await signInWithEmailAndPassword(getFirebaseAuth(), email.trim(), password)
+  await syncCurrentUser()
   return mapFirebaseUser(credential.user)
 }
 
 export async function loginWithGoogle() {
   const credential = await signInWithPopup(getFirebaseAuth(), googleProvider)
+  await syncCurrentUser()
   return mapFirebaseUser(credential.user)
 }
 
@@ -52,6 +68,9 @@ export async function registerWithEmail({
   )
 
   await updateProfile(credential.user, { displayName: fullName.trim() })
+  // Token cũ chưa có họ tên: làm mới token để gateway gửi X-User-Name khi đồng bộ user.
+  await credential.user.getIdToken(true)
+  await syncCurrentUser()
   return mapFirebaseUser(credential.user)
 }
 

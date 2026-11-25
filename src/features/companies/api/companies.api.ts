@@ -1,4 +1,4 @@
-import { apiClient } from '../../../shared/api/api-client'
+import { backendService } from '../../../shared/api/backend.service'
 import type { ApiResponse } from '../../../shared/types/api.types'
 import type {
   Company,
@@ -9,7 +9,7 @@ import type {
 import type { JobSummary, JobSummaryApiDto } from '../../jobs/types/job.types'
 import { toJobSummary } from '../../jobs/api/jobs.api'
 
-const COMPANIES_ENDPOINT = '/api/v1/companies'
+const COMPANIES_ENDPOINT = '/companies'
 
 type PageApiDto<T> = {
   content: T[]
@@ -38,7 +38,7 @@ export async function searchCompanies(
   const params = new URLSearchParams({ page: String(page), size: String(size) })
   if (keyword.trim()) params.set('keyword', keyword.trim())
 
-  const response = await apiClient.get<ApiResponse<PageApiDto<CompanySummaryApiDto>>>(
+  const response = await backendService.get<ApiResponse<PageApiDto<CompanySummaryApiDto>>>(
     `${COMPANIES_ENDPOINT}?${params}`,
     { signal, authenticated: false },
   )
@@ -46,7 +46,7 @@ export async function searchCompanies(
 }
 
 export async function getCompanyDetail(companyId: string, signal?: AbortSignal): Promise<Company> {
-  const response = await apiClient.get<ApiResponse<CompanySummaryApiDto>>(
+  const response = await backendService.get<ApiResponse<CompanySummaryApiDto>>(
     `${COMPANIES_ENDPOINT}/${encodeURIComponent(companyId)}`,
     { signal, authenticated: false },
   )
@@ -60,7 +60,7 @@ export async function getCompanyJobs(
   signal?: AbortSignal,
 ): Promise<{ jobs: JobSummary[]; total: number }> {
   const params = new URLSearchParams({ page: String(page), size: String(size) })
-  const response = await apiClient.get<ApiResponse<PageApiDto<JobSummaryApiDto>>>(
+  const response = await backendService.get<ApiResponse<PageApiDto<JobSummaryApiDto>>>(
     `${COMPANIES_ENDPOINT}/${encodeURIComponent(companyId)}/jobs?${params}`,
     { signal, authenticated: false },
   )

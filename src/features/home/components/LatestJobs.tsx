@@ -3,7 +3,7 @@ import { JobCard } from "../../jobs/components/JobCard";
 import { useLatestJobs } from "../hooks/useLatestJobs";
 import styles from "./LatestJobs.module.css";
 
-const LATEST_JOBS_LIMIT = 4;
+const LATEST_JOBS_LIMIT = 8;
 
 export default function LatestJobs() {
   const { jobs, isLoading, error, retry } = useLatestJobs(LATEST_JOBS_LIMIT);

@@ -33,16 +33,18 @@ export function useJobDetail(jobId: string) {
   useEffect(() => {
     const controller = new AbortController()
 
-    void Promise.all([
-      getJobDetail(jobId, controller.signal),
-      getSimilarJobs(jobId, controller.signal).catch((error: unknown) => {
-        // Danh sách tương tự chỉ là phần phụ, lỗi thì bỏ qua để trang chi tiết vẫn hiển thị.
-        if (error instanceof DOMException && error.name === 'AbortError') throw error
-        return []
-      }),
-    ])
-      .then(([job, similarJobs]) => {
-        setState({ requestKey, job, similarJobs, error: null })
+    void getJobDetail(jobId, controller.signal)
+      .then((job) => {
+        if (controller.signal.aborted) return
+        setState({ requestKey, job, similarJobs: [], error: null })
+
+        // Danh sách tương tự chỉ là phần phụ: tải sau, lỗi thì bỏ qua để trang chi tiết vẫn hiển thị.
+        void getSimilarJobs(job, controller.signal)
+          .then((similarJobs) => {
+            if (controller.signal.aborted) return
+            setState((current) => (current.requestKey === requestKey ? { ...current, similarJobs } : current))
+          })
+          .catch(() => undefined)
       })
       .catch((error: unknown) => {
         if (error instanceof DOMException && error.name === 'AbortError') {
