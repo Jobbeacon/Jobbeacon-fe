@@ -17,8 +17,7 @@ npm run preview    # serve dist/ locally
 npm run dev:admin      # admin site dev server on :5174 (vite.admin.config.ts)
 npm run build:admin    # tsc -b + admin build → dist-admin/
 npm run preview:admin
-docker build -t jobbeacon-fe .                                      # user site
-docker build --build-arg APP_TARGET=admin -t jobbeacon-admin .     # admin site
+docker build -t jobbeacon-fe .   # one image, both sites: user on :80, admin on :8080
 ```
 
 There is no test runner configured (`src/test/` only has a setup file and mocks). "Done" means `npm run lint` and `npm run build` pass (plus `npm run build:admin` when admin code or shared code is touched); CI runs lint and build. Component files export only components (`react-refresh/only-export-components`): put shared helpers in the feature's `utils/`. `src/features/jobs/components/LocationPicker.tsx` has 2 pre-existing react-refresh lint errors.
@@ -26,8 +25,8 @@ There is no test runner configured (`src/test/` only has a setup file and mocks)
 ## Configuration
 
 - Env vars (see `.env.example`): `VITE_API_BASE_URL` (the gateway; empty = same origin as the FE), the `VITE_FIREBASE_*` web-app config, `VITE_USER_SITE_URL` (admin only: base URL of the user site for "view on site" links; empty hides them), and `VITE_GRAFANA_URL` (admin only: base URL of Grafana for the "Giám sát hệ thống" page; empty hides its content). Local overrides go in `.env.local`. `.env*` files are gitignored, except `.env.example`.
-- Runtime config: `index.html` loads `/env.js`, which sets `window.__ENV__`. `src/app/config/env.ts` reads `window.__ENV__` first, then `import.meta.env`. In Docker, `docker-entrypoint.sh` renders `env.template.js` with `envsubst` into `/usr/share/nginx/html/env.js`, so one image works for every environment.
-- `nginx.conf` (copied to `/etc/nginx/conf.d/default.conf`):
+- Runtime config: `index.html` loads `/env.js`, which sets `window.__ENV__`. `src/app/config/env.ts` reads `window.__ENV__` first, then `import.meta.env`. In Docker, `docker-entrypoint.sh` renders `env.template.js` with `envsubst` into `env.js` under both nginx roots, so one image works for every environment.
+- One Docker image builds and serves both sites (see Dockerfile): the build stage runs `npm run build` and `npm run build:admin`, then nginx serves `dist/` on port 80 and `dist-admin/` on port 8080. `nginx.conf` (copied to `/etc/nginx/conf.d/default.conf`) holds two `server` blocks, one per port/root, each `include`-ing the shared rules in `nginx-common.conf` (copied to `/etc/nginx/common.conf`) so the two stay in sync instead of drifting:
   - Uses Docker's DNS resolver and `set $api_upstream gateway:8088`, so the gateway service must be named `gateway`.
   - `index.html` and `env.js` are not cached; `/assets/` is cached immutable.
   - `^~ /jobbeacon-be/` and `^~ /jobbeacon-recommendation/` are proxied unchanged to `gateway:8088` (`$api_upstream`).
