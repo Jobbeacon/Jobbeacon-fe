@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { Pager, SearchInput, StatRow, useConfirm, useToast } from '../../../shared/components/admin'
 import type { StatCard } from '../../../shared/components/admin'
-import { EMPLOYMENT_LABEL } from '../../../shared/utils/admin-format'
+import { EMPLOYMENT_LABEL, SOURCE_LABEL } from '../../../shared/utils/admin-format'
 import { deleteJob, getJobStats, listJobs } from '../api/admin-jobs.api'
 import { JobEditor } from '../components/JobEditor'
 import { JobTable } from '../components/JobTable'
@@ -10,7 +10,7 @@ import { useLoad } from '../hooks/useLoad'
 import type { JobCrawled, JobQuery, JobRow, JobSort, JobStatus } from '../types/admin-job.types'
 
 const PAGE_SIZE = 20
-const SOURCES = ['topcv.vn', 'itviec.com']
+const SOURCES = Object.keys(SOURCE_LABEL)
 const SORTS: [JobSort, string][] = [
   ['new', 'Crawl mới nhất'],
   ['old', 'Crawl cũ nhất'],
