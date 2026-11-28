@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, type ReactNode } from 'react'
 import { Bot, BriefcaseBusiness, Building2, ChartBar, Heart, Menu, Sparkles, UserRound, X } from 'lucide-react'
 import { NavLink } from 'react-router-dom'
 import logo from '../../../../assets/logo/jobbeacon-logo.svg'
@@ -22,7 +22,12 @@ function getInitials(name: string | null, email: string | null) {
     .join('')
 }
 
-export default function Header() {
+type HeaderProps = {
+  /** Nội dung gắn cạnh avatar khi đã đăng nhập (vd. chuông thông báo, do app layer truyền vào). */
+  authenticatedActions?: ReactNode
+}
+
+export default function Header({ authenticatedActions }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const { user, isInitializing, pendingAction, logout } = useAuth()
 
@@ -69,6 +74,8 @@ export default function Header() {
 
         <div className={styles.accountActions}>
           {user ? (
+            <>
+            {authenticatedActions}
             <div className={styles.userChip}>
               <button className={styles.userChipTrigger} type="button" aria-haspopup="menu">
                 {user.photoUrl ? (
@@ -94,6 +101,7 @@ export default function Header() {
                 </button>
               </div>
             </div>
+            </>
           ) : isInitializing ? null : (
             <>
               <NavLink className={styles.loginButton} to="/login">Đăng nhập</NavLink>
