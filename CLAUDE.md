@@ -29,6 +29,11 @@ There is no test runner configured (`src/test/` only has a setup file and mocks)
 - One Docker image builds and serves both sites (see Dockerfile): the build stage runs `npm run build` and `npm run build:admin`, then nginx serves `dist/` on port 80 and `dist-admin/` on port 8080. `nginx.conf` (copied to `/etc/nginx/conf.d/default.conf`) holds two `server` blocks, one per port/root, each `include`-ing the shared rules in `nginx-common.conf` (copied to `/etc/nginx/common.conf`) so the two stay in sync instead of drifting:
   - Uses Docker's DNS resolver and `set $api_upstream gateway:8088`, so the gateway service must be named `gateway`.
   - `index.html` and `env.js` are not cached; `/assets/` is cached immutable.
+  - `^~ /api/api/` rewrites to `/api/` for a doubled prefix.
+  - `set $gateway_upstream gateway:8088`: `^~ /jobbeacon-notification/` is proxied as-is (prefix kept) to the API gateway service `gateway`; `Authorization` is forwarded.
+  - `= /jobbeacon-notification/api/v1/me/notifications/stream` (SSE): `proxy_buffering off`, `gzip off`, HTTP/1.1 with `Connection ""`, `proxy_read_timeout 1h`.
+  - `/api/` is proxied to the backend.
+  - Exact-match blocks for `/api/v1/chat/stream` (and the `/api/api/` variant) turn off buffering and gzip for SSE.
   - `^~ /jobbeacon-be/` and `^~ /jobbeacon-recommendation/` are proxied unchanged to `gateway:8088` (`$api_upstream`).
   - The exact-match block for `/jobbeacon-be/api/v1/chat/stream` turns off buffering and gzip for SSE.
   - Falls back to the SPA `index.html`.

@@ -10,11 +10,13 @@ import { ForgotPasswordPage } from '../features/auth/pages/ForgotPasswordPage'
 import { CandidateProfilePage } from '../features/candidate-profile/pages/CandidateProfilePage'
 import { CareerChatPage } from '../features/career-chat/pages/CareerChatPage'
 import { SavedJobsPage } from '../features/saved-jobs/pages/SavedJobsPage'
+import { NotificationsPage } from '../features/notifications/pages/NotificationsPage'
 import { RecommendationsPage } from '../features/recommendations/pages/RecommendationsPage'
 import { MarketPage } from '../features/market-insights/pages/MarketPage'
 import { NotFoundPage } from '../shared/components/common/NotFoundPage'
 import { AuthGuard } from './router/guards/AuthGuard'
 import { MainLayout } from './layouts/MainLayout'
+import { ROUTE_PATHS } from './router/route-paths'
 
 // Data router (thay cho BrowserRouter) để các trang dùng được useBlocker — xem trang JobBeacon Agent.
 const router = createBrowserRouter(
@@ -48,6 +50,22 @@ const router = createBrowserRouter(
           element={
             <AuthGuard>
               <SavedJobsPage />
+            </AuthGuard>
+          }
+        />
+        <Route
+          path={ROUTE_PATHS.NOTIFICATIONS}
+          element={
+            <AuthGuard>
+              <NotificationsPage />
+            </AuthGuard>
+          }
+        />
+        <Route
+          path={ROUTE_PATHS.NOTIFICATIONS}
+          element={
+            <AuthGuard>
+              <NotificationsPage />
             </AuthGuard>
           }
         />

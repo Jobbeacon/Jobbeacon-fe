@@ -2,7 +2,7 @@ import { ApiError, createApiErrorFromResponse } from '../../../shared/api/api-cl
 import { backendService } from '../../../shared/api/backend.service'
 import type { ApiResponse } from '../../../shared/types/api.types'
 import type { AgentReply, AgentToolCall, AgentToolCallEvent } from '../types/career-chat.types'
-import { readSseEvents } from './sse'
+import { readSseEvents } from '../../../shared/api/sse'
 
 const CHAT_ENDPOINT = '/chat'
 const CHAT_STREAM_ENDPOINT = '/chat/stream'

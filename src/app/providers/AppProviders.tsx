@@ -11,6 +11,7 @@ import {
   initialAuthState,
 } from '../../features/auth/store/auth.store'
 import type { AuthState } from '../../features/auth/types/auth.types'
+import { NotificationsProvider } from '../../features/notifications/store/NotificationsProvider'
 import { SavedJobsProvider } from '../../features/saved-jobs/store/SavedJobsProvider'
 import { configureApiClient } from '../../shared/api/api-client'
 
@@ -55,7 +56,9 @@ export function AppProviders({ children }: AppProvidersProps) {
 
   return (
     <AuthStateContext.Provider value={authState}>
-      <SavedJobsProvider>{children}</SavedJobsProvider>
+      <SavedJobsProvider>
+        <NotificationsProvider>{children}</NotificationsProvider>
+      </SavedJobsProvider>
     </AuthStateContext.Provider>
   )
 }
