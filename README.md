@@ -39,6 +39,18 @@ Các màn xác thực hiện có:
 - `/forgot-password`: gửi email đặt lại mật khẩu.
 - `/profile`: lấy thông tin tài khoản từ `GET /jobbeacon-be/api/v1/users/me`.
 
+## Trang quản trị (Admin)
+
+Site admin dùng chung source với site người dùng nhưng build/deploy riêng:
+
+```bash
+npm run dev:admin      # http://localhost:5174
+npm run build:admin    # → dist-admin/
+docker build --build-arg APP_TARGET=admin -t jobbeacon-admin .
+```
+
+Chi tiết: `docs/admin-hien-trang.md`. Backend cần `APP_ADMIN_EMAILS` để tạo admin đầu tiên.
+
 ## React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.

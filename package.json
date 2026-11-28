@@ -5,9 +5,12 @@
   "type": "module",
   "scripts": {
     "dev": "vite --mode development",
+    "dev:admin": "vite --config vite.admin.config.ts --mode development",
     "build": "tsc -b && vite build --mode prod",
+    "build:admin": "tsc -b && vite build --config vite.admin.config.ts --mode prod",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "preview:admin": "vite preview --config vite.admin.config.ts"
   },
   "dependencies": {
     "dompurify": "^3.4.16",
