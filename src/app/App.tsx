@@ -11,6 +11,7 @@ import { CandidateProfilePage } from '../features/candidate-profile/pages/Candid
 import { CareerChatPage } from '../features/career-chat/pages/CareerChatPage'
 import { SavedJobsPage } from '../features/saved-jobs/pages/SavedJobsPage'
 import { RecommendationsPage } from '../features/recommendations/pages/RecommendationsPage'
+import { MarketPage } from '../features/market-insights/pages/MarketPage'
 import { NotFoundPage } from '../shared/components/common/NotFoundPage'
 import { AuthGuard } from './router/guards/AuthGuard'
 import { MainLayout } from './layouts/MainLayout'
@@ -25,6 +26,7 @@ const router = createBrowserRouter(
         <Route path="/jobs/:jobId" element={<JobDetailPage />} />
         <Route path="/companies" element={<CompaniesPage />} />
         <Route path="/companies/:companyId" element={<CompanyDetailPage />} />
+        <Route path="/market" element={<MarketPage />} />
         <Route
           path="/profile"
           element={
