@@ -20,6 +20,11 @@ export const PERIOD_LABEL: Record<string, string> = {
 export const SOURCE_LABEL: Record<string, string> = {
   'topcv.vn': 'TopCV',
   'itviec.com': 'ITviec',
+  'vietnamworks.com': 'VietnamWorks',
+  'topdev.vn': 'TopDev',
+  'careerlink.vn': 'CareerLink',
+  'vieclam24h.vn': 'Vieclam24h',
+  'glints.com': 'Glints',
 }
 
 // Tên hiển thị của nguồn crawl; nguồn chưa biết thì dùng luôn domain.
